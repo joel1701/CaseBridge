@@ -1,0 +1,44 @@
+[
+  {
+    "sourceComplaintId": "cmp-001",
+    "targetComplaintId": "cmp-002",
+    "related": true,
+    "reason": "Same institution and allegation about admission fees across PGRC and RB."
+  },
+  {
+    "sourceComplaintId": "cmp-001",
+    "targetComplaintId": "cmp-003",
+    "related": false,
+    "reason": "Same institution, distinct infrastructure issue."
+  },
+  {
+    "sourceComplaintId": "cmp-004",
+    "targetComplaintId": "cmp-005",
+    "related": true,
+    "reason": "Same institution and faculty staffing allegation across bureaus."
+  },
+  {
+    "sourceComplaintId": "cmp-006",
+    "targetComplaintId": "cmp-007",
+    "related": true,
+    "reason": "Same institution and fee allegation across bureaus."
+  },
+  {
+    "sourceComplaintId": "cmp-001",
+    "targetComplaintId": "cmp-006",
+    "related": false,
+    "reason": "Similar wording but different institutions."
+  },
+  {
+    "sourceComplaintId": "cmp-002",
+    "targetComplaintId": "cmp-004",
+    "related": false,
+    "reason": "Different allegation categories."
+  },
+  {
+    "sourceComplaintId": "cmp-011",
+    "targetComplaintId": "cmp-012",
+    "related": true,
+    "reason": "Same institution and admission fee concerns."
+  }
+]

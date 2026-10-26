@@ -1,0 +1,42 @@
+[
+  {
+    "id": "act-001",
+    "complaintId": "cmp-001",
+    "bureauId": "PGRC",
+    "type": "EVIDENCE_REQUEST",
+    "status": "IN_PROGRESS",
+    "summary": "Request admission fee ledger for July\u2013September 2026",
+    "evidenceScope": "admission-fees:2026-Q3",
+    "dueAt": "2026-11-05T12:00:00Z"
+  },
+  {
+    "id": "act-002",
+    "complaintId": "cmp-002",
+    "bureauId": "RB",
+    "type": "EVIDENCE_REQUEST",
+    "status": "PLANNED",
+    "summary": "Request the same admission fee ledger",
+    "evidenceScope": "admission-fees:2026-Q3",
+    "dueAt": "2026-11-07T12:00:00Z"
+  },
+  {
+    "id": "act-003",
+    "complaintId": "cmp-003",
+    "bureauId": "PGRC",
+    "type": "INSPECTION",
+    "status": "PLANNED",
+    "summary": "Inspect laboratory roof safety",
+    "evidenceScope": "laboratory-roof",
+    "dueAt": "2026-11-08T12:00:00Z"
+  },
+  {
+    "id": "act-004",
+    "complaintId": "cmp-004",
+    "bureauId": "RB",
+    "type": "INSPECTION",
+    "status": "IN_PROGRESS",
+    "summary": "Inspect staffing records before proposing a separate notice",
+    "evidenceScope": "faculty:2026-Q3",
+    "dueAt": "2026-11-09T12:00:00Z"
+  }
+]

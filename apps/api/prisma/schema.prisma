@@ -1,0 +1,195 @@
+generator client {
+ provider = "prisma-client"
+ output = "../src/generated/prisma"
+ moduleFormat = "esm"
+}
+datasource db {
+ provider = "postgresql"
+}
+enum Role {
+ ADMIN
+ BUREAU_HEAD
+ OFFICER
+}
+enum ComplaintStatus {
+ RECEIVED
+ UNDER_PROCESS
+ TRANSFERRED
+ ESCALATED
+ DISPOSED
+}
+enum OverlapReviewStatus {
+ NOT_REVIEWED
+ PENDING
+ REVIEWED
+}
+enum CaseLinkStatus {
+ SUGGESTED
+ CONFIRMED
+ REJECTED
+}
+enum ActionType {
+ EVIDENCE_REQUEST
+ INSPECTION
+ NOTICE
+ REVIEW
+}
+enum ActionStatus {
+ PLANNED
+ IN_PROGRESS
+ COMPLETED
+ CANCELLED
+}
+enum CoordinationType {
+ SHARE_EVIDENCE
+ JOINT_INVESTIGATION
+ DEFER_ACTION
+ KEEP_SEPARATE
+}
+enum AlertType {
+ OVERLAP
+ ACTION_CONFLICT
+ DEADLINE
+}
+model User {
+ id String @id @default(cuid())
+ email String @unique
+ displayName String
+ passwordHash String
+ role Role @default(OFFICER)
+ active Boolean @default(true)
+ bureauId String?
+ bureau Bureau? @relation(fields: [bureauId], references: [id], onDelete: Restrict)
+ actions InvestigationAction[]
+ decisions CoordinationDecision[]
+ reviewedLinks CaseLink[]
+ auditLogs AuditLog[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([bureauId, role])
+}
+model Bureau {
+ id String @id @default(cuid())
+ code String @unique
+ name String
+ users User[]
+ complaints Complaint[]
+ actions InvestigationAction[]
+ alerts Alert[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+}
+model Institution {
+ id String @id @default(cuid())
+ permanentId String @unique
+ name String
+ state String
+ complaints Complaint[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([name])
+}
+model Complaint {
+ id String @id @default(cuid())
+ originalId String
+ institutionId String
+ institution Institution @relation(fields: [institutionId], references: [id], onDelete: Restrict)
+ bureauId String
+ bureau Bureau @relation(fields: [bureauId], references: [id], onDelete: Restrict)
+ title String
+ description String
+ category String
+ status ComplaintStatus @default(RECEIVED)
+ overlapReviewStatus OverlapReviewStatus @default(NOT_REVIEWED)
+ dueAt DateTime?
+ outgoingLinks CaseLink[] @relation("LinkSource")
+ incomingLinks CaseLink[] @relation("LinkTarget")
+ actions InvestigationAction[]
+ alerts Alert[]
+ auditLogs AuditLog[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@unique([bureauId, originalId])
+ @@index([institutionId, category])
+ @@index([bureauId, status, createdAt])
+ @@index([overlapReviewStatus])
+ @@index([dueAt])
+}
+model CaseLink {
+ id String @id @default(cuid())
+ sourceComplaintId String
+ targetComplaintId String
+ sourceComplaint Complaint @relation("LinkSource", fields: [sourceComplaintId], references: [id], onDelete: Restrict)
+ targetComplaint Complaint @relation("LinkTarget", fields: [targetComplaintId], references: [id], onDelete: Restrict)
+ status CaseLinkStatus @default(SUGGESTED)
+ score Float?
+ explanation Json
+ modelVersion String?
+ reviewedById String?
+ reviewedBy User? @relation(fields: [reviewedById], references: [id], onDelete: Restrict)
+ reviewReason String?
+ reviewedAt DateTime?
+ decisions CoordinationDecision[]
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@unique([sourceComplaintId, targetComplaintId])
+ @@index([targetComplaintId, status])
+ @@index([status])
+}
+model InvestigationAction {
+ id String @id @default(cuid())
+ complaintId String
+ complaint Complaint @relation(fields: [complaintId], references: [id], onDelete: Restrict)
+ bureauId String
+ bureau Bureau @relation(fields: [bureauId], references: [id], onDelete: Restrict)
+ createdById String?
+ createdBy User? @relation(fields: [createdById], references: [id], onDelete: Restrict)
+ type ActionType
+ status ActionStatus @default(PLANNED)
+ summary String
+ evidenceScope String?
+ dueAt DateTime?
+ overrideReason String?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([complaintId, status])
+ @@index([bureauId, type, status])
+ @@index([dueAt])
+}
+model CoordinationDecision {
+ id String @id @default(cuid())
+ caseLinkId String
+ caseLink CaseLink @relation(fields: [caseLinkId], references: [id], onDelete: Restrict)
+ decidedById String
+ decidedBy User @relation(fields: [decidedById], references: [id], onDelete: Restrict)
+ type CoordinationType
+ rationale String
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([caseLinkId, createdAt])
+}
+model Alert {
+ id String @id @default(cuid())
+ bureauId String
+ bureau Bureau @relation(fields: [bureauId], references: [id], onDelete: Restrict)
+ complaintId String?
+ complaint Complaint? @relation(fields: [complaintId], references: [id], onDelete: Restrict)
+ type AlertType
+ message String
+ readAt DateTime?
+ createdAt DateTime @default(now())
+ updatedAt DateTime @updatedAt
+ @@index([bureauId, readAt, createdAt])
+}
+model AuditLog {
+ id String @id @default(cuid())
+ actorId String?
+ actor User? @relation(fields: [actorId], references: [id], onDelete: Restrict)
+ complaintId String?
+ complaint Complaint? @relation(fields: [complaintId], references: [id], onDelete: Restrict)
+ event String
+ metadata Json?
+ createdAt DateTime @default(now())
+ @@index([complaintId, createdAt])
+ @@index([actorId, createdAt])
+}

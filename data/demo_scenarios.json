@@ -1,0 +1,28 @@
+[
+  {
+    "id": "related-fees",
+    "complaintIds": ["cmp-001", "cmp-002"],
+    "expected": "Suggest an explainable link; officer review required; retain bureau ownership."
+  },
+  {
+    "id": "false-positive",
+    "complaintIds": ["cmp-001", "cmp-003"],
+    "expected": "Do not link solely on institution identity."
+  },
+  {
+    "id": "duplicate-evidence",
+    "actionIds": ["act-001", "act-002"],
+    "expected": "Warn before the second request; officer may coordinate evidence sharing."
+  },
+  {
+    "id": "staffing-coordination",
+    "complaintIds": ["cmp-004", "cmp-005"],
+    "actionIds": ["act-004"],
+    "expected": "Warn about overlapping inspection/notice scopes; record a human coordination decision."
+  },
+  {
+    "id": "similar-text-other-institution",
+    "complaintIds": ["cmp-001", "cmp-006"],
+    "expected": "Do not treat semantic similarity alone as a confirmed relationship."
+  }
+]

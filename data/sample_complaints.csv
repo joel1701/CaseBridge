@@ -1,0 +1,26 @@
+id,originalId,institutionId,bureauId,title,description,category,status,overlapReviewStatus,createdAt
+cmp-001,PGRC-DEMO-001,inst-01,PGRC,Unapproved admission fees,Students report unauthorised collection of admission fees.,FEES,RECEIVED,PENDING,2026-10-01T09:00:00Z
+cmp-002,RB-DEMO-002,inst-01,RB,Additional admission payments,Institute demanding extra payments beyond approved charges.,FEES,UNDER_PROCESS,PENDING,2026-10-02T09:00:00Z
+cmp-003,PGRC-DEMO-003,inst-01,PGRC,Laboratory roof condition,A laboratory roof leaks during rainfall; repair and safety inspection requested.,INFRASTRUCTURE,RECEIVED,PENDING,2026-10-03T09:00:00Z
+cmp-004,RB-DEMO-004,inst-01,RB,Teaching vacancies,Required teaching posts appear vacant during the current term.,FACULTY,ESCALATED,PENDING,2026-10-04T09:00:00Z
+cmp-005,PGRC-DEMO-005,inst-01,PGRC,Faculty staffing review,Faculty attendance records indicate continuing vacancies in required teaching positions.,FACULTY,TRANSFERRED,PENDING,2026-10-05T09:00:00Z
+cmp-006,RB-DEMO-006,inst-02,RB,Unapproved admission fees,Students report unauthorised collection of admission fees.,FEES,RECEIVED,PENDING,2026-10-06T09:00:00Z
+cmp-007,PGRC-DEMO-007,inst-02,PGRC,Additional admission payments,Institute demanding extra payments beyond approved charges.,FEES,UNDER_PROCESS,NOT_REVIEWED,2026-10-07T09:00:00Z
+cmp-008,RB-DEMO-008,inst-02,RB,Laboratory roof condition,A laboratory roof leaks during rainfall; repair and safety inspection requested.,INFRASTRUCTURE,RECEIVED,NOT_REVIEWED,2026-10-08T09:00:00Z
+cmp-009,PGRC-DEMO-009,inst-02,PGRC,Teaching vacancies,Required teaching posts appear vacant during the current term.,FACULTY,ESCALATED,NOT_REVIEWED,2026-10-09T09:00:00Z
+cmp-010,RB-DEMO-010,inst-02,RB,Faculty staffing review,Faculty attendance records indicate continuing vacancies in required teaching positions.,FACULTY,TRANSFERRED,NOT_REVIEWED,2026-10-10T09:00:00Z
+cmp-011,PGRC-DEMO-011,inst-03,PGRC,Unapproved admission fees,Students report unauthorised collection of admission fees.,FEES,RECEIVED,NOT_REVIEWED,2026-10-11T09:00:00Z
+cmp-012,RB-DEMO-012,inst-03,RB,Additional admission payments,Institute demanding extra payments beyond approved charges.,FEES,UNDER_PROCESS,NOT_REVIEWED,2026-10-12T09:00:00Z
+cmp-013,PGRC-DEMO-013,inst-03,PGRC,Laboratory roof condition,A laboratory roof leaks during rainfall; repair and safety inspection requested.,INFRASTRUCTURE,RECEIVED,NOT_REVIEWED,2026-10-13T09:00:00Z
+cmp-014,RB-DEMO-014,inst-03,RB,Teaching vacancies,Required teaching posts appear vacant during the current term.,FACULTY,ESCALATED,NOT_REVIEWED,2026-10-14T09:00:00Z
+cmp-015,PGRC-DEMO-015,inst-03,PGRC,Faculty staffing review,Faculty attendance records indicate continuing vacancies in required teaching positions.,FACULTY,TRANSFERRED,NOT_REVIEWED,2026-10-15T09:00:00Z
+cmp-016,RB-DEMO-016,inst-04,RB,Unapproved admission fees,Students report unauthorised collection of admission fees.,FEES,RECEIVED,NOT_REVIEWED,2026-10-16T09:00:00Z
+cmp-017,PGRC-DEMO-017,inst-04,PGRC,Additional admission payments,Institute demanding extra payments beyond approved charges.,FEES,UNDER_PROCESS,NOT_REVIEWED,2026-10-17T09:00:00Z
+cmp-018,RB-DEMO-018,inst-04,RB,Laboratory roof condition,A laboratory roof leaks during rainfall; repair and safety inspection requested.,INFRASTRUCTURE,RECEIVED,NOT_REVIEWED,2026-10-18T09:00:00Z
+cmp-019,PGRC-DEMO-019,inst-04,PGRC,Teaching vacancies,Required teaching posts appear vacant during the current term.,FACULTY,ESCALATED,NOT_REVIEWED,2026-10-19T09:00:00Z
+cmp-020,RB-DEMO-020,inst-05,RB,Faculty staffing review,Faculty attendance records indicate continuing vacancies in required teaching positions.,FACULTY,TRANSFERRED,NOT_REVIEWED,2026-10-20T09:00:00Z
+cmp-021,PGRC-DEMO-021,inst-06,PGRC,Unapproved admission fees,Students report unauthorised collection of admission fees.,FEES,RECEIVED,NOT_REVIEWED,2026-10-21T09:00:00Z
+cmp-022,RB-DEMO-022,inst-07,RB,Additional admission payments,Institute demanding extra payments beyond approved charges.,FEES,UNDER_PROCESS,NOT_REVIEWED,2026-10-22T09:00:00Z
+cmp-023,PGRC-DEMO-023,inst-08,PGRC,Laboratory roof condition,A laboratory roof leaks during rainfall; repair and safety inspection requested.,INFRASTRUCTURE,RECEIVED,NOT_REVIEWED,2026-10-23T09:00:00Z
+cmp-024,RB-DEMO-024,inst-09,RB,Teaching vacancies,Required teaching posts appear vacant during the current term.,FACULTY,ESCALATED,NOT_REVIEWED,2026-10-24T09:00:00Z
+cmp-025,PGRC-DEMO-025,inst-10,PGRC,Faculty staffing review,Faculty attendance records indicate continuing vacancies in required teaching positions.,FACULTY,TRANSFERRED,NOT_REVIEWED,2026-10-25T09:00:00Z

@@ -1,0 +1,53 @@
+name: Foundation checks
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run lint && npm run typecheck && npm run build && npm test && npm run db:validate && npm run format:check
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: pip
+          cache-dependency-path: apps/ai/requirements-base.txt
+      - run: pip install -r apps/ai/requirements-base.txt
+      - run: python -m pytest
+        working-directory: apps/ai
+  database:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: casebridge
+          POSTGRES_DB: casebridge_test
+          # Ephemeral CI service only; not a deployment password.
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U casebridge"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql://casebridge@localhost:5432/casebridge_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run db:deploy && npm run db:seed && npm run db:seed
