@@ -11,3 +11,5 @@ coverage/
 apps/api/src/generated/
 .DS_Store
 *.log
+
+apps/api/.seed-credentials.json

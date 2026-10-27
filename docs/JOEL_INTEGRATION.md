@@ -1,5 +1,7 @@
 # Joel's intelligence modules — implementation and integration
 
+**Subsequent core-backend implementation:** Login, operational APIs and the coordination persistence adapter described as pending below are now implemented on joel-core-backend. See [current core handoff](CORE_BACKEND_INTEGRATION.md). The original implementation details and verification notes below describe the earlier intelligence milestone.
+
 Implemented on the existing `joel` branch. No schema/migration, authentication implementation, complaint workflow or frontend was rewritten. No commit, branch switch or push was performed.
 
 ## Implemented endpoints

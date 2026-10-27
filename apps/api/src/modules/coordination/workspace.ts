@@ -1,4 +1,4 @@
-/** Pending Vishwak's schema adapter. No HTTP route pretends this persists today. */
+/** Domain service; Prisma persistence and redacted HTTP responses live in separate adapters. */
 import type { Principal } from '../../middleware/auth.js';
 import { requireReviewer } from '../case-links/access.js';
 import { AppError } from '../../lib/errors.js';

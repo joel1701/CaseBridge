@@ -2,6 +2,7 @@ import type { ErrorRequestHandler } from 'express';
 import { AppError } from '../lib/errors.js';
 export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
   if (error instanceof AppError) {
+    if (error.status === 429) res.set('Retry-After', '900');
     res.status(error.status).json({
       success: false,
       error: {
@@ -25,6 +26,26 @@ export const errorHandler: ErrorRequestHandler = (error, _req, res, _next) => {
       error: {
         code: 'PAYLOAD_TOO_LARGE',
         message: 'Request body exceeds 1 MB',
+      },
+    });
+    return;
+  }
+  if (error?.code === 'P2002') {
+    res.status(409).json({
+      success: false,
+      error: {
+        code: 'DUPLICATE_REFERENCE',
+        message: 'A record with this unique reference already exists',
+      },
+    });
+    return;
+  }
+  if (['P1001', 'P1002', 'P1017', 'P2028', 'P2034'].includes(error?.code)) {
+    res.status(503).json({
+      success: false,
+      error: {
+        code: 'DEPENDENCY_UNAVAILABLE',
+        message: 'Database unavailable or busy; retry',
       },
     });
     return;
