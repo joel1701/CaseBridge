@@ -11,7 +11,16 @@ vi.mock('../lib/env.js', () => ({
   env: { JWT_SECRET: secret, NODE_ENV: 'test', COOKIE_SAME_SITE: 'lax' },
 }));
 vi.mock('../lib/prisma.js', () => ({
-  getPrisma: () => ({ user: { findUnique: lookup } }),
+  getPrisma: () => ({
+    user: { findUnique: lookup },
+    authSession: {
+      findUnique: async () => ({
+        userId: 'user-1',
+        revokedAt: null,
+        expiresAt: new Date(Date.now() + 60000),
+      }),
+    },
+  }),
 }));
 import { requireAuth, requireRole } from '../middleware/auth.js';
 import { errorHandler } from '../middleware/errors.js';
@@ -27,7 +36,7 @@ app.get('/private', requireAuth, requireRole('BUREAU_HEAD'), (req, res) =>
 );
 app.use(errorHandler);
 function cookie(options: jwt.SignOptions = {}) {
-  return `casebridge_session=${jwt.sign({}, secret, { subject: 'user-1', issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '5m', ...options })}`;
+  return `casebridge_session=${jwt.sign({}, secret, { subject: 'user-1', jwtid: 'test-session', issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '5m', ...options })}`;
 }
 afterEach(() => vi.resetAllMocks());
 describe('authentication boundaries', () => {

@@ -27,21 +27,35 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
   if (typeof token !== 'string')
     return next(new AppError(401, 'UNAUTHENTICATED', 'Sign in required'));
   let subject: string;
+  let sessionId: string;
   try {
     const claims = jwt.verify(token, env.JWT_SECRET, {
       algorithms: ['HS256'],
       issuer: 'casebridge-api',
       audience: 'casebridge-web',
     });
-    if (typeof claims === 'string' || !claims.sub || !claims.exp)
+    if (typeof claims === 'string' || !claims.sub || !claims.exp || !claims.jti)
       throw new Error('Invalid claims');
     subject = claims.sub;
+    sessionId = claims.jti!;
   } catch {
     return next(
       new AppError(401, 'UNAUTHENTICATED', 'Session invalid or expired'),
     );
   }
   try {
+    const session = await getPrisma().authSession.findUnique({
+      where: { id: sessionId },
+    });
+    if (
+      !session ||
+      session.userId !== subject ||
+      session.revokedAt ||
+      session.expiresAt <= new Date()
+    )
+      return next(
+        new AppError(401, 'UNAUTHENTICATED', 'Session invalid or expired'),
+      );
     // Reload active role and bureau: JWT role claims are never authorization authority.
     const user = await getPrisma().user.findUnique({ where: { id: subject } });
     if (!user?.active)

@@ -8,6 +8,11 @@ import { requireTrustedOrigin } from './middleware/origin.js';
 import { registerRoutes } from './modules/routes.js';
 export const app = express();
 app.disable('x-powered-by');
+if (env.TRUST_PROXY_HOPS) app.set('trust proxy', env.TRUST_PROXY_HOPS);
+app.use('/api', (_req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
 app.use(cors({ origin: new URL(env.FRONTEND_URL).origin, credentials: true }));
 app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());

@@ -45,7 +45,7 @@ const outsider = {
 };
 const admin = { id: id('admin'), role: 'ADMIN' as const, bureauId: null };
 function cookie(user: { id: string }) {
-  return `casebridge_session=${jwt.sign({}, env.JWT_SECRET!, { subject: user.id, issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '10m' })}`;
+  return `casebridge_session=${jwt.sign({}, env.JWT_SECRET!, { subject: user.id, jwtid: id(`session-${user.id}`), issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '10m' })}`;
 }
 function post(path: string, user: { id: string }, body: unknown) {
   return request(app)
@@ -72,6 +72,14 @@ describe.skipIf(!enabled)('PostgreSQL intelligence integration', () => {
           email: `${principal.id}@example.invalid`,
           displayName: 'Synthetic test officer',
           passwordHash: 'not-a-login-hash',
+        },
+      });
+    for (const user of [pgOfficer, pgHead, rbHead, outsider, admin])
+      await db.authSession.create({
+        data: {
+          id: id(`session-${user.id}`),
+          userId: user.id,
+          expiresAt: new Date(Date.now() + 3600000),
         },
       });
     const root = new URL('../../../../../', import.meta.url);

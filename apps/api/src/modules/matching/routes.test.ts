@@ -14,11 +14,20 @@ vi.mock('../../lib/env.js', () => ({
   },
 }));
 vi.mock('../../lib/prisma.js', () => ({
-  getPrisma: () => ({ user: { findUnique: findUser } }),
+  getPrisma: () => ({
+    user: { findUnique: findUser },
+    authSession: {
+      findUnique: async () => ({
+        userId: 'officer',
+        revokedAt: null,
+        expiresAt: new Date(Date.now() + 60000),
+      }),
+    },
+  }),
 }));
 import { app } from '../../app.js';
 function cookie() {
-  return `casebridge_session=${jwt.sign({}, secret, { subject: 'officer', issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '5m' })}`;
+  return `casebridge_session=${jwt.sign({}, secret, { subject: 'officer', jwtid: 'test-session', issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '5m' })}`;
 }
 const paths = [
   ['post', '/api/intelligence/analyze/c1'],

@@ -33,6 +33,10 @@ Canonical links store lexicographically smaller complaint ID first. The migratio
 
 Services must enforce action.bureauId equals the complaint's owning bureau, alert bureau/complaint consistency, reviewer/decider authority, and valid state transitions inside transactions. These cross-table policies are not represented by simple Prisma foreign keys. Audit writes accompany state-changing transactions. Real action creation must have createdById; nullable actors exist only for system/import fixtures. User email normalization to lower case belongs at input validation.
 
-Original IDs and bureau ownership are retained even when linked. The seed is additive/idempotent, does not delete data or overwrite existing rows, and is disabled in production. It creates no user unless both seed credentials are supplied; existing account passwords are not changed on rerun.
+Original IDs and bureau ownership are retained even when linked. The seed is additive/idempotent, does not delete data or overwrite existing rows, and is disabled in production. Demo accounts receive generated or explicitly configured passwords; existing account passwords are not changed on rerun.
 
 Run migration then seed as in SETUP. No live database was provisioned by this repository setup.
+
+## Operational extensions
+
+See CORE_BACKEND_INTEGRATION.md and migration 20261027000100_operational_backend for assignment/source bureau/version/lifecycle fields, AuthSession/LoginThrottle, alert resolution/deduplication, institution location and persistent coordination workspaces/shared actions. Existing delete restrictions remain; operational DELETE archives disposed complaints. Source-bureau/reference uniqueness preserves original identity through explicit administrator transfers.

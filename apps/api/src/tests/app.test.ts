@@ -15,11 +15,13 @@ describe('foundation API', () => {
       message: 'CaseBridge API is running',
     });
   });
-  it('returns consistent 404 and explicit 501', async () => {
+  it('returns consistent 404 and protected operational endpoints', async () => {
     expect((await request(app).get('/unknown')).body.error.code).toBe(
       'NOT_FOUND',
     );
-    expect((await request(app).get('/api/complaints')).status).toBe(501);
+    expect((await request(app).get('/api/complaints')).status).toBe(
+      process.env.JWT_SECRET ? 401 : 503,
+    );
   });
   it('rejects malformed JSON', async () => {
     const r = await request(app)
@@ -38,7 +40,7 @@ describe('foundation API', () => {
       expect(r.status).toBe(403);
     }
   });
-  it('exposes pending writes only to configured origin', async () => {
+  it('requires authentication after the trusted-origin check', async () => {
     expect(
       (
         await request(app)
@@ -46,7 +48,7 @@ describe('foundation API', () => {
           .set('Origin', 'http://localhost:5173')
           .send({})
       ).status,
-    ).toBe(501);
+    ).toBe(process.env.JWT_SECRET ? 401 : 503);
   });
   it('does not echo an untrusted CORS origin', async () => {
     const r = await request(app)

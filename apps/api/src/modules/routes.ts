@@ -1,4 +1,6 @@
 import type { Express } from 'express';
+import { router as bureaus } from './bureaus/routes.js';
+import { router as workspaces } from './coordination/workspace-routes.js';
 import { router as auth } from './auth/routes.js';
 import { router as complaints } from './complaints/routes.js';
 import { router as institutions } from './institutions/routes.js';
@@ -12,6 +14,8 @@ import { router as actionfirewall } from './action-firewall/routes.js';
 import { router as coordination } from './coordination/routes.js';
 export function registerRoutes(app: Express) {
   app.use('/api', auth);
+  app.use('/api', workspaces);
+  app.use('/api', bureaus);
   app.use('/api', complaints);
   app.use('/api', institutions);
   app.use('/api', alerts);
