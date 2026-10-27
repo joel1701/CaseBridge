@@ -12,83 +12,80 @@ export function BrandMark({
   const isLight = variant === 'light';
 
   const iconSizes = {
-    sm: 'w-6 h-6',
-    md: 'w-8 h-8',
+    sm: 'w-7 h-7',
+    md: 'w-9 h-9',
     lg: 'w-10 h-10',
   };
 
   const textSizes = {
-    sm: 'text-lg',
-    md: 'text-xl',
-    lg: 'text-2xl',
+    sm: 'text-base',
+    md: 'text-lg',
+    lg: 'text-xl',
   };
 
   return (
-    <div className="flex items-center gap-3 select-none">
+    <div className="flex items-center gap-2.5 select-none">
+      {/* Friendly Geometric Coordinate Bridge Icon */}
       <div
-        className={`relative flex items-center justify-center rounded-lg border transition-transform duration-200 group-hover:scale-105 ${iconSizes[size]} ${
+        className={`flex items-center justify-center rounded-lg border transition-colors ${iconSizes[size]} ${
           isLight
-            ? 'bg-[#222222] border-[#333333] text-white shadow-sm'
-            : 'bg-[#171717] border-[#262626] text-white shadow-sm'
+            ? 'bg-slate-800 border-slate-700 text-blue-400'
+            : 'bg-blue-50 border-blue-200 text-blue-700'
         }`}
       >
-        {/* Architectural Bridge and Keystone Glyph */}
         <svg
-          viewBox="0 0 32 32"
+          viewBox="0 0 24 24"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
           className="w-5 h-5"
+          aria-hidden="true"
         >
-          {/* Bridge Base Piers */}
+          {/* Bridge arch */}
           <path
-            d="M6 24V19C6 15.6863 8.68629 13 12 13H20C23.3137 13 26 15.6863 26 19V24"
+            d="M4 18V14C4 10.6863 6.68629 8 10 8H14C17.3137 8 20 10.6863 20 14V18"
             stroke="currentColor"
-            strokeWidth="2.2"
+            strokeWidth="2"
             strokeLinecap="round"
           />
-          {/* Deck Cable Span */}
+          {/* Deck baseline */}
           <path
-            d="M5 10H27"
+            d="M3 18H21"
             stroke="currentColor"
-            strokeWidth="2.2"
+            strokeWidth="2"
             strokeLinecap="round"
           />
-          {/* Lavender Keystone Pivot */}
-          <rect x="13.5" y="7" width="5" height="5" rx="1" fill="#A88BFF" />
-          {/* Mint Equilibrium Indicator */}
-          <circle cx="16" cy="18" r="2.2" fill="#45E3AE" />
+          {/* Central coordination pivot */}
+          <circle cx="12" cy="8" r="2.5" fill="#2563EB" />
         </svg>
       </div>
 
       <div className="flex flex-col">
         <div className="flex items-center gap-2">
           <span
-            className={`font-semibold tracking-tight leading-none ${textSizes[size]} ${
-              isLight ? 'text-white' : 'text-[#171717]'
+            className={`font-heading tracking-tight leading-none ${textSizes[size]} ${
+              isLight ? 'text-white' : 'text-slate-900'
             }`}
           >
-            Case
-            <span className="font-serif-editorial italic font-normal">
-              Bridge
-            </span>
+            <span className="font-extrabold text-slate-900 dark:text-white">Case</span>
+            <span className="font-bold text-blue-700">Bridge</span>
           </span>
           <span
-            className={`text-[9px] font-mono uppercase tracking-widest px-1.5 py-0.5 rounded ${
+            className={`text-[10px] font-medium tracking-wide px-1.5 py-0.5 rounded ${
               isLight
-                ? 'bg-[#2b2b2b] text-[#A88BFF] border border-[#3b3b3b]'
-                : 'bg-[#F0EBFF] text-[#5B3EBD] border border-[#D8CEFD]'
+                ? 'bg-slate-800 text-blue-300 border border-slate-700'
+                : 'bg-blue-50 text-blue-700 border border-blue-200'
             }`}
           >
-            v0.1
+            AICTE Demo
           </span>
         </div>
         {showSubtitle && (
           <span
-            className={`text-[10px] tracking-wider uppercase font-medium mt-0.5 ${
-              isLight ? 'text-[#888888]' : 'text-[#666662]'
+            className={`text-[11px] font-body tracking-normal mt-0.5 ${
+              isLight ? 'text-slate-400' : 'text-slate-500'
             }`}
           >
-            Intake & Legal-Aid Intelligence
+            AICTE grievance coordination
           </span>
         )}
       </div>

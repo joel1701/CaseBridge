@@ -1,6 +1,6 @@
 import { Link } from 'react-router';
 import { BrandMark } from './BrandMark';
-import { ArrowUp, Github, ExternalLink } from 'lucide-react';
+import { Github, ExternalLink, ArrowUp } from 'lucide-react';
 
 export function LandingFooter() {
   const scrollToTop = () => {
@@ -8,258 +8,116 @@ export function LandingFooter() {
   };
 
   return (
-    <footer className="relative overflow-hidden bg-[#171717] text-white pt-20 pb-16">
-      {/* Decorative Oversized Lavender Bridge Arch Vector in the Background */}
-      <div
-        className="pointer-events-none absolute -bottom-16 left-1/2 -translate-x-1/2 w-[900px] h-[360px] opacity-[0.06] select-none"
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 900 360"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="w-full h-full"
-        >
-          <path
-            d="M50 340 C200 120, 700 120, 850 340"
-            stroke="#A88BFF"
-            strokeWidth="32"
-            strokeLinecap="round"
-          />
-          <path
-            d="M150 340 C280 180, 620 180, 750 340"
-            stroke="#A88BFF"
-            strokeWidth="20"
-            strokeLinecap="round"
-          />
-          <rect x="420" y="80" width="60" height="60" rx="12" fill="#A88BFF" />
-          <line
-            x1="250"
-            y1="210"
-            x2="250"
-            y2="340"
-            stroke="#A88BFF"
-            strokeWidth="8"
-          />
-          <line
-            x1="350"
-            y1="165"
-            x2="350"
-            y2="340"
-            stroke="#A88BFF"
-            strokeWidth="8"
-          />
-          <line
-            x1="450"
-            y1="150"
-            x2="450"
-            y2="340"
-            stroke="#A88BFF"
-            strokeWidth="8"
-          />
-          <line
-            x1="550"
-            y1="165"
-            x2="550"
-            y2="340"
-            stroke="#A88BFF"
-            strokeWidth="8"
-          />
-          <line
-            x1="650"
-            y1="210"
-            x2="650"
-            y2="340"
-            stroke="#A88BFF"
-            strokeWidth="8"
-          />
-        </svg>
-      </div>
-
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-12 pb-16 border-b border-[#2B2B2B]">
-          {/* Brand & Description Column */}
-          <div className="lg:col-span-5 space-y-5">
-            <BrandMark variant="light" size="lg" />
-            <p className="text-sm text-[#A8A8A2] font-sans-ui max-w-sm leading-relaxed">
-              CaseBridge is an open foundation for authorized cross-bureau
-              complaint investigation, explainable matching, and Action Firewall
-              coordination. Built for Team Aarohan.
+    <footer className="relative bg-slate-900 text-slate-400 pt-16 pb-12 border-t border-slate-800">
+      <div className="mx-auto max-w-7xl px-6 lg:px-8">
+        
+        {/* Main Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
+          
+          {/* Brand & Mission Briefing (5 cols) */}
+          <div className="lg:col-span-5 space-y-4">
+            <BrandMark variant="light" size="md" />
+            <p className="text-xs text-slate-400 leading-relaxed font-body max-w-sm mt-3">
+              CaseBridge helps AICTE Public Grievance Redressal Cell and Regional Bureau officers review complex student complaints, identify missing evidence, and coordinate pre-notice actions.
             </p>
-            <div className="flex items-center gap-4 pt-2">
+            <div className="pt-2 flex items-center gap-3">
               <a
                 href="https://github.com/joel1701/CaseBridge"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 rounded-md bg-[#242424] hover:bg-[#333333] border border-[#383838] px-3.5 py-2 text-xs font-semibold text-white transition-colors"
+                className="inline-flex items-center gap-2 border border-slate-700 bg-slate-800 hover:bg-slate-700 text-white px-3 py-1.5 text-xs rounded-lg transition-colors"
               >
                 <Github className="w-4 h-4" />
                 <span>GitHub Repository</span>
-                <ExternalLink className="w-3 h-3 text-[#777777]" />
+                <ExternalLink className="w-3 h-3 text-slate-400" />
               </a>
-              <span className="text-xs text-[#777777] font-mono">
-                SIH26264 · AICTE
+              <span className="text-xs text-slate-400 font-medium">
+                Team Aarohan · SIH26264
               </span>
             </div>
           </div>
 
-          {/* Navigation Links Column */}
-          <div className="lg:col-span-2 space-y-4">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#A88BFF]">
-              Overview
+          {/* Working Workspace Screens (4 cols) */}
+          <div className="lg:col-span-4 space-y-3">
+            <span className="text-xs font-semibold text-white block font-heading">
+              Workspace screens
             </span>
-            <ul className="space-y-2.5 text-sm">
+            <ul className="space-y-2 text-xs font-body">
               <li>
-                <a
-                  href="#how-it-works"
-                  className="text-[#B5B5B0] hover:text-white transition-colors"
+                <Link
+                  to="/investigations/cmp-001"
+                  className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
-                  How It Works
-                </a>
+                  <span>Investigation workspace (cmp-001)</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">/investigations/cmp-001</span>
+                </Link>
               </li>
-              <li>
-                <a
-                  href="#features"
-                  className="text-[#B5B5B0] hover:text-white transition-colors"
-                >
-                  Product Showcase
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#benefits"
-                  className="text-[#B5B5B0] hover:text-white transition-colors"
-                >
-                  Key Capabilities
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#audiences"
-                  className="text-[#B5B5B0] hover:text-white transition-colors"
-                >
-                  For Caseworkers
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#trust"
-                  className="text-[#B5B5B0] hover:text-white transition-colors"
-                >
-                  Trust & Oversight
-                </a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Application Workspaces Column */}
-          <div className="lg:col-span-3 space-y-4">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#45E3AE]">
-              Workspace Routes
-            </span>
-            <ul className="space-y-2.5 text-sm">
               <li>
                 <Link
                   to="/dashboard"
-                  className="text-[#B5B5B0] hover:text-white transition-colors flex items-center justify-between group"
+                  className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
-                  <span>Coordination Dashboard</span>
-                  <span className="text-[10px] font-mono text-[#666666] group-hover:text-white">
-                    /dashboard
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/complaints"
-                  className="text-[#B5B5B0] hover:text-white transition-colors flex items-center justify-between group"
-                >
-                  <span>Complaints Repository</span>
-                  <span className="text-[10px] font-mono text-[#666666] group-hover:text-white">
-                    /complaints
-                  </span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/bureau-queue"
-                  className="text-[#B5B5B0] hover:text-white transition-colors flex items-center justify-between group"
-                >
-                  <span>Bureau Work Queue</span>
-                  <span className="text-[10px] font-mono text-[#666666] group-hover:text-white">
-                    /bureau-queue
-                  </span>
+                  <span>Coordination dashboard</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">/dashboard</span>
                 </Link>
               </li>
               <li>
                 <Link
                   to="/graph/inst-01"
-                  className="text-[#B5B5B0] hover:text-white transition-colors flex items-center justify-between group"
+                  className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
-                  <span>Knowledge Graph</span>
-                  <span className="text-[10px] font-mono text-[#666666] group-hover:text-white">
-                    /graph/:id
-                  </span>
+                  <span>Knowledge graph (inst-01)</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">/graph/inst-01</span>
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/login"
-                  className="text-[#B5B5B0] hover:text-white transition-colors flex items-center justify-between group"
+                  to="/bureau-queue"
+                  className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
-                  <span>Officer Sign In</span>
-                  <span className="text-[10px] font-mono text-[#666666] group-hover:text-white">
-                    /login
-                  </span>
+                  <span>Bureau triage queue</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">/bureau-queue</span>
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Governance & Back to top Column */}
-          <div className="lg:col-span-2 space-y-4">
-            <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#E8E6DF]">
-              Governance
+          {/* Regulatory Bureau Governance (3 cols) */}
+          <div className="lg:col-span-3 space-y-3">
+            <span className="text-xs font-semibold text-white block font-heading">
+              Participating bureaus
             </span>
-            <p className="text-xs text-[#888882] leading-relaxed">
-              Human review required before action. No automatic sanctions or
-              legal dispositions.
-            </p>
-            <button
-              type="button"
-              onClick={scrollToTop}
-              className="mt-4 inline-flex items-center gap-2 rounded-md border border-[#383838] bg-[#222222] px-3.5 py-2 text-xs font-medium text-white hover:bg-[#2e2e2e] transition-colors"
-            >
-              <ArrowUp className="w-3.5 h-3.5" />
-              <span>Back to Top</span>
-            </button>
+            <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs space-y-2 font-body">
+              <span className="font-semibold text-white block">AICTE Desks:</span>
+              <p className="text-slate-300 leading-relaxed text-[11px]">
+                • Public Grievance Redressal Cell (PGRC)<br />
+                • Regional Bureau (RB)
+              </p>
+              <div className="pt-2 border-t border-slate-700 text-[11px] text-blue-400 font-medium">
+                Mandatory human officer authorization
+              </div>
+            </div>
           </div>
+
         </div>
 
         {/* Bottom Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#73736E]">
-          <div className="flex flex-wrap items-center gap-3">
-            <span>© 2026 CaseBridge · Team Aarohan.</span>
-            <span>·</span>
-            <span>SIH26264 Prototype Foundation.</span>
-            <span>·</span>
-            <span className="text-[#8F8F8A]">
-              All included sample records are synthetic.
-            </span>
-          </div>
+        <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
+          <p className="text-slate-400 font-body text-center sm:text-left">
+            CaseBridge · Team Aarohan. Assistive regulatory triage prototype; all determinations remain with authorized officers.
+          </p>
 
-          <div className="flex items-center gap-4">
-            <Link
-              to="/dashboard"
-              className="hover:text-white transition-colors"
-            >
-              App Portal
-            </Link>
-            <Link to="/login" className="hover:text-white transition-colors">
-              Officer Login
-            </Link>
-          </div>
+          <button
+            type="button"
+            onClick={scrollToTop}
+            className="inline-flex items-center gap-1.5 text-slate-400 hover:text-white transition-colors"
+            aria-label="Scroll to top of page"
+          >
+            <span>Back to top</span>
+            <ArrowUp className="w-3.5 h-3.5" />
+          </button>
         </div>
+
       </div>
     </footer>
   );

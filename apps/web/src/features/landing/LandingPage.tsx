@@ -1,13 +1,11 @@
 import { useEffect } from 'react';
 import { LandingNav } from './components/LandingNav';
 import { HeroSection } from './components/HeroSection';
-import { ProductShowcase } from './components/ProductShowcase';
-import { ProblemSolutionSection } from './components/ProblemSolutionSection';
+import { ProductWorkbench } from './components/ProductWorkbench';
 import { HowItWorksSection } from './components/HowItWorksSection';
-import { KeyBenefitsSection } from './components/KeyBenefitsSection';
-import { WhoItsForSection } from './components/WhoItsForSection';
-import { TrustSection } from './components/TrustSection';
-import { ClosingCtaSection } from './components/ClosingCtaSection';
+import { ActionFirewallSection } from './components/ActionFirewallSection';
+import { TrustGovernanceSection } from './components/TrustGovernanceSection';
+import { ExploreWorkspaceCta } from './components/ExploreWorkspaceCta';
 import { LandingFooter } from './components/LandingFooter';
 
 export function LandingPage() {
@@ -21,41 +19,34 @@ export function LandingPage() {
   return (
     <div
       id="top"
-      className="min-h-screen bg-[#FFFCF0] text-[#171717] font-sans-ui selection:bg-[#A88BFF] selection:text-[#171717]"
+      className="min-h-screen bg-white text-slate-900 font-body selection:bg-blue-100 selection:text-blue-900"
     >
-      {/* Top Navigation */}
+      {/* Navigation */}
       <LandingNav />
 
-      {/* Main Content Landmark */}
+      {/* Main Flow */}
       <main>
-        {/* Section B: Hero Section */}
+        {/* Section 1: Hero Briefing */}
         <HeroSection />
 
-        {/* Section C: Product Showcase */}
-        <ProductShowcase />
+        {/* Section 2: Interactive Product Workbench (Borrowing Direction 2's Product-First Layout) */}
+        <ProductWorkbench />
 
-        {/* Section D: Problem and Solution */}
-        <ProblemSolutionSection />
-
-        {/* Section E: How CaseBridge Works */}
+        {/* Section 3: How It Works */}
         <HowItWorksSection />
 
-        {/* Section F: Key Benefits */}
-        <KeyBenefitsSection />
+        {/* Section 4: Action Firewall Feature */}
+        <ActionFirewallSection />
 
-        {/* Section G: Who It's For */}
-        <WhoItsForSection />
+        {/* Section 5: Trust, Governance & Regulatory Boundaries */}
+        <TrustGovernanceSection />
 
-        {/* Section H: Trust, Privacy, and Human Oversight */}
-        <TrustSection />
-
-        {/* Section I: Closing CTA */}
-        <ClosingCtaSection />
+        {/* Section 6: Explore Working Workspace Prototype */}
+        <ExploreWorkspaceCta />
       </main>
 
-      {/* Section J: Footer */}
+      {/* Footer */}
       <LandingFooter />
     </div>
   );
 }
-
