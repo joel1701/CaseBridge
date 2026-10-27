@@ -1,7 +1,7 @@
 import { beforeEach, it, expect, vi } from 'vitest';
 import request from 'supertest';
 import jwt from 'jsonwebtoken';
-import { randomUUID } from 'node:crypto';
+import { createHash, randomUUID } from 'node:crypto';
 const mocks = vi.hoisted(() => ({
   user: vi.fn(),
   counter: vi.fn(),
@@ -9,6 +9,7 @@ const mocks = vi.hoisted(() => ({
   create: vi.fn(),
   revoke: vi.fn(),
   audit: vi.fn(),
+  throttleReset: vi.fn(),
   secret: crypto.randomUUID() + crypto.randomUUID(),
 }));
 vi.mock('../../lib/env.js', () => ({
@@ -28,6 +29,7 @@ vi.mock('../../lib/prisma.js', () => ({
       work({
         authSession: { create: mocks.create, updateMany: mocks.revoke },
         auditLog: { create: mocks.audit },
+        loginThrottle: { deleteMany: mocks.throttleReset },
       }),
   }),
 }));
@@ -66,6 +68,15 @@ it('logs in with bcrypt, sends only an HttpOnly cookie, and reloads the active a
   });
   expect(mocks.user).toHaveBeenCalledWith({
     where: { email: 'officer@example.invalid' },
+  });
+  // Success clears only the hashed account counter, never the per-IP window.
+  expect(mocks.throttleReset).toHaveBeenCalledTimes(1);
+  expect(mocks.throttleReset).toHaveBeenCalledWith({
+    where: {
+      key: createHash('sha256')
+        .update('account:officer@example.invalid')
+        .digest('hex'),
+    },
   });
   const cookie = result.headers['set-cookie'][0];
   expect(cookie).toContain('HttpOnly');

@@ -8,6 +8,34 @@ export function alertScope(p: Principal): Prisma.AlertWhereInput {
     OR: [{ complaintId: null }, { complaint: bureauScope(p) }],
   };
 }
+const released = '#closed:';
+/** Automatic closure (condition cleared, transfer, disposal, archive). Resolves open alerts and
+ * releases their dedupe keys so a recurring condition raises a fresh alert. Manual resolution via
+ * PATCH keeps the key, so a still-current condition stays resolved. */
+export async function closeAlerts(
+  tx: Prisma.TransactionClient,
+  where: Prisma.AlertWhereInput,
+) {
+  await tx.alert.updateMany({
+    where: { ...where, resolvedAt: null },
+    data: { resolvedAt: new Date() },
+  });
+  const keyed = await tx.alert.findMany({
+    where: {
+      AND: [
+        where,
+        { dedupeKey: { not: null } },
+        { NOT: { dedupeKey: { contains: released } } },
+      ],
+    },
+    select: { id: true, dedupeKey: true },
+  });
+  for (const alert of keyed)
+    await tx.alert.update({
+      where: { id: alert.id },
+      data: { dedupeKey: `${alert.dedupeKey}${released}${alert.id}` },
+    });
+}
 export function desiredAlerts(
   c: {
     id: string;
@@ -54,8 +82,19 @@ export async function refreshAlerts(db: PrismaClient, p: Principal) {
   let cursor: string | undefined;
   let processed = 0;
   while (true) {
+    // Terminal cases need a visit only while an automatic alert is still open.
     const batch = await db.complaint.findMany({
-      where: bureauScope(p),
+      where: {
+        ...bureauScope(p),
+        OR: [
+          { status: { not: 'DISPOSED' }, archivedAt: null },
+          {
+            alerts: {
+              some: { resolvedAt: null, type: { in: ['DEADLINE', 'OVERLAP'] } },
+            },
+          },
+        ],
+      },
       select: { id: true, institutionId: true },
       orderBy: { id: 'asc' },
       take: 100,
@@ -70,14 +109,10 @@ export async function refreshAlerts(db: PrismaClient, p: Principal) {
         if (!c || c.institutionId !== entry.institutionId) return;
         const wanted = desiredAlerts(c, new Date(), hours),
           keys = wanted.map((a) => a.key);
-        await tx.alert.updateMany({
-          where: {
-            complaintId: c.id,
-            type: { in: ['DEADLINE', 'OVERLAP'] },
-            resolvedAt: null,
-            ...(keys.length ? { dedupeKey: { notIn: keys } } : {}),
-          },
-          data: { resolvedAt: new Date() },
+        await closeAlerts(tx, {
+          complaintId: c.id,
+          type: { in: ['DEADLINE', 'OVERLAP'] },
+          ...(keys.length ? { dedupeKey: { notIn: keys } } : {}),
         });
         for (const a of wanted)
           await tx.alert.upsert({

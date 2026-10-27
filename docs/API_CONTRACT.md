@@ -6,7 +6,7 @@ Base URL http://localhost:3001. JSON uses camelCase, opaque string IDs and UTC I
 
 All successful business responses wrap the displayed data in `{ "success": true, "data": ... }`. Lists add top-level `meta: { "page": 1, "pageSize": 20, "total": 25 }`. These example counts are illustrative. Default success HTTP status is 200; creation endpoints explicitly use 201. No pagination for bounded graph responses in this initial contract; enforce graph size limits during implementation.
 
-Errors use `{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": "Request validation failed", "details": [{"path":["title"],"message":"Required"}] } }`; details is optional and must never echo passwords/tokens. Common errors for protected routes: 401 UNAUTHENTICATED, 403 FORBIDDEN (role), 404 NOT_FOUND (missing or inaccessible resource), 500 INTERNAL_ERROR. Invalid inputs: 400 VALIDATION_ERROR. Invalid JSON: 400 INVALID_JSON; over 1 MB: 413 PAYLOAD_TOO_LARGE. Missing database configuration: 503 DATABASE_NOT_CONFIGURED. Auth helper without configured secret: 503 AUTH_NOT_CONFIGURED. All mutating requests require exact configured Origin or return 403 UNTRUSTED_ORIGIN. CORS uses credentials and a single configured frontend origin.
+Errors use `{ "success": false, "error": { "code": "VALIDATION_ERROR", "message": "Request validation failed", "details": [{"path":["title"],"message":"Required"}] } }`; details is optional and must never echo passwords/tokens. Common errors for protected routes: 401 UNAUTHENTICATED, 403 FORBIDDEN (role), 404 NOT_FOUND (missing or inaccessible resource), 500 INTERNAL_ERROR. Invalid inputs: 400 VALIDATION_ERROR. Invalid JSON: 400 INVALID_JSON; over 1 MB: 413 PAYLOAD_TOO_LARGE. Missing database configuration: 503 DATABASE_NOT_CONFIGURED. Database lock timeouts, pool exhaustion or lost connections: 503 DEPENDENCY_UNAVAILABLE (retry). Auth helper without configured secret: 503 AUTH_NOT_CONFIGURED. All mutating requests require exact configured Origin or return 403 UNTRUSTED_ORIGIN. CORS uses credentials and a single configured frontend origin.
 
 All authenticated reads/writes are bureau-scoped except ADMIN's explicitly authorized global scope. Cross-bureau matching does not reveal private details. Empty lists are 200 with items=[]; identifiers outside scope are 404. Passwords/tokens/hashes are never in response data. FRONTEND_URL is the browser origin; no wildcard with cookies.
 
@@ -19,6 +19,22 @@ Public; no parameters/body. Always process-liveness only, no DB/AI dependency. H
 ```
 
 Owner: Vishwak. AI GET /health is a separate public liveness endpoint and adds the active embedding mode.
+
+## GET /api/health/ready — implemented
+
+Public readiness for deployment health checks. Runs `SELECT 1` and reports configuration as booleans only; never returns URLs, secrets or error text. Ready requires the database and JWT_SECRET; the AI service is reported but optional because matching already fails closed with 503 AI_UNAVAILABLE.
+
+```json
+{
+  "success": true,
+  "data": {
+    "ready": true,
+    "checks": { "database": true, "auth": true, "aiConfigured": true }
+  }
+}
+```
+
+HTTP 503: `{ "success": false, "error": { "code": "NOT_READY", "message": "Database or authentication is not ready", "details": { "database": false, "auth": true, "aiConfigured": false } } }`.
 
 ## POST `/api/auth/login`
 
@@ -727,8 +743,8 @@ All endpoints below use the existing success/error envelopes, require authentica
 - `GET /api/complaints`: adds assignedToId, sortBy (createdAt/updatedAt/dueAt/title), sortOrder (asc/desc), archived (true/false, default false). q searches title/originalId/description case-insensitively. Cross-bureau filters from ordinary users return 403. List/detail responses add sourceBureauId, assignedToId, version, archivedAt; details also have createdById/resolvedAt.
 - `POST /api/complaints`: optionally accepts dueAt (ISO or null). Initial version=0; creator/source bureau derived server-side.
 - `POST /api/complaints/import/csv`: BUREAU_HEAD/ADMIN, body `{ "csv": "originalId,institutionId,bureauId,title,description,category\n..." }`. Required unique header names are the six shown; optional dueAt. Quoted commas/newlines/escaped quotes are supported. Empty dueAt means null. Same 1–100-row atomic import result as JSON import; 400 invalid CSV/rows, 409 duplicate reference.
-- `PATCH /api/complaints/:id`: body `{ "expectedVersion": 0, "reason": "Officer reviewed the record", "status": "UNDER_PROCESS" }`. Optional editable fields: title, description, category, dueAt, institutionId, assignedToId (ID/null), status, bureauId. At least one change required. OriginalId/sourceBureauId/creator cannot change. Returns updated complaint. Assignment/institution correction/disposal require BUREAU_HEAD/ADMIN; bureau transfer requires ADMIN and cannot include status. 409 STALE_COMPLAINT, INVALID_STATE, RELATIONSHIP_DEPENDENCY or COORDINATION_DEPENDENCY; 404 unknown/inaccessible references; 403 unauthorized workflow.
-- `DELETE /api/complaints/:id`: ADMIN-only archive, body `{ "expectedVersion": 3, "reason": "Archive disposed record" }`. Only DISPOSED may archive. Returns updated retained record, never hard-deletes.
+- `PATCH /api/complaints/:id`: body `{ "expectedVersion": 0, "reason": "Officer reviewed the record", "status": "UNDER_PROCESS" }`. Optional editable fields: title, description, category, dueAt, institutionId, assignedToId (ID/null), status, bureauId. At least one change required. OriginalId/sourceBureauId/creator cannot change. Returns updated complaint. Assignment/institution correction/disposal require BUREAU_HEAD/ADMIN; bureau transfer requires ADMIN and cannot include status. 409 STALE_COMPLAINT, INVALID_STATE, RELATIONSHIP_DEPENDENCY, COORDINATION_DEPENDENCY or DUPLICATE_REFERENCE (destination bureau already holds the same originalId); 404 unknown/inaccessible references; 403 unauthorized workflow. A request whose status equals the current status is accepted but is not a lifecycle event: no COMPLAINT_STATUS_CHANGED audit or STATUS_CHANGE alert is written. Transfer, disposal and archive automatically resolve the complaint's open alerts.
+- `DELETE /api/complaints/:id`: ADMIN-only archive, body `{ "expectedVersion": 3, "reason": "Archive disposed record" }`. Only DISPOSED, not-yet-archived complaints may archive (otherwise 409 INVALID_STATE). Returns updated retained record, never hard-deletes.
 - `GET /api/complaints/:id/actions`: paginated (page/pageSize) action history, scoped by both complaint and initiating bureau; returns data.items. Creation remains exclusively POST /api/actions through the Firewall.
 
 ### Reference directories and queues
@@ -743,7 +759,9 @@ All endpoints below use the existing success/error envelopes, require authentica
 
 GET /api/alerts adds `resolved=false|true|all` (default false), plus existing unreadOnly/page/pageSize. Items add resolvedAt/userId/dedupeKey. UserId identifies the assigned recipient; read/resolved states are bureau-shared.
 
-- `POST /api/alerts/refresh`: body `{}`, BUREAU_HEAD/ADMIN; refreshes authorized cases and returns `{ "processed": 25 }` (illustrative count).
+Resolution semantics: an alert resolved by a person (PATCH) keeps its dedupeKey, so refresh does not re-raise it while the same condition persists. Automatic resolution (condition cleared on refresh, transfer, disposal, archive) releases the key by renaming it to `<key>#closed:<alertId>`; if the condition recurs later, refresh creates a fresh alert. Condition keys: `deadline:<caseId>:<dueAt>:approaching|overdue`, `review:<caseId>`, `status:<caseId>:<version>`.
+
+- `POST /api/alerts/refresh`: body `{}`, BUREAU_HEAD/ADMIN; refreshes authorized cases and returns `{ "processed": 25 }` (illustrative count). Disposed/archived cases are skipped unless an automatic alert is still open.
 - `PATCH /api/alerts/:id`: body `{ "read": true, "resolved": true }`, either field may be omitted; returns authorized updated alert. 404 for inaccessible alerts.
 
 ### Reporting additions
@@ -753,8 +771,11 @@ Dashboard and reports accept optional inclusive `from`/`to` creation timestamps.
 ### Coordination workspaces — separate from decision API
 
 - `POST /api/coordination/workspaces`: BUREAU_HEAD/ADMIN, `{ "caseLinkId": "link-id" }`; 201 workspace. Confirmed relationship required; one workspace per link. Duplicate returns 409 DUPLICATE_REFERENCE.
-- `GET /api/coordination/workspaces`: page/pageSize, optional caseLinkId; paginated authorized workspaces.
+- `GET /api/coordination/workspaces`: page/pageSize, optional caseLinkId, complaintId and status (OPEN/IN_PROGRESS/COMPLETED); paginated authorized workspaces serialized from one consistent snapshot. A complaintId outside the caller's scope returns 404; use it to discover workspaces from a complaint detail page.
+- `GET /api/coordination/workspaces/:id/history`: authorized workspace; `data.items` in chronological order, one entry per version: `{ "event": "COORDINATION_WORKSPACE_UPDATED", "operation": "ASSIGN", "version": 1, "fromStatus": "OPEN", "toStatus": "OPEN", "actorId": "user-id", "fromCoordinatorId": null, "toCoordinatorId": "user-id", "coordinatorRestricted": false, "actionId": null, "actionRestricted": false, "createdAt": "2026-10-28T00:00:00.000Z" }`. The creation entry has event COORDINATION_WORKSPACE_CREATED and null operation. Actors, coordinators and actions from another bureau are null, with the matching restricted flag set for coordinators/actions. Audit rows written before 28 October 2026 carry no workspace reference, so events from before that date do not appear in history.
 - `GET /api/coordination/workspaces/:id`: authorized workspace.
 - `PATCH /api/coordination/workspaces/:id`: BUREAU_HEAD/ADMIN, `{ "expectedVersion": 0, "command": { "kind": "ASSIGN", "officerId": "user-id" } }`. Other commands: `{ "kind": "TRACK_ACTION", "actionId": "action-id" }` or `{ "kind": "SET_STATUS", "status": "OPEN|IN_PROGRESS|COMPLETED" }` (one literal status). Returns updated workspace. 409 STALE_COORDINATION/INVALID_STATE/CASE_CHANGED; 403 unauthorized assignment; 404 missing/inaccessible action/workspace.
+
+Complaint timelines show COORDINATION_WORKSPACE_CREATED (workspaceId) and COORDINATION_WORKSPACE_UPDATED (workspaceId, operation, version, fromStatus, toStatus) without coordinator or action identifiers.
 
 Workspace response fields: id, caseLinkId, status, version, createdAt, updatedAt, coordinatorId (nullable), coordinatorRestricted, involvedBureauIds, complaintIds, sharedActionIds. Complaint/action arrays include only authorized identifiers. Coordinator from the other bureau is null with coordinatorRestricted=true. No private evidence is shared implicitly.

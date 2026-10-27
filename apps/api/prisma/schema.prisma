@@ -123,8 +123,8 @@ model Complaint {
   institution         Institution           @relation(fields: [institutionId], references: [id], onDelete: Restrict)
   bureauId            String
   bureau              Bureau                @relation(fields: [bureauId], references: [id], onDelete: Restrict)
-  sourceBureauId      String?
-  sourceBureau        Bureau?               @relation("SourceBureau", fields: [sourceBureauId], references: [id], onDelete: Restrict)
+  sourceBureauId      String
+  sourceBureau        Bureau                @relation("SourceBureau", fields: [sourceBureauId], references: [id], onDelete: Restrict)
   assignedToId        String?
   assignedTo          User?                 @relation("AssignedOfficer", fields: [assignedToId], references: [id], onDelete: Restrict)
   createdById         String?

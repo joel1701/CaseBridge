@@ -1,7 +1,6 @@
 import 'dotenv/config';
 import { randomBytes } from 'node:crypto';
-import { writeFile } from 'node:fs/promises';
-import { readFile } from 'node:fs/promises';
+import { chmod, readFile, writeFile } from 'node:fs/promises';
 import { parse } from 'csv-parse/sync';
 import { z } from 'zod';
 import { getPrisma, disconnectPrisma } from '../src/lib/prisma.js';
@@ -222,21 +221,41 @@ async function seed() {
           update: {},
         });
     },
-    { timeout: 30000 },
+    // Hosted databases add per-statement latency to ~350 sequential upserts.
+    { timeout: 120000, maxWait: 10000 },
   );
-  if (newCredentials.length)
-    await writeFile(
-      new URL('../.seed-credentials.json', import.meta.url),
-      JSON.stringify(newCredentials, null, 2),
-      { mode: 0o600 },
-    );
+  if (newCredentials.length) {
+    // Merge so credentials of accounts created by an earlier run are not lost.
+    const file = new URL('../.seed-credentials.json', import.meta.url);
+    const previous = await readFile(file, 'utf8')
+      .then((text) =>
+        z
+          .array(z.object({ email: z.string(), password: z.string() }))
+          .parse(JSON.parse(text)),
+      )
+      .catch(() => []);
+    const merged = new Map(previous.map((c) => [c.email, c]));
+    for (const c of newCredentials) merged.set(c.email, c);
+    await writeFile(file, JSON.stringify([...merged.values()], null, 2), {
+      mode: 0o600,
+    });
+    await chmod(file, 0o600);
+  }
   console.log(
     'Synthetic seed complete; existing rows preserved. Newly created demo credentials are in apps/api/.seed-credentials.json (private, ignored).',
   );
 }
 seed()
   .catch((error) => {
-    console.error(error instanceof Error ? error.message : 'Seed failed');
+    if (error?.code === 'P2002')
+      console.error(
+        `Seed conflicts with an existing differently identified record (${
+          error.meta?.target ??
+          error.meta?.driverAdapterError?.cause?.constraint?.index ??
+          'unique constraint'
+        }); the transaction was rolled back and existing data is unchanged.`,
+      );
+    else console.error(error instanceof Error ? error.message : 'Seed failed');
     process.exitCode = 1;
   })
   .finally(disconnectPrisma);

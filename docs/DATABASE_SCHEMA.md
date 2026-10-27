@@ -39,4 +39,4 @@ Run migration then seed as in SETUP. No live database was provisioned by this re
 
 ## Operational extensions
 
-See CORE_BACKEND_INTEGRATION.md and migration 20261027000100_operational_backend for assignment/source bureau/version/lifecycle fields, AuthSession/LoginThrottle, alert resolution/deduplication, institution location and persistent coordination workspaces/shared actions. Existing delete restrictions remain; operational DELETE archives disposed complaints. Source-bureau/reference uniqueness preserves original identity through explicit administrator transfers.
+See CORE_BACKEND_INTEGRATION.md, migration 20261027000100_operational_backend and migration 20261028000100_source_bureau_not_null (Complaint.sourceBureauId is required) for assignment/source bureau/version/lifecycle fields, AuthSession/LoginThrottle, alert resolution/deduplication, institution location and persistent coordination workspaces/shared actions. Existing delete restrictions remain; operational DELETE archives disposed complaints. Source-bureau/reference uniqueness preserves original identity through explicit administrator transfers.

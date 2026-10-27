@@ -31,11 +31,13 @@ export async function login(
       'Authentication is not configured',
     );
   // Atomic database counters work across API workers. Never store raw addresses/email in throttle keys.
+  const throttleKey = (raw: string) =>
+    createHash('sha256').update(raw).digest('hex');
   for (const [raw, maximum] of [
     [`ip:${ip}`, 60],
     [`account:${email}`, 10],
   ] as const) {
-    const key = createHash('sha256').update(raw).digest('hex');
+    const key = throttleKey(raw);
     const rows = await db.$queryRaw<
       Array<{ attempts: number }>
     >`INSERT INTO "LoginThrottle" ("key","attempts","windowStart") VALUES (${key},1,NOW()) ON CONFLICT ("key") DO UPDATE SET "attempts" = CASE WHEN "LoginThrottle"."windowStart" < NOW() - INTERVAL '15 minutes' THEN 1 ELSE "LoginThrottle"."attempts"+1 END, "windowStart" = CASE WHEN "LoginThrottle"."windowStart" < NOW() - INTERVAL '15 minutes' THEN NOW() ELSE "LoginThrottle"."windowStart" END RETURNING "attempts"`;
@@ -72,6 +74,10 @@ export async function login(
     });
     await tx.auditLog.create({
       data: { actorId: user.id, event: 'AUTH_LOGIN', metadata: {} },
+    });
+    // Only a correct password clears the account counter; the per-IP window keeps counting.
+    await tx.loginThrottle.deleteMany({
+      where: { key: throttleKey(`account:${email}`) },
     });
   });
   return { token, user: publicUser(user) };

@@ -15,6 +15,17 @@ describe('foundation API', () => {
       message: 'CaseBridge API is running',
     });
   });
+  it('reports readiness as booleans without leaking configuration', async () => {
+    const res = await request(app).get('/api/health/ready');
+    if (!process.env.DATABASE_URL) {
+      expect(res.status).toBe(503);
+      expect(res.body.error).toMatchObject({
+        code: 'NOT_READY',
+        details: { database: false },
+      });
+    }
+    expect(JSON.stringify(res.body)).not.toMatch(/postgres|:\/\/|secret/i);
+  });
   it('returns consistent 404 and protected operational endpoints', async () => {
     expect((await request(app).get('/unknown')).body.error.code).toBe(
       'NOT_FOUND',

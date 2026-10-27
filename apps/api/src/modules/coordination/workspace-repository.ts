@@ -101,8 +101,14 @@ export class PrismaWorkspaceRepository implements WorkspaceRepository {
                 complaintId,
                 event: 'COORDINATION_WORKSPACE_UPDATED',
                 metadata: {
+                  workspaceId: event.workspaceId,
                   operation: event.operation,
                   version: event.version,
+                  fromStatus: event.fromStatus,
+                  toStatus: event.toStatus,
+                  fromCoordinatorId: event.fromCoordinatorId,
+                  toCoordinatorId: event.toCoordinatorId,
+                  actionId: event.actionId,
                 },
               },
             });

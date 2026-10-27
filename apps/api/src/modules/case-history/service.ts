@@ -27,6 +27,15 @@ const safeFields: Record<string, string[]> = {
   CASE_LINK_REVIEWED: ['status'],
   MATCH_ANALYSIS_COMPLETED: ['candidatesEvaluated'],
   COORDINATION_RECORDED: ['type'],
+  // Workspaces are visible to both involved bureaus; coordinator/action IDs stay out of timelines.
+  COORDINATION_WORKSPACE_CREATED: ['workspaceId'],
+  COORDINATION_WORKSPACE_UPDATED: [
+    'workspaceId',
+    'operation',
+    'version',
+    'fromStatus',
+    'toStatus',
+  ],
 };
 export function safeMetadata(
   event: string,

@@ -127,6 +127,7 @@ describe.skipIf(!enabled)('PostgreSQL intelligence integration', () => {
           id: id(row.id),
           institutionId: id(row.institutionId),
           bureauId: id(row.bureauId),
+          sourceBureauId: id(row.bureauId),
         },
       });
   }, 30000);
