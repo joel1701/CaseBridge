@@ -3,3 +3,5 @@ node_modules
 dist
 .venv
 apps/api/src/generated
+apps/ai/.model-cache/
+apps/ai/evaluation-local.json

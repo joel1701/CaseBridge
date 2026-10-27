@@ -1,12 +1,22 @@
 import { Router } from 'express';
-import { AppError } from '../../lib/errors.js';
+import { requireAuth, requireRole } from '../../middleware/auth.js';
+import { validateBody } from '../../middleware/validate.js';
+import { getPrisma } from '../../lib/prisma.js';
+import { coordinationSchema } from './validation.js';
+import { CoordinationService } from './service.js';
 export const router = Router();
-router.post('/coordination', (_req, _res, next) =>
-  next(
-    new AppError(
-      501,
-      'NOT_IMPLEMENTED',
-      'coordination is a foundation contract; implementation pending',
-    ),
-  ),
+router.post(
+  '/coordination',
+  requireAuth,
+  requireRole('BUREAU_HEAD', 'ADMIN'),
+  validateBody(coordinationSchema),
+  async (req, res) => {
+    res.status(201).json({
+      success: true,
+      data: await new CoordinationService(getPrisma()).record(
+        req.principal!,
+        req.body,
+      ),
+    });
+  },
 );

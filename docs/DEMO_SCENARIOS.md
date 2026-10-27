@@ -1,6 +1,6 @@
 # Synthetic demo scenarios
 
-All allegations and institutions are fictional. These describe expected future product behavior; the foundation does not implement intelligence or action workflows. IDs refer to `data/` fixtures.
+All allegations and institutions are fictional. Intelligence and action APIs are implemented; the complete UI and teammate-owned authentication workflows still require integration. See `JOEL_INTEGRATION.md` for verified behavior and limitations. IDs refer to `data/` fixtures.
 
 | Scenario                            | Records                               | Expected outcome                                                                                                                        |
 | ----------------------------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
