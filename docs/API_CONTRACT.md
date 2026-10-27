@@ -1,6 +1,6 @@
 # Initial API contract (v1)
 
-**Planned contract, not implemented business behavior.** All endpoints below currently return 501 NOT_IMPLEMENTED (writes require a trusted Origin first). Health works. Replace stubs only after adding authentication, roles, validation, bureau filtering and audit tests. No placeholder returns invented success data.
+**Implementation status:** Joel's seven intelligence/action/coordination endpoints are implemented; authentication issuance and operational feature endpoints remain 501 stubs. Health works. See [Joel integration notes](JOEL_INTEGRATION.md) for explicit additive response fields, validation clarifications, concurrency behavior and outstanding database verification. No stub returns invented success data.
 
 Base URL http://localhost:3001. JSON uses camelCase, opaque string IDs and UTC ISO 8601 timestamps. Reject unknown input fields. IDs are nonempty, max 128 characters. No request can choose its creator or elevate its role. Zod validation precedes business logic.
 

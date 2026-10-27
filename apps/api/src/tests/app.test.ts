@@ -32,7 +32,7 @@ describe('foundation API', () => {
   it('rejects foreign and missing origins on writes', async () => {
     for (const origin of ['', 'https://evil.example']) {
       const r = await request(app)
-        .post('/api/actions')
+        .post('/api/complaints')
         .set('Origin', origin)
         .send({});
       expect(r.status).toBe(403);
@@ -42,7 +42,7 @@ describe('foundation API', () => {
     expect(
       (
         await request(app)
-          .post('/api/actions')
+          .post('/api/complaints')
           .set('Origin', 'http://localhost:5173')
           .send({})
       ).status,

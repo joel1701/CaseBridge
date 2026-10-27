@@ -1,3 +1,3 @@
 # graph — Joel
 
-Foundation only. Routes return HTTP 501 without reading or writing data. Before replacing a stub: add requireAuth, requireRole, request validation, bureau-scoped database queries, audit events, and authorization tests. Read docs/API_CONTRACT.md. Cross-bureau links do not grant access to private descriptions.
+Permission-filtered, bounded graph projection over PostgreSQL. Namespaced node IDs, original metadata.recordId and relationship status are documented in docs/JOEL_INTEGRATION.md.

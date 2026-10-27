@@ -1,4 +1,3 @@
-import sys
 import numpy as np
 import pytest
 from fastapi.testclient import TestClient
@@ -10,9 +9,9 @@ from app.schemas import ComparisonRequest
 
 def test_health_does_not_load_model(monkeypatch):
     monkeypatch.setenv("EMBEDDING_MODE", "fixture")
+    monkeypatch.setattr("app.main.get_model", lambda: pytest.fail("Health must not load the model"))
     with TestClient(app) as client:
         assert client.get("/health").json()["success"] is True
-    assert "sentence_transformers" not in sys.modules
 
 def test_fixture_repeatable():
     assert np.array_equal(embed(["fee complaint"], "fixture"), embed(["fee complaint"], "fixture"))

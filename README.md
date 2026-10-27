@@ -4,7 +4,7 @@ Team Aarohan · Smart India Hackathon 2026 · SIH26264 (AICTE)
 
 A foundation for authorized cross-bureau complaint investigation and coordination. PGRC and RB may receive related complaints independently, leading to repeated evidence requests, duplicate investigations and delayed resolution. CaseBridge will help officers identify relationships while preserving original complaint IDs and bureau ownership.
 
-**Foundation only:** the browser shell and both health checks work. Business endpoints return 501. Login, complaint workflows, matching, Action Firewall and the graph are assigned team work, not completed functionality. All included data is fictional. This is not an official AICTE service.
+**Implementation status:** the browser remains a foundation shell. Joel's matching, Action Firewall, link review, graph and coordination-decision endpoints are implemented; login and complaint workflows remain assigned teammate work. See [Joel's integration handoff](docs/JOEL_INTEGRATION.md), including pending PostgreSQL verification and coordination-workspace schema dependencies. All included data is fictional. This is not an official AICTE service.
 
 ## Planned USPs
 
@@ -53,7 +53,7 @@ casebridge/
 └── scripts/        # shared automation guidance
 ```
 
-Browser → Express API → PostgreSQL. Express will call the private AI service; the browser never calls it directly. No inference route is exposed yet. Frontend mock mode is explicit (`VITE_USE_MOCKS=true`) and never used as a fallback for failed real requests.
+Browser → Express API → PostgreSQL. Express will call the private AI service; the browser never calls it directly. The AI exposes a service-token-protected batch similarity route. Frontend mock mode is explicit (`VITE_USE_MOCKS=true`) and never used as a fallback for failed real requests.
 
 | Member  | Start here                                                                                  |
 | ------- | ------------------------------------------------------------------------------------------- |

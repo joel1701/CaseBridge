@@ -60,9 +60,9 @@ cp .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-Use `pip install -r requirements-base.txt` instead for health/fixture tests without the ML runtime. Both installation paths avoid model downloads. Default EMBEDDING_MODE=fixture uses deterministic hash buckets, not semantic embeddings. Set EMBEDDING_MODE=transformer to use MiniLM. Model loading is lazy and local-cache-only unless ALLOW_MODEL_DOWNLOAD=true. PRELOAD_MODEL=true explicitly loads at startup in transformer mode; failure then prevents startup rather than silently falling back. Model download requires network access and disk space. Do not enable it accidentally in CI.
+Use `pip install -r requirements-base.txt` instead for tests without the ML runtime. Both installation paths avoid model downloads. The default EMBEDDING_MODE=transformer uses MiniLM; fixture mode is an explicit test utility and is rejected by the Express matching integration. Model loading is lazy and local-cache-only unless ALLOW_MODEL_DOWNLOAD=true. PRELOAD_MODEL=true attempts startup loading; unavailable weights leave inference unavailable without silently falling back. Model download requires network access and disk space.
 
-`ComparisonRequest/Response` and compare utility are ready for Joel; no public inference endpoint exists. Health is liveness, not model or database readiness.
+Authenticated batch inference is available at `POST /v1/similarities`. Configure the same AI_SERVICE_TOKEN (at least 32 characters) in both services. Health is liveness, not model or database readiness. See [Joel integration](JOEL_INTEGRATION.md) for setup, contracts and measured evaluation.
 
 ```sh
 .venv/bin/python -m pytest
@@ -78,7 +78,7 @@ npm run build
 npm run format:check
 ```
 
-`npm run build -w @casebridge/web` builds without a DB. API: `npm run build -w @casebridge/api` then `npm start -w @casebridge/api`. For Vercel, install at repository root, build the web workspace, output `apps/web/dist`; the included SPA rewrite supports direct route loads. For Render API, install with `npm ci`, build API, start the API workspace; set API_PORT to the platform port. AI: install requirements and start `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"`. Supply production origin, HTTPS cookie configuration and secrets in provider settings. Configure private AI connectivity before adding inference.
+`npm run build -w @casebridge/web` builds without a DB. API: `npm run build -w @casebridge/api` then `npm start -w @casebridge/api`. For Vercel, install at repository root, build the web workspace, output `apps/web/dist`; the included SPA rewrite supports direct route loads. For Render API, install with `npm ci`, build API, start the API workspace; set API_PORT to the platform port. AI: install requirements and start `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"`. Supply production origin, HTTPS cookie configuration and secrets in provider settings. Configure private AI connectivity and the shared service token before enabling matching.
 
 ## Troubleshooting
 

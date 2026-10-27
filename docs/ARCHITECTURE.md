@@ -8,7 +8,7 @@ flowchart LR
   I --> M[Lazy MiniLM encoder]
 ```
 
-Only health endpoints and UI navigation are functional today. The API does not call AI yet. Feature routers expose explicit 501 responses until owners implement authorization and business logic. The AI only exposes health; comparison functions and Pydantic schemas are internal foundations.
+Joel's intelligence/action/coordination routers now implement their contracts and call an authenticated private FastAPI batch-similarity endpoint. Operational/auth issuance routers remain 501 stubs. See [Joel integration notes](JOEL_INTEGRATION.md) for model/rule behavior, transactional concurrency, schema handoff and verification limits.
 
 React Router owns navigation; TanStack Query owns async server state; Axios sends credentialed API calls. `VITE_USE_MOCKS=true` selects a separate typed fixture adapter at build/start time. Errors never silently select mocks. Mock data is public synthetic content, not an authorization mechanism.
 
