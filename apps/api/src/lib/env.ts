@@ -6,6 +6,7 @@ export const env = z
     NODE_ENV: z
       .enum(['development', 'test', 'production'])
       .default('development'),
+    TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
     API_PORT: z.coerce.number().int().min(1).max(65535).default(3001),
     FRONTEND_URL: z.url().default('http://localhost:5173'),
     AI_SERVICE_URL: z.url().default('http://localhost:8000'),

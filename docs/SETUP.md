@@ -17,9 +17,9 @@ npm run dev
 
 Frontend http://localhost:5173; API http://localhost:3001/api/health. Root `.env.example` is a reference; each app reads its own `.env`. The workspace commands run in the correct application directory. Never commit `.env`.
 
-Generate an auth secret with `openssl rand -hex 32` and place it in `apps/api/.env` as JWT_SECRET. Do not paste it in commits. Blank is accepted in development so health/stubs run; production requires a secret. Login still returns 501 until implemented.
+Generate an auth secret with `openssl rand -hex 32` and place it in `apps/api/.env` as JWT_SECRET. Do not paste it in commits. Blank is accepted in development so health/stubs run; production requires a secret. Login requires the migrated database and an active account; see CORE_BACKEND_INTEGRATION.md.
 
-Mock mode: `VITE_USE_MOCKS=true` returns typed synthetic data. Set false and restart Vite for real API requests; pending endpoints visibly fail with 501. Vite variables are public and embedded at build time. No password/database/JWT secret belongs in them.
+Mock mode: `VITE_USE_MOCKS=true` returns typed synthetic data. Set false and restart Vite for real API requests; API failures remain visible and never silently select mocks. Vite variables are public and embedded at build time. No password/database/JWT secret belongs in them.
 
 ## PostgreSQL
 
@@ -45,7 +45,7 @@ npm run db:seed
 
 `db:deploy` applies the checked-in baseline migration. For later schema edits use `npm run db:migrate -- --name describe_change` (the root workspace forwarding may require running `npm run db:migrate -w @casebridge/api -- --name describe_change` directly). Commit resulting migrations. Migration development requires a database role allowed to create a shadow database or an explicitly configured shadow URL. `db:generate` and validate do not connect to PostgreSQL.
 
-Seed creates 2 bureaus, 10 institutions, 25 complaints, 4 actions, a suggestion and an alert. Optional `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` create a demo admin with a bcrypt hash. Password must be 12+ characters and <=72 UTF-8 bytes. No default account/password exists. Seed only against a development database; it preserves existing records.
+Seed creates 2 bureaus, 10 institutions, 125 complaints, 4 actions, a suggestion, an alert and five role-varied demo accounts. Their newly generated credentials are saved privately in apps/api/.seed-credentials.json (Git-ignored, mode 0600), or set SEED_DEMO_PASSWORD for initial creation. Optional `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` create a demo admin with a bcrypt hash. Password must be 12+ characters and <=72 UTF-8 bytes. No fixed default password is embedded in source. Seed only against a development database; it preserves existing records.
 
 ## AI service
 
@@ -60,9 +60,9 @@ cp .env.example .env
 uvicorn app.main:app --reload --port 8000
 ```
 
-Use `pip install -r requirements-base.txt` instead for health/fixture tests without the ML runtime. Both installation paths avoid model downloads. Default EMBEDDING_MODE=fixture uses deterministic hash buckets, not semantic embeddings. Set EMBEDDING_MODE=transformer to use MiniLM. Model loading is lazy and local-cache-only unless ALLOW_MODEL_DOWNLOAD=true. PRELOAD_MODEL=true explicitly loads at startup in transformer mode; failure then prevents startup rather than silently falling back. Model download requires network access and disk space. Do not enable it accidentally in CI.
+Use `pip install -r requirements-base.txt` instead for tests without the ML runtime. Both installation paths avoid model downloads. The default EMBEDDING_MODE=transformer uses MiniLM; fixture mode is an explicit test utility and is rejected by the Express matching integration. Model loading is lazy and local-cache-only unless ALLOW_MODEL_DOWNLOAD=true. PRELOAD_MODEL=true attempts startup loading; unavailable weights leave inference unavailable without silently falling back. Model download requires network access and disk space.
 
-`ComparisonRequest/Response` and compare utility are ready for Joel; no public inference endpoint exists. Health is liveness, not model or database readiness.
+Authenticated batch inference is available at `POST /v1/similarities`. Configure the same AI_SERVICE_TOKEN (at least 32 characters) in both services. Health is liveness, not model or database readiness. See [Joel integration](JOEL_INTEGRATION.md) for setup, contracts and measured evaluation.
 
 ```sh
 .venv/bin/python -m pytest
@@ -78,7 +78,7 @@ npm run build
 npm run format:check
 ```
 
-`npm run build -w @casebridge/web` builds without a DB. API: `npm run build -w @casebridge/api` then `npm start -w @casebridge/api`. For Vercel, install at repository root, build the web workspace, output `apps/web/dist`; the included SPA rewrite supports direct route loads. For Render API, install with `npm ci`, build API, start the API workspace; set API_PORT to the platform port. AI: install requirements and start `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"`. Supply production origin, HTTPS cookie configuration and secrets in provider settings. Configure private AI connectivity before adding inference.
+`npm run build -w @casebridge/web` builds without a DB. API: `npm run build -w @casebridge/api` then `npm start -w @casebridge/api`. For Vercel, install at repository root, build the web workspace, output `apps/web/dist`; the included SPA rewrite supports direct route loads. For Render API, install with `npm ci`, build API, start the API workspace; set API_PORT to the platform port. AI: install requirements and start `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"`. Supply production origin, HTTPS cookie configuration and secrets in provider settings. Configure private AI connectivity and the shared service token before enabling matching.
 
 ## Troubleshooting
 
@@ -87,6 +87,6 @@ npm run format:check
 - P1001/connection failures: verify PostgreSQL is running, DATABASE_URL and provider TLS settings. Health alone does not test DB connectivity.
 - Model unavailable: fixture mode is offline; transformer mode needs cached weights or explicit ALLOW_MODEL_DOWNLOAD=true.
 - CORS/cookie issues: FRONTEND_URL must match the browser origin exactly (localhost and 127.0.0.1 differ). Writes require Origin. Production requires HTTPS; cross-site cookies need SameSite=None and may still face browser restrictions.
-- 501: expected for unfinished routes, including login. No authentication bypass is supplied.
+- 401: sign in using a seeded/provisioned active account. Old manually minted tokens without a database session are invalid. No authentication bypass is supplied.
 - npm cache permission errors: choose a writable cache with `npm install --cache /tmp/casebridge-npm-cache`; do not change home-directory ownership as a routine fix.
 - Port busy: stop the process using 5173/3001/8000 or update both service config and consumers. Vite uses strictPort to avoid a hidden CORS mismatch.

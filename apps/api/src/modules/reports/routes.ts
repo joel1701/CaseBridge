@@ -1,21 +1,17 @@
 import { Router } from 'express';
-import { AppError } from '../../lib/errors.js';
+import { requireAuth } from '../../middleware/auth.js';
+import { getPrisma } from '../../lib/prisma.js';
+import { parseInput } from '../case-links/access.js';
+import { summary, reportSchema } from './service.js';
 export const router = Router();
-router.get('/dashboard/summary', (_req, _res, next) =>
-  next(
-    new AppError(
-      501,
-      'NOT_IMPLEMENTED',
-      'reports is a foundation contract; implementation pending',
-    ),
-  ),
-);
-router.get('/reports/summary', (_req, _res, next) =>
-  next(
-    new AppError(
-      501,
-      'NOT_IMPLEMENTED',
-      'reports is a foundation contract; implementation pending',
-    ),
-  ),
-);
+for (const path of ['/dashboard/summary', '/reports/summary'])
+  router.get(path, requireAuth, async (req, res) =>
+    res.json({
+      success: true,
+      data: await summary(
+        getPrisma(),
+        req.principal!,
+        parseInput(reportSchema, req.query),
+      ),
+    }),
+  );
