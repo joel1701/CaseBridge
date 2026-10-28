@@ -16,9 +16,14 @@ async function run() {
   );
 }
 run()
-  .catch(() => {
+  .catch((error: unknown) => {
+    // Codes only (e.g. P1001, DATABASE_NOT_CONFIGURED); messages may embed connection details.
+    const code =
+      typeof error === 'object' && error && 'code' in error
+        ? String(error.code)
+        : 'UNKNOWN';
     console.error(
-      'Alert refresh failed; inspect database connectivity and configuration.',
+      `Alert refresh failed (${code}); inspect database connectivity and configuration.`,
     );
     process.exitCode = 1;
   })

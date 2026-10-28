@@ -126,7 +126,10 @@ function fakeDb(overrides: Record<string, unknown> = {}) {
   };
   const tx = {
     complaint: {
-      findFirst: vi.fn(async () => record),
+      // Honour the id filter so lookups for other records (e.g. destination duplicates) miss.
+      findFirst: vi.fn(async (args?: { where?: { id?: string } }) =>
+        args?.where?.id === record.id ? record : null,
+      ),
       updateMany: vi.fn(async () => ({ count: 1 })),
       findUniqueOrThrow: vi.fn(async () => ({ ...record, version: 1 })),
     },
@@ -139,6 +142,8 @@ function fakeDb(overrides: Record<string, unknown> = {}) {
     alert: {
       create: vi.fn(async () => ({})),
       updateMany: vi.fn(async () => ({ count: 0 })),
+      findMany: vi.fn(async () => []),
+      update: vi.fn(async () => ({})),
     },
     $executeRaw: vi.fn(),
     $queryRaw: vi.fn(),
@@ -224,4 +229,87 @@ it('refuses institution moves that would invalidate reviewed relationships', asy
       institutionId: 'j',
     }),
   ).rejects.toMatchObject({ code: 'RELATIONSHIP_DEPENDENCY' });
+});
+it('treats same-status requests as non-lifecycle events', async () => {
+  const { db, tx } = fakeDb();
+  await new ComplaintService(db).update(officer, 'c', {
+    expectedVersion: 0,
+    reason: 'confirm status',
+    status: 'RECEIVED',
+  });
+  expect(tx.auditLog.create).toHaveBeenCalledWith(
+    expect.objectContaining({
+      data: expect.objectContaining({ event: 'COMPLAINT_UPDATED' }),
+    }),
+  );
+  expect(tx.auditLog.create).not.toHaveBeenCalledWith(
+    expect.objectContaining({
+      data: expect.objectContaining({ event: 'COMPLAINT_STATUS_CHANGED' }),
+    }),
+  );
+  expect(tx.alert.create).not.toHaveBeenCalled();
+});
+it('refuses transfers into a bureau that already holds the original reference', async () => {
+  const { db, tx } = fakeDb();
+  const lookup = tx.complaint.findFirst.getMockImplementation()!;
+  // The destination bureau already holds the same originalId under another id.
+  tx.complaint.findFirst.mockImplementation(async (args) =>
+    (args?.where as { bureauId?: string })?.bureauId === 'RB'
+      ? ({ id: 'existing' } as never)
+      : lookup(args),
+  );
+  await expect(
+    new ComplaintService(db).update(admin, 'c', {
+      expectedVersion: 0,
+      reason: 'transfer',
+      bureauId: 'RB',
+    }),
+  ).rejects.toMatchObject({ status: 409, code: 'DUPLICATE_REFERENCE' });
+  expect(tx.complaint.updateMany).not.toHaveBeenCalled();
+});
+it('closes alerts and releases their keys on transfer, and refuses re-archiving', async () => {
+  const { db, tx } = fakeDb();
+  tx.alert.findMany.mockResolvedValue([
+    { id: 'a1', dedupeKey: 'review:c' },
+  ] as never);
+  await new ComplaintService(db).update(admin, 'c', {
+    expectedVersion: 0,
+    reason: 'transfer authorized',
+    bureauId: 'RB',
+  });
+  expect(tx.alert.updateMany).toHaveBeenCalledWith({
+    where: { complaintId: 'c', resolvedAt: null },
+    data: { resolvedAt: expect.any(Date) },
+  });
+  expect(tx.alert.update).toHaveBeenCalledWith({
+    where: { id: 'a1' },
+    data: { dedupeKey: 'review:c#closed:a1' },
+  });
+  const archived = fakeDb();
+  archived.tx.complaint.findFirst.mockResolvedValue({
+    id: 'c',
+    institutionId: 'i',
+    version: 3,
+    status: 'DISPOSED',
+    archivedAt: new Date(),
+  } as never);
+  await expect(
+    new ComplaintService(archived.db).archive(admin, 'c', 3, 'again'),
+  ).rejects.toMatchObject({ code: 'INVALID_STATE' });
+  expect(archived.tx.auditLog.create).not.toHaveBeenCalled();
+});
+it('maps advisory lock timeouts to a retryable 503 instead of a 500', async () => {
+  const db = {
+    $transaction: async () => {
+      throw Object.assign(
+        new Error('canceling statement due to lock timeout'),
+        {
+          code: 'P2010',
+        },
+      );
+    },
+  } as unknown as PrismaClient;
+  await expect(
+    withInstitutions(db, ['i'], async () => 1),
+  ).rejects.toMatchObject({ status: 503, code: 'DEPENDENCY_UNAVAILABLE' });
 });

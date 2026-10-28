@@ -77,3 +77,35 @@ it('validates coordinator assignment, action tracking, responsibility and status
     }),
   ).rejects.toMatchObject({ code: 'STALE_COORDINATION' });
 });
+it('audits before/after responsibility so coordinator handovers are traceable', async () => {
+  const { repo, audit } = repository();
+  const service = new CoordinationWorkspaceService(repo);
+  await service.update(principal, 'w', 0, { kind: 'ASSIGN', officerId: 'own' });
+  await service.update(principal, 'w', 1, {
+    kind: 'ASSIGN',
+    officerId: 'successor',
+  });
+  await service.update(principal, 'w', 2, {
+    kind: 'SET_STATUS',
+    status: 'IN_PROGRESS',
+  });
+  expect(audit.mock.calls.map(([event]) => event)).toEqual([
+    expect.objectContaining({
+      operation: 'ASSIGN',
+      fromCoordinatorId: null,
+      toCoordinatorId: 'own',
+      actionId: null,
+    }),
+    expect.objectContaining({
+      operation: 'ASSIGN',
+      fromCoordinatorId: 'own',
+      toCoordinatorId: 'successor',
+    }),
+    expect.objectContaining({
+      operation: 'SET_STATUS',
+      fromStatus: 'OPEN',
+      toStatus: 'IN_PROGRESS',
+      version: 3,
+    }),
+  ]);
+});

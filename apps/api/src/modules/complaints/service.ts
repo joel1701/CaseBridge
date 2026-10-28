@@ -9,6 +9,7 @@ import { authorizedComplaint, requireReviewer } from '../case-links/access.js';
 import { AppError } from '../../lib/errors.js';
 import { recordAudit } from '../case-history/service.js';
 import { withInstitutions } from './transaction.js';
+import { closeAlerts } from '../alerts/service.js';
 import type {
   CreateComplaint,
   ComplaintChanges,
@@ -166,7 +167,9 @@ export class ComplaintService {
             input.status === 'DISPOSED'
               ? (current.resolvedAt ?? new Date())
               : null;
-          events.push('COMPLAINT_STATUS_CHANGED');
+          // Same-status requests are accepted but are not a lifecycle event.
+          if (input.status !== current.status)
+            events.push('COMPLAINT_STATUS_CHANGED');
         }
         if (input.assignedToId !== undefined) {
           requireReviewer(p);
@@ -225,13 +228,24 @@ export class ComplaintService {
               'COORDINATION_DEPENDENCY',
               'Ownership is referenced by a coordination workspace',
             );
+          if (
+            await tx.complaint.findFirst({
+              where: {
+                bureauId: input.bureauId,
+                originalId: current.originalId,
+              },
+              select: { id: true },
+            })
+          )
+            throw new AppError(
+              409,
+              'DUPLICATE_REFERENCE',
+              'Destination bureau already holds this original reference',
+            );
           data.sourceBureauId = current.sourceBureauId ?? current.bureauId;
           data.status = 'TRANSFERRED';
           data.assignedToId = input.assignedToId ?? null;
-          await tx.alert.updateMany({
-            where: { complaintId: id, resolvedAt: null },
-            data: { resolvedAt: new Date() },
-          });
+          await closeAlerts(tx, { complaintId: id });
           events.push('COMPLAINT_TRANSFERRED');
         }
         if (
@@ -290,6 +304,11 @@ export class ComplaintService {
           });
         const updated = await tx.complaint.findUniqueOrThrow({ where: { id } });
         if (
+          updated.status === 'DISPOSED' &&
+          events.includes('COMPLAINT_STATUS_CHANGED')
+        )
+          await closeAlerts(tx, { complaintId: id });
+        if (
           events.includes('COMPLAINT_STATUS_CHANGED') ||
           events.includes('COMPLAINT_TRANSFERRED')
         )
@@ -337,10 +356,13 @@ export class ComplaintService {
           'INVALID_STATE',
           'Dispose the complaint before archiving',
         );
+      if (record.archivedAt)
+        throw new AppError(409, 'INVALID_STATE', 'Complaint already archived');
       const result = await tx.complaint.update({
         where: { id },
         data: { archivedAt: new Date(), version: { increment: 1 } },
       });
+      await closeAlerts(tx, { complaintId: id });
       await recordAudit(tx, p.id, id, 'COMPLAINT_ARCHIVED', {
         reason,
         version: result.version,

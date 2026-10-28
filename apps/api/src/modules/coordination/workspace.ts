@@ -27,12 +27,19 @@ export interface WorkspaceTransaction {
     workspace: CoordinationWorkspace,
     expectedVersion: number,
   ): Promise<boolean>;
-  audit(event: {
-    actorId: string;
-    workspaceId: string;
-    operation: string;
-    version: number;
-  }): Promise<void>;
+  audit(event: WorkspaceAuditEvent): Promise<void>;
+}
+/** Before/after values form the responsibility history; HTTP adapters redact cross-bureau IDs. */
+export interface WorkspaceAuditEvent {
+  actorId: string;
+  workspaceId: string;
+  operation: string;
+  version: number;
+  fromStatus: CoordinationWorkspace['status'];
+  toStatus: CoordinationWorkspace['status'];
+  fromCoordinatorId: string | null;
+  toCoordinatorId: string | null;
+  actionId: string | null;
 }
 export interface WorkspaceRepository {
   transaction<T>(work: (tx: WorkspaceTransaction) => Promise<T>): Promise<T>;
@@ -114,6 +121,11 @@ export class CoordinationWorkspaceService {
         workspaceId: id,
         operation: command.kind,
         version: next.version,
+        fromStatus: current.status,
+        toStatus: next.status,
+        fromCoordinatorId: current.coordinatorId,
+        toCoordinatorId: next.coordinatorId,
+        actionId: command.kind === 'TRACK_ACTION' ? command.actionId : null,
       });
       return next;
     });
