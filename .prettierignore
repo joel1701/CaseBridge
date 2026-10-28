@@ -6,3 +6,7 @@ apps/api/src/generated
 apps/ai/.model-cache/
 apps/ai/evaluation-local.json
 apps/api/.seed-credentials.json
+.github/agents
+.github/skills
+.impeccable
+temp_critique_body.md

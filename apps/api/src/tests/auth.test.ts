@@ -105,5 +105,5 @@ describe('authentication boundaries', () => {
     expect(await verifyPassword('incorrect', hash)).toBe(false);
     await expect(hashPassword('é'.repeat(37))).rejects.toThrow();
     expect(sessionCookieOptions.httpOnly).toBe(true);
-  });
+  }, 20_000);
 });

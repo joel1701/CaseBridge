@@ -1,5 +1,6 @@
 import { createBrowserRouter, Link } from 'react-router';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { LandingPage } from '@/features/landing/LandingPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
 import { LoginPage } from '@/features/auth/LoginPage';
 import { ComplaintsPage } from '@/features/complaints/ComplaintsPage';
@@ -11,11 +12,24 @@ import { InvestigationPage } from '@/features/investigations/InvestigationPage';
 import { GraphPage } from '@/features/graph/GraphPage';
 import { ReportsPage } from '@/features/reports/ReportsPage';
 import { AlertsPage } from '@/features/dashboard/AlertsPage';
+
 export const router = createBrowserRouter([
+  // Public Editorial Landing Page
+  {
+    path: '/',
+    element: <LandingPage />,
+  },
+  {
+    path: '/landing',
+    element: <LandingPage />,
+  },
+
+  // Internal Investigation & Coordination Workspace
   {
     element: <AppLayout />,
     children: [
-      { path: '/', element: <DashboardPage /> },
+      { path: '/dashboard', element: <DashboardPage /> },
+      { path: '/app', element: <DashboardPage /> },
       { path: '/login', element: <LoginPage /> },
       { path: '/complaints', element: <ComplaintsPage /> },
       { path: '/complaints/new', element: <NewComplaintPage /> },
@@ -29,11 +43,27 @@ export const router = createBrowserRouter([
       {
         path: '*',
         element: (
-          <section>
-            <h1 className="text-3xl font-semibold">Page not found</h1>
-            <Link className="mt-4 inline-block underline" to="/">
-              Return to dashboard
-            </Link>
+          <section className="py-12">
+            <h1 className="text-3xl font-semibold text-gray-900">
+              Page not found
+            </h1>
+            <p className="mt-2 text-sm text-gray-600">
+              The requested resource could not be found within the workspace.
+            </p>
+            <div className="mt-6 flex items-center gap-4">
+              <Link
+                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity"
+                to="/dashboard"
+              >
+                Go to Dashboard
+              </Link>
+              <Link
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+                to="/"
+              >
+                Return to Landing Page
+              </Link>
+            </div>
           </section>
         ),
       },

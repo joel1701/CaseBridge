@@ -9,6 +9,7 @@ export default tseslint.config(
       '**/node_modules/**',
       '**/generated/**',
       '**/.venv/**',
+      '.github/skills/**',
     ],
   },
   js.configs.recommended,
