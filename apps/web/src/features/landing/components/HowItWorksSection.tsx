@@ -53,8 +53,11 @@ export function HowItWorksSection() {
                 className="rounded-2xl border border-slate-200 bg-white p-8 hover:border-blue-300 hover:shadow-md transition-all duration-200 flex flex-col justify-between"
               >
                 <div>
-                  <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 font-bold flex items-center justify-center text-sm mb-6 border border-blue-100">
-                    {step.number}
+                  <div className="mb-6 flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-lg bg-blue-50 text-blue-700 font-bold flex items-center justify-center text-sm border border-blue-100">
+                      {step.number}
+                    </div>
+                    <Icon className="h-5 w-5 text-blue-700" aria-hidden="true" />
                   </div>
 
                   <h3 className="font-heading text-xl font-bold text-slate-900 mb-3">
