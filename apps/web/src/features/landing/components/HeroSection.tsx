@@ -5,7 +5,6 @@ export function HeroSection() {
   return (
     <section className="relative bg-white pt-16 pb-16 lg:pt-24 lg:pb-20 border-b border-slate-100">
       <div className="mx-auto max-w-5xl px-6 lg:px-8 text-center">
-        
         {/* Direct, Natural Heading - No Eyebrow Pill */}
         <h1 className="font-heading text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 leading-[1.12] max-w-4xl mx-auto">
           Investigate related complaints in one workspace.
@@ -13,7 +12,10 @@ export function HeroSection() {
 
         {/* Supporting Plain-Language Narrative */}
         <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed font-body max-w-3xl mx-auto">
-          CaseBridge helps AICTE Public Grievance Redressal Cell and Regional Bureau officers review student and faculty grievances, spot missing evidence early, and coordinate before sending duplicate notices to institutions.
+          CaseBridge helps AICTE Public Grievance Redressal Cell and Regional
+          Bureau officers review student and faculty grievances, spot missing
+          evidence early, and coordinate before sending duplicate notices to
+          institutions.
         </p>
 
         {/* Primary and Secondary Actions */}
@@ -36,9 +38,10 @@ export function HeroSection() {
 
         {/* Understated Verification Note */}
         <p className="mt-12 text-xs text-slate-500 font-body max-w-2xl mx-auto">
-          Evaluated on 25 synthetic AICTE grievances across PGRC and Regional Bureau queues. Assistive review only—all regulatory determinations remain with authorized officers.
+          Evaluated on 25 synthetic AICTE grievances across PGRC and Regional
+          Bureau queues. Assistive review only—all regulatory determinations
+          remain with authorized officers.
         </p>
-
       </div>
     </section>
   );

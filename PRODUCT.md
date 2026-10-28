@@ -25,6 +25,7 @@ Used in government and legal-aid desktop casework environments during complaint 
 ## Capabilities and Constraints
 
 Capabilities today:
+
 - Verbatim narrative intake preservation with cryptographic immutability.
 - Structured parameter extraction: statutory category, timeline dates, disputed financial amounts, and respondent institution entities.
 - Evidentiary gap surfacing: explicit identification of missing receipts, unverified circulars, and absent documentation.
@@ -34,6 +35,7 @@ Capabilities today:
 - Public editorial landing page communicating platform capabilities and routing caseworkers to internal workspaces.
 
 Technical constraints & current phase:
+
 - Foundation prototype: browser shell, route layout, health checks, mock adapters (`VITE_USE_MOCKS=true`), and synthetic fixtures are active.
 - Real API endpoints currently return 501 placeholders until backend modules are connected.
 - Zero automated sanctions: CaseBridge outputs are assistive drafts; all determinations require an authorized human officer.

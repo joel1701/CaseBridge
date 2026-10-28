@@ -1,27 +1,36 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
-import { ShieldAlert, ArrowRight, AlertTriangle, UserCheck } from 'lucide-react';
+import {
+  ShieldAlert,
+  ArrowRight,
+  AlertTriangle,
+  UserCheck,
+} from 'lucide-react';
 
 export function ActionFirewallSection() {
   const [isCoordinated, setIsCoordinated] = useState(false);
 
   return (
-    <section id="action-firewall" className="relative bg-slate-50 py-20 lg:py-28 border-b border-slate-200">
+    <section
+      id="action-firewall"
+      className="relative bg-slate-50 py-20 lg:py-28 border-b border-slate-200"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        
         {/* Section Header - Direct, No Eyebrow Pill */}
         <div className="max-w-3xl mb-14">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
             Stop duplicate notices before they reach institutions.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600 font-body leading-relaxed">
-            When independent bureaus review the same institution, uncoordinated inquiries create confusion and repeated evidence burdens. CaseBridge checks proposed actions across bureau calendars to recommend joint proceedings.
+            When independent bureaus review the same institution, uncoordinated
+            inquiries create confusion and repeated evidence burdens. CaseBridge
+            checks proposed actions across bureau calendars to recommend joint
+            proceedings.
           </p>
         </div>
 
         {/* Interactive Conflict Resolution Card */}
         <div className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10 shadow-sm">
-          
           {/* Top Status Header */}
           <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-100">
             <div className="flex items-center gap-3">
@@ -29,7 +38,9 @@ export function ActionFirewallSection() {
                 <ShieldAlert className="w-5 h-5" />
               </div>
               <div>
-                <span className="text-xs text-slate-500 block">Institution under review</span>
+                <span className="text-xs text-slate-500 block">
+                  Institution under review
+                </span>
                 <strong className="text-base font-heading font-bold text-slate-900">
                   Aaravika Institute of Engineering
                 </strong>
@@ -44,14 +55,15 @@ export function ActionFirewallSection() {
                     : 'bg-amber-50 text-amber-800 border-amber-200'
                 }`}
               >
-                {isCoordinated ? 'Joint notice approved' : 'Duplicate notice detected'}
+                {isCoordinated
+                  ? 'Joint notice approved'
+                  : 'Duplicate notice detected'}
               </span>
             </div>
           </div>
 
           {/* 3-Column Visual: Bureau A | Collision Warning | Bureau B */}
           <div className="mt-8 grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
-            
             {/* Bureau 01: PGRC Action */}
             <div className="lg:col-span-4 rounded-xl border border-slate-200 bg-slate-50/70 p-5">
               <div className="flex items-center justify-between pb-2 border-b border-slate-200 mb-3">
@@ -66,7 +78,8 @@ export function ActionFirewallSection() {
                 Evidence request: Q3 fee ledgers
               </strong>
               <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                Requesting complete admission fee accounts for July–September 2026 to verify unapproved cash collections.
+                Requesting complete admission fee accounts for July–September
+                2026 to verify unapproved cash collections.
               </p>
               <div className="text-[11px] text-slate-500">
                 Due: Nov 5, 2026 · Status: In progress
@@ -82,7 +95,8 @@ export function ActionFirewallSection() {
                 Identical evidence requested
               </span>
               <p className="text-xs text-amber-800/90 leading-relaxed mb-4">
-                Both bureaus are scheduling requests for the same fee ledgers within 48 hours of each other.
+                Both bureaus are scheduling requests for the same fee ledgers
+                within 48 hours of each other.
               </p>
               <button
                 type="button"
@@ -93,7 +107,9 @@ export function ActionFirewallSection() {
                     : 'bg-blue-700 text-white hover:bg-blue-800'
                 }`}
               >
-                {isCoordinated ? 'Reset demonstration' : 'Simulate joint notice approval'}
+                {isCoordinated
+                  ? 'Reset demonstration'
+                  : 'Simulate joint notice approval'}
               </button>
             </div>
 
@@ -111,13 +127,13 @@ export function ActionFirewallSection() {
                 Evidence request: Q3 fee ledgers
               </strong>
               <p className="text-xs text-slate-600 leading-relaxed mb-3">
-                Independent regional notice requesting identical July–September 2026 admission receipts.
+                Independent regional notice requesting identical July–September
+                2026 admission receipts.
               </p>
               <div className="text-[11px] text-slate-500">
                 Due: Nov 7, 2026 · Status: Planned
               </div>
             </div>
-
           </div>
 
           {/* Outcome Explanation Banner */}
@@ -146,9 +162,7 @@ export function ActionFirewallSection() {
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
-
         </div>
-
       </div>
     </section>
   );

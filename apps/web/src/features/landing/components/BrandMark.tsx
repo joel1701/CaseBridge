@@ -66,7 +66,9 @@ export function BrandMark({
               isLight ? 'text-white' : 'text-slate-900'
             }`}
           >
-            <span className="font-extrabold text-slate-900 dark:text-white">Case</span>
+            <span className="font-extrabold text-slate-900 dark:text-white">
+              Case
+            </span>
             <span className="font-bold text-blue-700">Bridge</span>
           </span>
           <span

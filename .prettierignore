@@ -3,3 +3,7 @@ node_modules
 dist
 .venv
 apps/api/src/generated
+.github/agents
+.github/skills
+.impeccable
+temp_critique_body.md

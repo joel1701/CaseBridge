@@ -29,16 +29,19 @@ export function TrustGovernanceSection() {
   ];
 
   return (
-    <section id="governance" className="relative bg-white py-20 lg:py-28 border-b border-slate-100">
+    <section
+      id="governance"
+      className="relative bg-white py-20 lg:py-28 border-b border-slate-100"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        
         {/* Section Header - Direct, No Eyebrow Pill */}
         <div className="text-center max-w-3xl mx-auto mb-16">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
             Built for officer discretion, not automated decisions.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600 font-body leading-relaxed">
-            Regulatory reviews carry high legal stakes. CaseBridge is strictly designed as an assistive tool that keeps human officers in control.
+            Regulatory reviews carry high legal stakes. CaseBridge is strictly
+            designed as an assistive tool that keeps human officers in control.
           </p>
         </div>
 
@@ -68,7 +71,6 @@ export function TrustGovernanceSection() {
             );
           })}
         </div>
-
       </div>
     </section>
   );

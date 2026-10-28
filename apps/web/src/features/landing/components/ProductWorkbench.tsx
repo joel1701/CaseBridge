@@ -60,11 +60,13 @@ const demoCases: CaseData[] = [
     gaps: [
       {
         item: 'Stamped official receipt absent',
-        detail: 'Complainant was issued only an unnumbered handwritten slip without official seal.',
+        detail:
+          'Complainant was issued only an unnumbered handwritten slip without official seal.',
       },
       {
         item: 'Written fee circular absent',
-        detail: 'Demand was made verbally at admissions counter; not listed in approved prospectus.',
+        detail:
+          'Demand was made verbally at admissions counter; not listed in approved prospectus.',
       },
     ],
     sisterNotice: {
@@ -98,11 +100,13 @@ const demoCases: CaseData[] = [
     gaps: [
       {
         item: 'Annual faculty disclosure missing',
-        detail: 'No public roster or recruitment gazette advertisement on institutional portal.',
+        detail:
+          'No public roster or recruitment gazette advertisement on institutional portal.',
       },
       {
         item: 'Biometric lab registers uncorroborated',
-        detail: 'Lab sessions marked held without identifying supervising instructors.',
+        detail:
+          'Lab sessions marked held without identifying supervising instructors.',
       },
     ],
     sisterNotice: {
@@ -121,22 +125,24 @@ export function ProductWorkbench() {
   const activeCase = demoCases[activeCaseIdx];
 
   return (
-    <section id="product-preview" className="relative bg-slate-50 py-16 lg:py-24 border-b border-slate-200">
+    <section
+      id="product-preview"
+      className="relative bg-slate-50 py-16 lg:py-24 border-b border-slate-200"
+    >
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        
         {/* Section Header - Direct, No Eyebrow Pill */}
         <div className="max-w-3xl mb-10">
           <h2 className="font-heading text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
             How an intake looks inside the workspace.
           </h2>
           <p className="mt-3 text-base sm:text-lg text-slate-600 font-body leading-relaxed">
-            Compare raw grievance testimony with extracted parameters, missing evidence flags, and cross-bureau overlap notices in a single view.
+            Compare raw grievance testimony with extracted parameters, missing
+            evidence flags, and cross-bureau overlap notices in a single view.
           </p>
         </div>
 
         {/* Workbench Container Mockup */}
         <div className="rounded-2xl border border-slate-200 bg-white shadow-md overflow-hidden">
-          
           {/* Workbench Top Bar */}
           <div className="bg-slate-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
             <span className="text-xs font-medium text-slate-300">
@@ -179,7 +185,12 @@ export function ProductWorkbench() {
               <span className="text-slate-500">{activeCase.bureauName}</span>
             </div>
             <div className="flex items-center gap-3 text-xs text-slate-500">
-              <span>Reference: <strong className="font-mono-code text-slate-700">{activeCase.bureauRef}</strong></span>
+              <span>
+                Reference:{' '}
+                <strong className="font-mono-code text-slate-700">
+                  {activeCase.bureauRef}
+                </strong>
+              </span>
               <span>·</span>
               <span className="text-emerald-700 font-medium">Under review</span>
             </div>
@@ -187,7 +198,6 @@ export function ProductWorkbench() {
 
           {/* 2-Column Workbench Body */}
           <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x divide-slate-200">
-            
             {/* Left Column: Complainant's Original Narrative (7 Cols) */}
             <div className="lg:col-span-7 p-6 sm:p-8 flex flex-col justify-between">
               <div>
@@ -244,7 +254,6 @@ export function ProductWorkbench() {
 
             {/* Right Column: Structured Intelligence & Evidence Checklist (5 Cols) */}
             <div className="lg:col-span-5 p-6 sm:p-8 bg-slate-50/40 flex flex-col justify-between space-y-5">
-              
               {/* Card 1: Extracted Parameters */}
               <div className="bg-white rounded-xl border border-slate-200 p-4 shadow-2xs">
                 <span className="text-xs font-semibold text-slate-900 block mb-3">
@@ -258,7 +267,9 @@ export function ProductWorkbench() {
                     </strong>
                   </div>
                   <div>
-                    <span className="text-slate-500 block">Critical timeline</span>
+                    <span className="text-slate-500 block">
+                      Critical timeline
+                    </span>
                     <strong className="text-slate-900 font-semibold text-sm text-amber-700">
                       {activeCase.extracted.statutoryDeadline}
                     </strong>
@@ -279,7 +290,8 @@ export function ProductWorkbench() {
                   <span>Missing evidence checklist</span>
                 </div>
                 <p className="text-xs text-amber-800/90 mb-3 leading-relaxed">
-                  Flagged so officers know what proof to request before taking action:
+                  Flagged so officers know what proof to request before taking
+                  action:
                 </p>
                 <div className="space-y-2">
                   {activeCase.gaps.map((gap, idx) => (
@@ -319,7 +331,9 @@ export function ProductWorkbench() {
 
               {/* Bottom Quick Action */}
               <div className="pt-2 flex items-center justify-between">
-                <span className="text-xs text-slate-500">Subject to human officer review</span>
+                <span className="text-xs text-slate-500">
+                  Subject to human officer review
+                </span>
                 <Link
                   to="/investigations/cmp-001"
                   className="inline-flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white px-3.5 py-1.5 rounded-md text-xs font-medium transition-colors shadow-2xs"
@@ -328,12 +342,9 @@ export function ProductWorkbench() {
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
-
             </div>
-
           </div>
         </div>
-
       </div>
     </section>
   );

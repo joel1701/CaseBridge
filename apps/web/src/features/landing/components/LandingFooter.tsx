@@ -10,15 +10,15 @@ export function LandingFooter() {
   return (
     <footer className="relative bg-slate-900 text-slate-400 pt-16 pb-12 border-t border-slate-800">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-        
         {/* Main Footer Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-slate-800">
-          
           {/* Brand & Mission Briefing (5 cols) */}
           <div className="lg:col-span-5 space-y-4">
             <BrandMark variant="light" size="md" />
             <p className="text-xs text-slate-400 leading-relaxed font-body max-w-sm mt-3">
-              CaseBridge helps AICTE Public Grievance Redressal Cell and Regional Bureau officers review complex student complaints, identify missing evidence, and coordinate pre-notice actions.
+              CaseBridge helps AICTE Public Grievance Redressal Cell and
+              Regional Bureau officers review complex student complaints,
+              identify missing evidence, and coordinate pre-notice actions.
             </p>
             <div className="pt-2 flex items-center gap-3">
               <a
@@ -49,7 +49,9 @@ export function LandingFooter() {
                   className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
                   <span>Investigation workspace (cmp-001)</span>
-                  <span className="text-[11px] font-mono-code text-slate-400">/investigations/cmp-001</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">
+                    /investigations/cmp-001
+                  </span>
                 </Link>
               </li>
               <li>
@@ -58,7 +60,9 @@ export function LandingFooter() {
                   className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
                   <span>Coordination dashboard</span>
-                  <span className="text-[11px] font-mono-code text-slate-400">/dashboard</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">
+                    /dashboard
+                  </span>
                 </Link>
               </li>
               <li>
@@ -67,7 +71,9 @@ export function LandingFooter() {
                   className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
                   <span>Knowledge graph (inst-01)</span>
-                  <span className="text-[11px] font-mono-code text-slate-400">/graph/inst-01</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">
+                    /graph/inst-01
+                  </span>
                 </Link>
               </li>
               <li>
@@ -76,7 +82,9 @@ export function LandingFooter() {
                   className="hover:text-white transition-colors flex items-center justify-between py-1 border-b border-slate-800"
                 >
                   <span>Bureau triage queue</span>
-                  <span className="text-[11px] font-mono-code text-slate-400">/bureau-queue</span>
+                  <span className="text-[11px] font-mono-code text-slate-400">
+                    /bureau-queue
+                  </span>
                 </Link>
               </li>
             </ul>
@@ -88,23 +96,25 @@ export function LandingFooter() {
               Participating bureaus
             </span>
             <div className="p-3.5 rounded-xl bg-slate-800/80 border border-slate-700/80 text-xs space-y-2 font-body">
-              <span className="font-semibold text-white block">AICTE Desks:</span>
+              <span className="font-semibold text-white block">
+                AICTE Desks:
+              </span>
               <p className="text-slate-300 leading-relaxed text-[11px]">
-                • Public Grievance Redressal Cell (PGRC)<br />
-                • Regional Bureau (RB)
+                • Public Grievance Redressal Cell (PGRC)
+                <br />• Regional Bureau (RB)
               </p>
               <div className="pt-2 border-t border-slate-700 text-[11px] text-blue-400 font-medium">
                 Mandatory human officer authorization
               </div>
             </div>
           </div>
-
         </div>
 
         {/* Bottom Bar */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <p className="text-slate-400 font-body text-center sm:text-left">
-            CaseBridge · Team Aarohan. Assistive regulatory triage prototype; all determinations remain with authorized officers.
+            CaseBridge · Team Aarohan. Assistive regulatory triage prototype;
+            all determinations remain with authorized officers.
           </p>
 
           <button
@@ -117,7 +127,6 @@ export function LandingFooter() {
             <ArrowUp className="w-3.5 h-3.5" />
           </button>
         </div>
-
       </div>
     </footer>
   );
