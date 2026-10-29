@@ -69,11 +69,12 @@ function PanelsSkeleton() {
 }
 
 export function ReportsPage() {
-  const { filters, setRange, setRegion, setBureau } = useOverviewFilters();
-  // "All time" isn't a report preset; fall back to the default 90 days.
+  // Reports open on 12 months, so the per-month charts show the whole year.
+  const { filters, setRange, setRegion, setBureau } = useOverviewFilters('12m');
+  // "All time" isn't a report preset; fall back to the default 12 months.
   const range = PERIODS.some((p) => p.value === filters.range)
     ? filters
-    : { ...filters, range: '90d' as const };
+    : { ...filters, range: '12m' as const };
 
   const overview = useQuery({
     queryKey: ['dashboard-overview', range],

@@ -12,10 +12,11 @@ export const RANGES: { value: OverviewRange; label: string }[] = [
 
 // Filters live in the URL (?region=&bureau=&range=). The bureau is the shell's
 // bureau context: a ?bureau= link sets the context once, and the context writes the URL.
-export function useOverviewFilters() {
+/** `defaultRange` is the period when the URL has none (dashboard: 90 days; reports: 12 months). */
+export function useOverviewFilters(defaultRange: OverviewRange = '90d') {
   const [url, setUrl] = useUrlState({
     region: '',
-    range: '90d',
+    range: defaultRange,
     bureau: 'ALL',
   });
   const { bureau, setBureau } = useBureau();
@@ -34,7 +35,7 @@ export function useOverviewFilters() {
 
   const range: OverviewRange = RANGES.some((r) => r.value === url.range)
     ? (url.range as OverviewRange)
-    : '90d';
+    : defaultRange;
   const region = url.region || undefined;
 
   const filters = useMemo<OverviewFilters>(

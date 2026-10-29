@@ -1,3 +1,4 @@
+import { categoryLabel } from '../complaints/shared';
 import { useId, useState } from 'react';
 import { Link, useParams, useSearchParams } from 'react-router';
 import {
@@ -125,7 +126,9 @@ function CaseCard({
         </div>
         <div>
           <dt>Category</dt>
-          <dd className={cn(match.category && hit)}>{c.category}</dd>
+          <dd className={cn(match.category && hit)}>
+            {categoryLabel(c.category)}
+          </dd>
         </div>
         <div>
           <dt>Received</dt>
@@ -285,14 +288,27 @@ export function InvestigationPage() {
     })),
   });
   const [mine, other] = caseQueries.map((q) => q.data?.data);
+  // Both cases usually concern the same institution: query each one once.
+  const instIds = [
+    ...new Set(
+      [mine?.institutionId, other?.institutionId].filter(
+        (x): x is string => !!x,
+      ),
+    ),
+  ];
   const instQueries = useQueries({
-    queries: [mine?.institutionId, other?.institutionId].map((id) => ({
-      queryKey: institutionKeys.detail(id ?? ''),
-      queryFn: () => getInstitution(id!),
-      enabled: !!id,
+    queries: instIds.map((id) => ({
+      queryKey: institutionKeys.detail(id),
+      queryFn: () => getInstitution(id),
     })),
   });
-  const [mineInst, otherInst] = instQueries.map((q) => q.data?.data);
+  const instById = new Map(
+    instQueries.flatMap((q) =>
+      q.data ? [[q.data.data.id, q.data.data] as const] : [],
+    ),
+  );
+  const mineInst = mine ? instById.get(mine.institutionId) : undefined;
+  const otherInst = other ? instById.get(other.institutionId) : undefined;
 
   const workspace = useQuery({
     queryKey: coordinationKeys.workspaces({ caseLinkId: link?.id }),

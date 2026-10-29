@@ -54,6 +54,13 @@ const tabs = [
 ] as const;
 type TabKey = (typeof tabs)[number]['key'];
 
+const COORDINATION_LABEL: Record<string, string> = {
+  SHARE_EVIDENCE: 'share evidence',
+  JOINT_INVESTIGATION: 'joint investigation',
+  DEFER_ACTION: 'defer action to one bureau',
+  KEEP_SEPARATE: 'keep separate',
+};
+
 const ACTION_STATUS: Record<Action['status'], string> = {
   PLANNED: 'Planned',
   IN_PROGRESS: 'In progress',
@@ -147,6 +154,18 @@ function describe(
       return { title: 'Archived', detail: who + reason };
     case 'COMPLAINT_UPDATED':
       return { title: 'Details updated', detail: who + reason };
+    case 'COORDINATION_RECORDED':
+      return {
+        title: `Coordination decided: ${COORDINATION_LABEL[m.type ?? ''] ?? 'recorded'}`,
+        detail: who,
+      };
+    case 'COORDINATION_WORKSPACE_CREATED':
+      return {
+        title: 'Coordination workspace opened with the other bureau',
+        detail: who,
+      };
+    case 'COORDINATION_WORKSPACE_UPDATED':
+      return { title: 'Coordination workspace updated', detail: who };
     default:
       return { title: e.event.toLowerCase().replaceAll('_', ' '), detail: who };
   }
