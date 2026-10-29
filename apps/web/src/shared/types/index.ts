@@ -80,6 +80,8 @@ export type OverviewCountKey =
 export interface OverlapAlert {
   id: string;
   linkId: string;
+  /** Every pairwise link in this overlap (three-bureau overlaps have two). */
+  linkIds?: string[];
   updatedAt: string;
   institution: { id: string; name: string; permanentId: string };
   bureaus: BureauCode[];
@@ -148,3 +150,5 @@ export interface DashboardOverview {
     }[];
   };
 }
+
+export * from './api';

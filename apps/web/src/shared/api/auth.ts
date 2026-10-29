@@ -1,7 +1,8 @@
 import { isAxiosError } from 'axios';
 import { useQuery } from '@tanstack/react-query';
 import { api, useMocks } from './client';
-import type { ApiFailure, ApiSuccess, AuthUser, Role } from '../types';
+import { apiErrorCode } from './errors';
+import type { ApiSuccess, AuthUser, Role } from '../types';
 
 // Auth contract: docs/API_CONTRACT.md (POST /auth/login, GET /auth/me, POST /auth/logout).
 // In mock mode nothing reaches the API: the seed's demo accounts sign in with a
@@ -120,15 +121,8 @@ export async function logout() {
   await api.post('/auth/logout', {});
 }
 
-// Maps any login failure to a code the form knows how to explain.
-export function authErrorCode(err: unknown): string {
-  if (err instanceof AuthError) return err.code;
-  if (isAxiosError<ApiFailure>(err)) {
-    if (!err.response) return 'NETWORK';
-    return err.response.data?.error?.code ?? 'UNKNOWN';
-  }
-  return 'UNKNOWN';
-}
+// Maps any login failure to a code the form knows how to explain (see errors.ts).
+export const authErrorCode = apiErrorCode;
 
 export function useMe() {
   return useQuery({

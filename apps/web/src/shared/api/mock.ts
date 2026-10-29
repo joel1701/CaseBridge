@@ -1,4 +1,5 @@
-import type { Alert, Complaint, DashboardSummary, Institution } from '../types';
+// Seed records shared with the synthetic store (synthetic/core.ts builds on these).
+import type { Complaint, Institution } from '../types';
 export const institutions: Institution[] = [
   {
     id: 'inst-01',
@@ -73,38 +74,5 @@ export const complaints: Complaint[] = [
     status: 'UNDER_PROCESS',
     overlapReviewStatus: 'PENDING',
     createdAt: '2026-10-02T09:00:00Z',
-  },
-];
-export const summary: DashboardSummary = {
-  totalComplaints: 25,
-  pendingOverlapReviews: 6,
-  activeActions: 4,
-  scope: 'SYNTHETIC',
-};
-// Synthetic unread alerts, shaped like GET /api/alerts items.
-export const alerts: Alert[] = [
-  {
-    id: 'alert-demo-001',
-    type: 'OVERLAP',
-    complaintId: 'cmp-001',
-    message: 'Overlap awaits review',
-    readAt: null,
-    createdAt: '2026-10-02T09:15:00Z',
-  },
-  {
-    id: 'alert-demo-002',
-    type: 'DEADLINE',
-    complaintId: 'cmp-002',
-    message: 'Disposal timeline ends in 6 days',
-    readAt: null,
-    createdAt: '2026-10-24T08:00:00Z',
-  },
-  {
-    id: 'alert-demo-003',
-    type: 'STATUS_CHANGE',
-    complaintId: 'cmp-002',
-    message: 'Case moved to Under process',
-    readAt: null,
-    createdAt: '2026-10-25T11:05:00Z',
   },
 ];

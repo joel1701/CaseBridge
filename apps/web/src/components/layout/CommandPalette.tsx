@@ -1,7 +1,8 @@
 import { useId, useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useNavigate } from 'react-router';
 import { Building2, FileText, Search, type LucideIcon } from 'lucide-react';
-import { complaints, institutions } from '@/shared/api/mock';
+import { cases as complaints } from '@/shared/api/synthetic/store';
+import { institutions } from '@/shared/api/synthetic/core';
 import { cn } from '@/shared/utils/cn';
 import { navItems } from './nav';
 import { trapTab } from './useDismiss';
@@ -15,7 +16,7 @@ interface Result {
   icon: LucideIcon;
 }
 
-// Search index. Institutions and complaints come from the shared mock data for now.
+// Search index. Institutions and complaints come from the shared synthetic store for now.
 const index: Result[] = [
   ...navItems.map((n) => ({
     id: `page-${n.to}`,

@@ -174,13 +174,19 @@ export function CoordinationPanel({
     );
 
   const link = useMutation({
-    mutationFn: (alert: OverlapAlert) => linkOverlap(alert, data.scope),
+    mutationFn: (alert: OverlapAlert) => linkOverlap(alert),
     onMutate: (alert) => {
       setStatus(alert.id, 'LINKED');
       return { previous: alert.status };
     },
     onSuccess: (_r, alert) =>
       setAnnouncement(`Cases linked for ${alert.institution.name}.`),
+    // The overlap alert, review status and case history change on other pages too.
+    onSettled: () => {
+      void queryClient.invalidateQueries({ queryKey: ['alerts'] });
+      void queryClient.invalidateQueries({ queryKey: ['complaints'] });
+      void queryClient.invalidateQueries({ queryKey: ['intelligence'] });
+    },
     onError: (_e, alert, ctx) => {
       setStatus(alert.id, ctx?.previous ?? alert.status);
       setAnnouncement(
