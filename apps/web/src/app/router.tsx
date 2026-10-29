@@ -1,8 +1,8 @@
+import { lazy, Suspense, type ReactNode } from 'react';
 import { createBrowserRouter, Link } from 'react-router';
+import { RootLayout } from '@/app/RootLayout';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { LandingPage } from '@/features/landing/LandingPage';
 import { DashboardPage } from '@/features/dashboard/DashboardPage';
-import { LoginPage } from '@/features/auth/LoginPage';
 import { ComplaintsPage } from '@/features/complaints/ComplaintsPage';
 import { NewComplaintPage } from '@/features/complaints/NewComplaintPage';
 import { ComplaintDetailsPage } from '@/features/complaints/ComplaintDetailsPage';
@@ -14,64 +14,106 @@ import { ReportsPage } from '@/features/reports/ReportsPage';
 import { AlertsPage } from '@/features/dashboard/AlertsPage';
 import { StyleguidePage } from '@/features/styleguide/StyleguidePage';
 
-export const router = createBrowserRouter([
-  // Public Editorial Landing Page
-  {
-    path: '/',
-    element: <LandingPage />,
-  },
-  {
-    path: '/landing',
-    element: <LandingPage />,
-  },
-  // Design system reference, outside the app navigation
-  {
-    path: '/styleguide',
-    element: <StyleguidePage />,
-  },
+// Lazy so app users never download the landing page or its animation code.
+const LandingPage = lazy(() =>
+  import('@/features/landing/LandingPage').then((m) => ({
+    default: m.LandingPage,
+  })),
+);
+const LoginPage = lazy(() =>
+  import('@/features/auth/LoginPage').then((m) => ({ default: m.LoginPage })),
+);
 
-  // Internal Investigation & Coordination Workspace
+function Lazy({ children }: { children: ReactNode }) {
+  return (
+    <Suspense
+      fallback={
+        <p role="status" className="sr-only">
+          Loading…
+        </p>
+      }
+    >
+      {children}
+    </Suspense>
+  );
+}
+
+export const router = createBrowserRouter([
   {
-    element: <AppLayout />,
+    element: <RootLayout />,
     children: [
-      { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/app', element: <DashboardPage /> },
-      { path: '/login', element: <LoginPage /> },
-      { path: '/complaints', element: <ComplaintsPage /> },
-      { path: '/complaints/new', element: <NewComplaintPage /> },
-      { path: '/complaints/:id', element: <ComplaintDetailsPage /> },
-      { path: '/institutions/:id', element: <InstitutionProfilePage /> },
-      { path: '/bureau-queue', element: <BureauQueuePage /> },
-      { path: '/investigations/:id', element: <InvestigationPage /> },
-      { path: '/graph/:institutionId', element: <GraphPage /> },
-      { path: '/alerts', element: <AlertsPage /> },
-      { path: '/reports', element: <ReportsPage /> },
+      // Public landing page
       {
-        path: '*',
+        path: '/',
         element: (
-          <section className="py-12">
-            <h1 className="text-3xl font-semibold text-foreground">
-              Page not found
-            </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
-              The requested resource could not be found within the workspace.
-            </p>
-            <div className="mt-6 flex items-center gap-4">
-              <Link
-                className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
-                to="/dashboard"
-              >
-                Go to Dashboard
-              </Link>
-              <Link
-                className="rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
-                to="/"
-              >
-                Return to Landing Page
-              </Link>
-            </div>
-          </section>
+          <Lazy>
+            <LandingPage />
+          </Lazy>
         ),
+      },
+      {
+        path: '/landing',
+        element: (
+          <Lazy>
+            <LandingPage />
+          </Lazy>
+        ),
+      },
+      {
+        path: '/login',
+        element: (
+          <Lazy>
+            <LoginPage />
+          </Lazy>
+        ),
+      },
+      // Design system reference, outside the app navigation
+      { path: '/styleguide', element: <StyleguidePage /> },
+
+      // Internal investigation and coordination workspace
+      {
+        element: <AppLayout />,
+        children: [
+          { path: '/dashboard', element: <DashboardPage /> },
+          { path: '/app', element: <DashboardPage /> },
+          { path: '/complaints', element: <ComplaintsPage /> },
+          { path: '/complaints/new', element: <NewComplaintPage /> },
+          { path: '/complaints/:id', element: <ComplaintDetailsPage /> },
+          { path: '/institutions/:id', element: <InstitutionProfilePage /> },
+          { path: '/bureau-queue', element: <BureauQueuePage /> },
+          { path: '/investigations/:id', element: <InvestigationPage /> },
+          { path: '/graph/:institutionId', element: <GraphPage /> },
+          { path: '/alerts', element: <AlertsPage /> },
+          { path: '/reports', element: <ReportsPage /> },
+          {
+            path: '*',
+            element: (
+              <section className="py-12">
+                <h1 className="text-3xl font-semibold text-foreground">
+                  Page not found
+                </h1>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  The requested resource could not be found within the
+                  workspace.
+                </p>
+                <div className="mt-6 flex items-center gap-4">
+                  <Link
+                    className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:opacity-90 transition-opacity"
+                    to="/dashboard"
+                  >
+                    Go to Dashboard
+                  </Link>
+                  <Link
+                    className="rounded-md border border-border bg-card px-4 py-2 text-sm font-medium text-foreground hover:bg-muted transition-colors"
+                    to="/"
+                  >
+                    Return to Landing Page
+                  </Link>
+                </div>
+              </section>
+            ),
+          },
+        ],
       },
     ],
   },

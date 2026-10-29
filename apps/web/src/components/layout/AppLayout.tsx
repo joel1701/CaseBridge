@@ -10,7 +10,6 @@ import {
   Network,
   Bell,
   ChartNoAxesCombined,
-  LogIn,
   Globe,
 } from 'lucide-react';
 import { useMocks } from '@/shared/api/client';
@@ -25,7 +24,6 @@ const links = [
   ['/graph/inst-01', 'Knowledge graph', Network],
   ['/alerts', 'Alerts', Bell],
   ['/reports', 'Reports', ChartNoAxesCombined],
-  ['/login', 'Login', LogIn],
 ] as const;
 
 export function AppLayout() {
@@ -34,9 +32,9 @@ export function AppLayout() {
       <aside className="border-r bg-background p-5 flex flex-col justify-between">
         <div>
           <Link
-            to="/"
+            to="/dashboard"
             className="flex items-center gap-3 py-3 rounded hover:opacity-90 transition-opacity"
-            title="Return to Landing Page"
+            title="Go to dashboard"
           >
             <Landmark className="text-primary" />
             <div>
