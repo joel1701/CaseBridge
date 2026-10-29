@@ -92,257 +92,262 @@
   --ease-setu: var(--ease);
 }
 
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
-
-* {
-  border-color: var(--border);
-}
-
-html.lenis,
-html.lenis body {
-  height: auto;
-}
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
-
-body {
-  margin: 0;
-  min-width: 320px;
-  background: var(--g0);
-  color: var(--text);
-  font-family: var(--f-text);
-  font-size: clamp(16px, 0.35vw + 13px, 18px);
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-}
-
-/* Covers the phone status-bar inset */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0 0 auto;
-  height: env(safe-area-inset-top, 0px);
-  z-index: 60;
-  background: var(--g0);
-}
-
-/* Grain overlay */
-body::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  pointer-events: none;
-  opacity: 0.09;
-  background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 .7 -.12'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
-}
-
-a,
-button {
-  -webkit-tap-highlight-color: transparent;
-}
-
-:focus-visible {
-  outline: 2px solid var(--ind-hi);
-  outline-offset: 3px;
-}
-/* --ind-hi is under 3:1 on light and indigo bands (SETU_DESIGN.md, Guardrails) */
-[data-tone='paper'] :focus-visible,
-[data-tone='indigo'] :focus-visible {
-  outline-color: var(--ink);
-}
-
-.wrap {
-  padding-left: max(var(--m), env(safe-area-inset-left, 0px));
-  padding-right: max(var(--m), env(safe-area-inset-right, 0px));
-}
-
-/* Tones */
-[data-tone='base'] {
-  background: var(--g0);
-  color: var(--text);
-}
-[data-tone='deep'] {
-  background: var(--g1);
-  color: var(--text);
-}
-[data-tone='indigo'] {
-  background: var(--ind);
-  color: var(--ink);
-}
-[data-tone='paper'] {
-  background: var(--paper);
-  color: var(--ink);
-}
-
-/* Type */
-.h2 {
-  margin: 0;
-  font-family: var(--f-display);
-  font-stretch: 75%;
-  font-weight: 700;
-  font-size: clamp(46px, 7.4vw, 132px);
-  line-height: 0.86;
-  letter-spacing: -0.012em;
-  text-transform: lowercase;
-  color: var(--ind-hi);
-  text-wrap: balance;
-}
-[data-tone='indigo'] .h2 {
-  color: var(--ink);
-}
-[data-tone='paper'] .h2 {
-  color: var(--ind-deep);
-}
-.lead {
-  font-size: clamp(17px, 0.6vw + 13px, 21px);
-  max-width: 40ch;
-}
-.wide {
-  font-stretch: 125%;
-  font-weight: 300;
-  letter-spacing: 0.01em;
-}
-
-/* Spec: label/value list */
-.spec {
-  margin: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
-  gap: 14px var(--gap);
-}
-.spec > div {
-  min-width: 0;
-}
-.spec dt {
-  font-weight: 700;
-  font-size: 15px;
-  line-height: 1.3;
-}
-.spec dt::after {
-  content: ' -';
-}
-.spec dd {
-  margin: 6px 0 0;
-  font-stretch: 125%;
-  font-weight: 300;
-  font-size: 14px;
-  line-height: 1.35;
-  letter-spacing: 0.01em;
-}
-.spec--sm dt {
-  font-size: 13px;
-}
-.spec--sm dd {
-  font-size: 12.5px;
-}
-
-/* Buttons: colour wipes up on hover, square */
-.btn {
-  --bg: var(--ind);
-  --fg: var(--ink);
-  --fill: var(--text);
-  --fill-fg: var(--ink);
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  min-height: 50px;
-  padding: 0 24px;
-  border: 0;
-  border-radius: 0;
-  background: var(--bg);
-  color: var(--fg);
-  font: inherit;
-  font-weight: 600;
-  font-size: 16px;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color 0.45s var(--ease);
-}
-.btn::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  background: var(--fill);
-  clip-path: inset(100% 0 0 0);
-  transition: clip-path 0.55s var(--ease);
-}
-.btn--ink {
-  --bg: var(--ink);
-  --fg: var(--text);
-  --fill: var(--text);
-  --fill-fg: var(--ink);
-}
-.btn--ghost {
-  --bg: transparent;
-  --fg: currentColor;
-  --fill: currentColor;
-  box-shadow: inset 0 0 0 1.5px currentColor;
-}
-[data-tone='base'] .btn--ghost {
-  --fill-fg: var(--g0);
-}
-.btn--sm {
-  min-height: 40px;
-  padding: 0 18px;
-  font-size: 14px;
-}
-.btn:disabled,
-.btn[aria-disabled='true'] {
-  opacity: 0.5;
-  pointer-events: none;
-  cursor: default;
-}
-@media (hover: hover) {
-  .btn:hover {
-    color: var(--fill-fg);
+/* Layered so Tailwind utilities can override these (unlayered CSS beats every utility in v4) */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
   }
-  .btn:hover::before {
-    clip-path: inset(0);
+
+  * {
+    border-color: var(--border);
+  }
+
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+
+  body {
+    margin: 0;
+    min-width: 320px;
+    background: var(--g0);
+    color: var(--text);
+    font-family: var(--f-text);
+    font-size: clamp(16px, 0.35vw + 13px, 18px);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Covers the phone status-bar inset */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0 0 auto;
+    height: env(safe-area-inset-top, 0px);
+    z-index: 60;
+    background: var(--g0);
+  }
+
+  /* Grain overlay */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    pointer-events: none;
+    opacity: 0.09;
+    background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 .7 -.12'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--ind-hi);
+    outline-offset: 3px;
+  }
+  /* --ind-hi is under 3:1 on light and indigo bands (SETU_DESIGN.md, Guardrails) */
+  [data-tone='paper'] :focus-visible,
+  [data-tone='indigo'] :focus-visible {
+    outline-color: var(--ink);
   }
 }
 
-/* Link: 1px rule, 2px line grows on hover */
-.link {
-  text-decoration: none;
-  font-weight: 600;
-  background:
-    linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat,
-    linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
-  padding-bottom: 4px;
-  transition: background-size 0.55s var(--ease);
-}
-@media (hover: hover) {
-  .link:hover {
-    background-size:
-      100% 0,
-      100% 2px;
+@layer components {
+  .wrap {
+    padding-left: max(var(--m), env(safe-area-inset-left, 0px));
+    padding-right: max(var(--m), env(safe-area-inset-right, 0px));
   }
-}
 
-/* Legacy font helpers, still used by the old landing page */
-.font-heading {
-  font-family: var(--f-display);
-  letter-spacing: -0.025em;
-}
-.font-body {
-  font-family: var(--f-text);
-}
-.font-mono-code {
-  font-family: var(--f-mono);
+  /* Tones */
+  [data-tone='base'] {
+    background: var(--g0);
+    color: var(--text);
+  }
+  [data-tone='deep'] {
+    background: var(--g1);
+    color: var(--text);
+  }
+  [data-tone='indigo'] {
+    background: var(--ind);
+    color: var(--ink);
+  }
+  [data-tone='paper'] {
+    background: var(--paper);
+    color: var(--ink);
+  }
+
+  /* Type */
+  .h2 {
+    margin: 0;
+    font-family: var(--f-display);
+    font-stretch: 75%;
+    font-weight: 700;
+    font-size: clamp(46px, 7.4vw, 132px);
+    line-height: 0.86;
+    letter-spacing: -0.012em;
+    text-transform: lowercase;
+    color: var(--ind-hi);
+    text-wrap: balance;
+  }
+  [data-tone='indigo'] .h2 {
+    color: var(--ink);
+  }
+  [data-tone='paper'] .h2 {
+    color: var(--ind-deep);
+  }
+  .lead {
+    font-size: clamp(17px, 0.6vw + 13px, 21px);
+    max-width: 40ch;
+  }
+  .wide {
+    font-stretch: 125%;
+    font-weight: 300;
+    letter-spacing: 0.01em;
+  }
+
+  /* Spec: label/value list */
+  .spec {
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 9.5rem), 1fr));
+    gap: 14px var(--gap);
+  }
+  .spec > div {
+    min-width: 0;
+  }
+  .spec dt {
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 1.3;
+  }
+  .spec dt::after {
+    content: ' -';
+  }
+  .spec dd {
+    margin: 6px 0 0;
+    font-stretch: 125%;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+  }
+  .spec--sm dt {
+    font-size: 13px;
+  }
+  .spec--sm dd {
+    font-size: 12.5px;
+  }
+
+  /* Buttons: colour wipes up on hover, square */
+  .btn {
+    --bg: var(--ind);
+    --fg: var(--ink);
+    --fill: var(--text);
+    --fill-fg: var(--ink);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 50px;
+    padding: 0 24px;
+    border: 0;
+    border-radius: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: inherit;
+    font-weight: 600;
+    font-size: 16px;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: color 0.45s var(--ease);
+  }
+  .btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--fill);
+    clip-path: inset(100% 0 0 0);
+    transition: clip-path 0.55s var(--ease);
+  }
+  .btn--ink {
+    --bg: var(--ink);
+    --fg: var(--text);
+    --fill: var(--text);
+    --fill-fg: var(--ink);
+  }
+  .btn--ghost {
+    --bg: transparent;
+    --fg: currentColor;
+    --fill: currentColor;
+    box-shadow: inset 0 0 0 1.5px currentColor;
+  }
+  [data-tone='base'] .btn--ghost {
+    --fill-fg: var(--g0);
+  }
+  .btn--sm {
+    min-height: 40px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+  .btn:disabled,
+  .btn[aria-disabled='true'] {
+    opacity: 0.5;
+    pointer-events: none;
+    cursor: default;
+  }
+  @media (hover: hover) {
+    .btn:hover {
+      color: var(--fill-fg);
+    }
+    .btn:hover::before {
+      clip-path: inset(0);
+    }
+  }
+
+  /* Link: 1px rule, 2px line grows on hover */
+  .link {
+    text-decoration: none;
+    font-weight: 600;
+    background:
+      linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat,
+      linear-gradient(currentColor, currentColor) 0 100% / 0 2px no-repeat;
+    padding-bottom: 4px;
+    transition: background-size 0.55s var(--ease);
+  }
+  @media (hover: hover) {
+    .link:hover {
+      background-size:
+        100% 0,
+        100% 2px;
+    }
+  }
+
+  /* Legacy font helpers, still used by the old landing page */
+  .font-heading {
+    font-family: var(--f-display);
+    letter-spacing: -0.025em;
+  }
+  .font-body {
+    font-family: var(--f-text);
+  }
+  .font-mono-code {
+    font-family: var(--f-mono);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

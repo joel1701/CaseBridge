@@ -104,7 +104,7 @@ export function StyleguidePage() {
         <div className="mt-10 grid gap-0 sm:grid-cols-2">
           {(['base', 'deep', 'indigo', 'paper'] as const).map((tone) => (
             <div key={tone} data-tone={tone} className="p-8">
-              <p className="h2 !text-[clamp(40px,5vw,72px)]">{tone}</p>
+              <p className="h2 text-[clamp(40px,5vw,72px)]">{tone}</p>
               <p className="mt-4 text-sm">data-tone=&quot;{tone}&quot;</p>
               <div className="mt-5 flex flex-wrap items-center gap-4">
                 <Button size="sm" variant="ghost">
@@ -192,9 +192,6 @@ export function StyleguidePage() {
           {(['default', 'sm'] as const).map((size) => (
             <div key={size} className="flex flex-wrap items-center gap-4">
               <Button size={size}>Sign in</Button>
-              <Button size={size} variant="ink">
-                Ink
-              </Button>
               <Button size={size} variant="ghost">
                 Explore the views
               </Button>
@@ -211,6 +208,18 @@ export function StyleguidePage() {
             <a id="links" className="link" href="#links">
               Follow a case
             </a>
+          </div>
+          <div
+            data-tone="paper"
+            className="flex flex-wrap items-center gap-4 p-6"
+          >
+            <Button variant="ink">Ink</Button>
+            <Button variant="ink" size="sm">
+              Ink
+            </Button>
+            <span className="wide text-xs">
+              Ink is for light and indigo bands; on graphite it disappears.
+            </span>
           </div>
         </div>
       </Section>
