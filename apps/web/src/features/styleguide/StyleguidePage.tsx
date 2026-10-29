@@ -1,10 +1,11 @@
-import type { ReactNode } from 'react';
 import { Link } from 'react-router';
 import { Button } from '@/components/ui/button';
 import { Spec } from '@/components/ui/spec';
 import { StatusPill, STATUSES } from '@/components/ui/status-pill';
 import { BureauTag } from '@/components/ui/bureau-tag';
 import { Skeleton } from '@/components/ui/skeleton';
+import { PageKitSections } from './PageKitSections';
+import { Section } from './Section';
 
 // Internal reference for the Setu design system (docs/SETU_DESIGN.md). Not linked from the app nav.
 
@@ -47,17 +48,6 @@ const display: [label: string, size: string, lh: number, sample: string][] = [
   ['Dashboard title', '34px', 1, 'overview'],
   ['Card title', '26px', 0.92, 'aaravika institute of engineering'],
 ];
-
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <section className="wrap border-t border-line py-16">
-      <h2 className="font-display text-[34px] leading-none font-bold lowercase [font-stretch:75%]">
-        {title}
-      </h2>
-      <div className="mt-8">{children}</div>
-    </section>
-  );
-}
 
 export function StyleguidePage() {
   return (
@@ -280,6 +270,8 @@ export function StyleguidePage() {
           </div>
         </div>
       </Section>
+
+      <PageKitSections />
 
       <footer className="wrap border-t border-line py-8 text-sm text-subtle">
         All sample data on this page is synthetic.

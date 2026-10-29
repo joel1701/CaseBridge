@@ -40,30 +40,4 @@
     color: #dde1ff;
     max-width: 30ch;
   }
-  .field {
-    width: 100%;
-    min-height: 48px;
-    padding: 0 14px;
-    background: var(--g0);
-    color: var(--text);
-    border: 1px solid var(--line-2);
-    border-radius: 0;
-    font: inherit;
-    font-size: 16px;
-    transition: border-color 0.2s var(--ease);
-  }
-  .field::placeholder {
-    color: var(--muted);
-  }
-  .field:hover {
-    border-color: var(--muted);
-  }
-  /* Not red: the brief keeps red for overlaps and overdue cases only. */
-  .field[aria-invalid='true'] {
-    border-color: var(--ind-hi);
-    box-shadow: inset 3px 0 0 var(--ind-hi);
-  }
-  .field:disabled {
-    opacity: 0.6;
-  }
 }

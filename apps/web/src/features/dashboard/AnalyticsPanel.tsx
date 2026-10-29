@@ -1,4 +1,4 @@
-import { useId, useRef, useState, type KeyboardEvent } from 'react';
+import { useId, useState } from 'react';
 import {
   Bar,
   BarChart,
@@ -12,8 +12,8 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { TabPanel, Tabs } from '@/components/page';
 import { useReducedMotion } from '@/shared/hooks/useReducedMotion';
-import { cn } from '@/shared/utils/cn';
 import type { DashboardOverview } from '@/shared/types';
 import { Panel } from './Panel';
 import { useChartTokens, type ChartTokens } from './useChartTokens';
@@ -215,74 +215,29 @@ export function AnalyticsPanel({ data }: { data: DashboardOverview }) {
   const t = useChartTokens();
   const reduce = useReducedMotion();
   const uid = useId();
-  const listRef = useRef<HTMLDivElement>(null);
-
-  function onKey(e: KeyboardEvent) {
-    const i = tabs.findIndex((x) => x.key === tab);
-    const to =
-      e.key === 'ArrowRight'
-        ? (i + 1) % tabs.length
-        : e.key === 'ArrowLeft'
-          ? (i - 1 + tabs.length) % tabs.length
-          : e.key === 'Home'
-            ? 0
-            : e.key === 'End'
-              ? tabs.length - 1
-              : -1;
-    if (to < 0) return;
-    e.preventDefault();
-    setTab(tabs[to].key);
-    listRef.current?.querySelectorAll<HTMLElement>('[role="tab"]')[to]?.focus();
-  }
 
   return (
     <Panel
       title="analytics"
       titleId="analytics-title"
       action={
-        <div
-          ref={listRef}
-          role="tablist"
-          aria-label="Analytics views"
-          onKeyDown={onKey}
-          className="flex border border-line"
-        >
-          {tabs.map((x) => (
-            <button
-              key={x.key}
-              type="button"
-              role="tab"
-              id={`${uid}-${x.key}-tab`}
-              aria-selected={tab === x.key}
-              aria-controls={`${uid}-panel`}
-              tabIndex={tab === x.key ? 0 : -1}
-              onClick={() => setTab(x.key)}
-              className={cn(
-                'h-9 px-3 text-sm',
-                tab === x.key
-                  ? 'bg-panel text-snow shadow-[inset_0_-2px_0_var(--ind)]'
-                  : 'text-subtle hover:text-snow',
-              )}
-            >
-              {x.label}
-            </button>
-          ))}
-        </div>
+        <Tabs
+          id={uid}
+          label="Analytics views"
+          tabs={tabs}
+          value={tab}
+          onChange={setTab}
+        />
       }
     >
-      <div
-        id={`${uid}-panel`}
-        role="tabpanel"
-        aria-labelledby={`${uid}-${tab}-tab`}
-        tabIndex={0}
-      >
+      <TabPanel id={uid} value={tab}>
         <p className="sr-only">{summary(tab, data)}</p>
         <div className="h-72" aria-hidden="true">
           {tab === 'workload' && <Workload data={data} t={t} reduce={reduce} />}
           {tab === 'ageing' && <Ageing data={data} t={t} reduce={reduce} />}
           {tab === 'trend' && <Trend data={data} t={t} reduce={reduce} />}
         </div>
-      </div>
+      </TabPanel>
     </Panel>
   );
 }
