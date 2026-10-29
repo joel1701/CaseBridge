@@ -337,6 +337,25 @@
     }
   }
 
+  /* Square native select for filters */
+  .select {
+    appearance: none;
+    min-height: 40px;
+    padding: 0 36px 0 12px;
+    background:
+      url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%238C95AB' stroke-width='2.5'><path d='M6 9l6 6 6-6'/></svg>")
+        no-repeat right 12px center,
+      var(--surface);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 0;
+    font: inherit;
+    font-size: 14px;
+  }
+  .select:hover {
+    border-color: var(--line-2);
+  }
+
   /* App motion (calm): route content fades in with a small rise */
   .route-enter {
     animation: setu-enter 0.3s var(--ease) both;
