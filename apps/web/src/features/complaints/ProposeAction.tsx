@@ -169,7 +169,10 @@ export function ProposeAction({
               <span>
                 {w.message}
                 {w.relatedActionId ? (
-                  <span className="text-subtle"> · your bureau, another case</span>
+                  <span className="text-subtle">
+                    {' '}
+                    · your bureau, another case
+                  </span>
                 ) : (
                   <span className="text-subtle"> · at another bureau</span>
                 )}
