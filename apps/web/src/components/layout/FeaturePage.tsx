@@ -1,4 +1,7 @@
 import type { ReactNode } from 'react';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+// Shared page frame for feature screens. Exported names and props are relied on by every page.
 export function FeaturePage({
   title,
   owner,
@@ -10,14 +13,13 @@ export function FeaturePage({
 }) {
   return (
     <section>
-      <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-        Foundation · Team Aarohan
-      </p>
-      <h1 className="mt-3 text-3xl font-semibold tracking-tight">{title}</h1>
-      <p className="mt-3 text-muted-foreground">Feature owner: {owner}</p>
-      <div className="mt-8 rounded-lg border bg-white p-6">
-        <h2 className="font-semibold">Ready for development</h2>
-        <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
+      <h1 className="font-display text-[clamp(40px,5vw,72px)] leading-[0.86] font-bold tracking-[-0.012em] text-balance text-indigo-hi lowercase [font-stretch:75%]">
+        {title}
+      </h1>
+      <p className="mt-4 text-sm text-subtle">Owner: {owner}</p>
+      <div className="mt-8 border border-line bg-graphite-1 p-6">
+        <h2 className="font-bold">Ready for development</h2>
+        <p className="mt-2 max-w-2xl text-sm leading-6 text-subtle">
           This is a starter screen. Workflow implementation belongs to the
           feature owner. AI suggestions support officer review and do not
           determine regulatory outcomes.
@@ -29,20 +31,25 @@ export function FeaturePage({
 }
 export function LoadingState() {
   return (
-    <p role="status" className="p-6">
-      Loading summary…
-    </p>
+    <div className="grid gap-3 py-2">
+      <Skeleton className="h-5 w-2/5" label="Loading summary…" />
+      <div className="grid gap-4 sm:grid-cols-3">
+        <Skeleton className="h-24" />
+        <Skeleton className="h-24" />
+        <Skeleton className="h-24" />
+      </div>
+    </div>
   );
 }
 export function ErrorState({ retry }: { retry: () => void }) {
   return (
-    <div role="alert" className="rounded border p-5">
-      <p>
+    <div role="alert" className="border border-line bg-graphite-1 p-5">
+      <p className="text-sm">
         Summary unavailable. In API mode, this endpoint awaits implementation.
       </p>
-      <button className="mt-3 underline" onClick={retry}>
-        Try again
-      </button>
+      <Button variant="ghost" size="sm" className="mt-4" onClick={retry}>
+        Retry
+      </Button>
     </div>
   );
 }

@@ -1,10 +1,10 @@
-# CaseBridge
+# Setu
 
 Team Aarohan · Smart India Hackathon 2026 · SIH26264 (AICTE)
 
-A foundation for authorized cross-bureau complaint investigation and coordination. PGRC and RB may receive related complaints independently, leading to repeated evidence requests, duplicate investigations and delayed resolution. CaseBridge will help officers identify relationships while preserving original complaint IDs and bureau ownership.
+A foundation for authorized cross-bureau complaint investigation and coordination. PGRC and RB may receive related complaints independently, leading to repeated evidence requests, duplicate investigations and delayed resolution. Setu will help officers identify relationships while preserving original complaint IDs and bureau ownership.
 
-**Implementation status:** the browser remains a foundation shell. Joel's matching, Action Firewall, link review, graph and coordination-decision endpoints are implemented; authentication, complaint workflows, scoped reporting and persistent coordination are also implemented. See [core backend handoff](docs/CORE_BACKEND_INTEGRATION.md) for setup and pending local PostgreSQL verification. All included data is fictional. This is not an official AICTE service.
+**Implementation status:** the browser remains a foundation shell. Joel's matching, Action Firewall, link review, graph and coordination-decision endpoints are implemented; authentication, complaint workflows, scoped reporting and persistent coordination are also implemented. See [core backend handoff](docs/CORE_BACKEND_INTEGRATION.md) for setup and pending local PostgreSQL verification. All included data is synthetic. This is not an official AICTE service.
 
 ## Planned USPs
 

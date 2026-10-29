@@ -36,7 +36,7 @@ app.get('/private', requireAuth, requireRole('BUREAU_HEAD'), (req, res) =>
 );
 app.use(errorHandler);
 function cookie(options: jwt.SignOptions = {}) {
-  return `casebridge_session=${jwt.sign({}, secret, { subject: 'user-1', jwtid: 'test-session', issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '5m', ...options })}`;
+  return `setu_session=${jwt.sign({}, secret, { subject: 'user-1', jwtid: 'test-session', issuer: 'setu-api', audience: 'setu-web', expiresIn: '5m', ...options })}`;
 }
 afterEach(() => vi.resetAllMocks());
 describe('authentication boundaries', () => {

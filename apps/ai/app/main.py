@@ -13,7 +13,7 @@ from .schemas import BatchRequest, BatchResponse, SimilarityResult
 
 load_dotenv()
 _inference_slot = threading.BoundedSemaphore(1)
-logger = logging.getLogger("casebridge.ai")
+logger = logging.getLogger("setu.ai")
 
 class ServiceError(Exception):
     def __init__(self, status: int, code: str, message: str):
@@ -42,7 +42,7 @@ async def lifespan(_app: FastAPI):
             logger.warning("Model preload failed; health remains available, inference returns 503")
     yield
 
-app = FastAPI(title="CaseBridge AI", lifespan=lifespan)
+app = FastAPI(title="Setu AI", lifespan=lifespan)
 
 @app.exception_handler(ServiceError)
 async def service_error(_request, exc):
@@ -55,7 +55,7 @@ async def invalid_request(_request, _exc):
 
 @app.get("/health")
 def health():
-    return {"success": True, "message": "CaseBridge AI service is running", "mode": os.getenv("EMBEDDING_MODE", "transformer")}
+    return {"success": True, "message": "Setu AI service is running", "mode": os.getenv("EMBEDDING_MODE", "transformer")}
 
 @app.post("/v1/similarities", response_model=BatchResponse, dependencies=[Depends(require_service_token)])
 def similarities(body: BatchRequest):

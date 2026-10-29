@@ -45,7 +45,7 @@ const outsider = {
 };
 const admin = { id: id('admin'), role: 'ADMIN' as const, bureauId: null };
 function cookie(user: { id: string }) {
-  return `casebridge_session=${jwt.sign({}, env.JWT_SECRET!, { subject: user.id, jwtid: id(`session-${user.id}`), issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '10m' })}`;
+  return `setu_session=${jwt.sign({}, env.JWT_SECRET!, { subject: user.id, jwtid: id(`session-${user.id}`), issuer: 'setu-api', audience: 'setu-web', expiresIn: '10m' })}`;
 }
 function post(path: string, user: { id: string }, body: unknown) {
   return request(app)

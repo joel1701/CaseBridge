@@ -101,13 +101,13 @@ it('logout revokes the token and a replay is denied', async () => {
   const token = jwt.sign({}, mocks.secret, {
     subject: 'u',
     jwtid: 'session',
-    issuer: 'casebridge-api',
-    audience: 'casebridge-web',
+    issuer: 'setu-api',
+    audience: 'setu-web',
     expiresIn: '1h',
   });
   const result = await post('/api/auth/logout', {}).set(
     'Cookie',
-    `casebridge_session=${token}`,
+    `setu_session=${token}`,
   );
   expect(result.status).toBe(200);
   expect(result.headers['set-cookie'][0]).toContain('Expires=Thu, 01 Jan 1970');
@@ -125,7 +125,7 @@ it('logout revokes the token and a replay is denied', async () => {
     (
       await request(app)
         .get('/api/auth/me')
-        .set('Cookie', `casebridge_session=${token}`)
+        .set('Cookie', `setu_session=${token}`)
     ).status,
   ).toBe(401);
 });

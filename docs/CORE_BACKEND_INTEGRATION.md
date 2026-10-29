@@ -15,7 +15,7 @@ Login counts attempts atomically in PostgreSQL: 10 per normalized account and 60
 | Setting            | Local                   | Vercel web + Render API                                                                                                                                                                                                                                       |
 | ------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `NODE_ENV`         | `development`           | `production` (forces Secure cookies; JWT_SECRET required at startup)                                                                                                                                                                                          |
-| `FRONTEND_URL`     | `http://localhost:5173` | The exact browser origin, e.g. `https://casebridge.example`. Scheme, host and port must match; no trailing path                                                                                                                                               |
+| `FRONTEND_URL`     | `http://localhost:5173` | The exact browser origin, e.g. `https://setu.example`. Scheme, host and port must match; no trailing path                                                                                                                                                     |
 | `COOKIE_SAME_SITE` | `lax`                   | `lax` when web and API share a registrable domain (preferred, e.g. `app.example` + `api.example`). `none` only for unrelated default domains (`*.vercel.app` + `*.onrender.com`); browsers that block third-party cookies will still refuse it                |
 | `TRUST_PROXY_HOPS` | `0`                     | The number of reverse proxies in front of Express. Render puts its load balancer in front of the service, so start with `1`, then confirm in staging that the throttle sees distinct client IPs (not the proxy's). Never set it higher than the real topology |
 
@@ -56,13 +56,13 @@ Transfers between bureaus are ADMIN only:
 
 Transitions: RECEIVED → UNDER_PROCESS / ESCALATED / DISPOSED; UNDER_PROCESS → ESCALATED / DISPOSED; TRANSFERRED → UNDER_PROCESS / ESCALATED / DISPOSED; ESCALATED → UNDER_PROCESS / DISPOSED. A same-status request is accepted but is not a lifecycle event: no status audit and no status alert. DISPOSED cannot reopen. TRANSFERRED is set only by a real bureau transfer; sending it as a standalone status is rejected. Disposal resolves the complaint's earlier open alerts before the disposal status alert is written.
 
-All complaint writes use the same institution advisory-lock namespace as the intelligence engine (`casebridge:institution:<id>`, sorted acquisition, 5 s lock timeout). A lock timeout or pool exhaustion now returns 503 DEPENDENCY_UNAVAILABLE instead of 500. Institution correction locks old/new keys in sorted order, reloads authorization/version and refuses active relationships or any workspace dependency. Reject inappropriate relationships through the existing review API first. A complaint referenced by any coordination workspace cannot transfer bureau, including a completed workspace. No alternate action-creation/update endpoint exists; actual actions continue to go through the Action Firewall.
+All complaint writes use the same institution advisory-lock namespace as the intelligence engine (`setu:institution:<id>`, sorted acquisition, 5 s lock timeout). A lock timeout or pool exhaustion now returns 503 DEPENDENCY_UNAVAILABLE instead of 500. Institution correction locks old/new keys in sorted order, reloads authorization/version and refuses active relationships or any workspace dependency. Reject inappropriate relationships through the existing review API first. A complaint referenced by any coordination workspace cannot transfer bureau, including a completed workspace. No alternate action-creation/update endpoint exists; actual actions continue to go through the Action Firewall.
 
 DELETE is an ADMIN-only archive of a disposed, not-yet-archived complaint (re-archiving returns 409 INVALID_STATE). It retains the row, references and audit history, and resolves remaining open alerts. Lists default to unarchived cases; `archived=true` selects archived records. Reports include historical/archived complaints, and authorized detail/timeline/graph reads remain available. No hard delete, unarchive or automatic disposition is implemented.
 
 ## Alerts and the deadline monitor
 
-`POST /api/alerts/refresh` refreshes the caller's authorized bureau(s); heads/admins only. The standalone `npm run alerts:refresh -w @casebridge/api` checks all cases for a trusted operator/scheduler and deletes session/throttle rows that expired more than a day ago. On failure it logs only an error code (for example `P1001` or `DATABASE_NOT_CONFIGURED`) and exits 1. Reads never generate alerts.
+`POST /api/alerts/refresh` refreshes the caller's authorized bureau(s); heads/admins only. The standalone `npm run alerts:refresh -w @setu/api` checks all cases for a trusted operator/scheduler and deletes session/throttle rows that expired more than a day ago. On failure it logs only an error code (for example `P1001` or `DATABASE_NOT_CONFIGURED`) and exits 1. Reads never generate alerts.
 
 DEADLINE_ALERT_HOURS defaults to 48 (range 1–720). Keys:
 
@@ -77,7 +77,7 @@ Resolution semantics:
 
 Each case refreshes in its own transaction under the institution lock, so concurrent refreshes (cron plus a head pressing refresh) serialize per case without duplicate-key failures. Disposed/archived cases are skipped unless an automatic alert is still open. Read/resolved state is shared by the bureau, not per user. Requests to read/update alerts scope both the alert's bureau and its complaint's current bureau.
 
-**Scheduling:** no scheduler is installed by the repository. On Render, add a Cron Job service that uses the API's build and environment (same `DATABASE_URL`, `DEADLINE_ALERT_HOURS`; JWT/AI secrets not needed) with the command `npm run alerts:refresh -w @casebridge/api` and schedule `*/10 * * * *` (any value in 5–15 minutes). Elsewhere, use the platform scheduler or `cron` with the same command. Overlapping runs are safe but wasteful; keep the interval longer than a run.
+**Scheduling:** no scheduler is installed by the repository. On Render, add a Cron Job service that uses the API's build and environment (same `DATABASE_URL`, `DEADLINE_ALERT_HOURS`; JWT/AI secrets not needed) with the command `npm run alerts:refresh -w @setu/api` and schedule `*/10 * * * *` (any value in 5–15 minutes). Elsewhere, use the platform scheduler or `cron` with the same command. Overlapping runs are safe but wasteful; keep the interval longer than a run.
 
 ## Timelines
 
@@ -109,13 +109,13 @@ Workspace responses redact private complaint/action/coordinator identifiers. Inv
 The original labelled CSVs and evaluation results are untouched. The seed creates:
 
 - the original 25 complaints plus 100 deterministic operational fixtures (125 total);
-- 10 fictional institutions and two bureaus;
+- 10 synthetic institutions and two bureaus;
 - the existing actions/link and operational histories, including overdue, escalated and disposed cases;
 - five role-varied demo accounts.
 
 Fixed operational fixture dates are based on 27 October 2026, so their deadlines age naturally. Repeated runs preserve existing rows and passwords, verified by identical row counts and password-hash digests across runs. The seed runs as one transaction with a 120 s timeout to allow for hosted-database latency. If a row conflicts with a differently identified existing record, it names the constraint, rolls back and changes nothing.
 
-Accounts: pgrc-officer, pgrc-head, rb-officer, rb-head and admin, each at `@casebridge.example.invalid`. SEED_DEMO_PASSWORD optionally supplies their initial password (12+ characters, <=72 UTF-8 bytes); without it a random password is generated. Newly created credentials are merged into `apps/api/.seed-credentials.json` (mode 0600, Git-ignored), and earlier entries are kept. Do not publish this file. Reruns that create no accounts leave it untouched. SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD remain supported. Seed is disabled in NODE_ENV=production.
+Accounts: pgrc-officer, pgrc-head, rb-officer, rb-head and admin, each at `@setu.example.invalid`. SEED_DEMO_PASSWORD optionally supplies their initial password (12+ characters, <=72 UTF-8 bytes); without it a random password is generated. Newly created credentials are merged into `apps/api/.seed-credentials.json` (mode 0600, Git-ignored), and earlier entries are kept. Do not publish this file. Reruns that create no accounts leave it untouched. SEED_ADMIN_EMAIL/SEED_ADMIN_PASSWORD remain supported. Seed is disabled in NODE_ENV=production.
 
 From the repository root:
 
@@ -126,8 +126,8 @@ npm install
 npm run db:generate
 npm run db:deploy
 npm run db:seed
-npm run alerts:refresh -w @casebridge/api
-npm run dev -w @casebridge/api
+npm run alerts:refresh -w @setu/api
+npm run dev -w @setu/api
 ```
 
 Run MiniLM separately as documented in JOEL_INTEGRATION.md: EMBEDDING_MODE=transformer, the shared service token and the pinned model cache. The frontend must set VITE_USE_MOCKS=false and use credentialed requests; login is real, with no fixture fallback or auth bypass.
@@ -192,7 +192,7 @@ docker run -d --rm --name casebridge-test-pg -e POSTGRES_USER=casebridge \
 export CASEBRIDGE_TEST_DATABASE_URL=postgresql://casebridge@127.0.0.1:55432/casebridge_test
 DATABASE_URL="$CASEBRIDGE_TEST_DATABASE_URL" npm run db:deploy
 DATABASE_URL="$CASEBRIDGE_TEST_DATABASE_URL" npm run db:seed
-npm run test -w @casebridge/api -- src/modules/complaints/core.integration.test.ts src/modules/matching/intelligence.integration.test.ts
+npm run test -w @setu/api -- src/modules/complaints/core.integration.test.ts src/modules/matching/intelligence.integration.test.ts
 # Model-dependent cases: start uvicorn with EMBEDDING_MODE=transformer and a shared AI_SERVICE_TOKEN, then
 CASEBRIDGE_TEST_AI=1 AI_SERVICE_URL=http://127.0.0.1:8000 AI_SERVICE_TOKEN=... npm test
 docker stop casebridge-test-pg   # --rm deletes it

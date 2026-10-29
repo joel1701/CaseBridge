@@ -12,7 +12,7 @@ describe('foundation API', () => {
     expect(res.status).toBe(200);
     expect(res.body).toEqual({
       success: true,
-      message: 'CaseBridge API is running',
+      message: 'Setu API is running',
     });
   });
   it('reports readiness as booleans without leaking configuration', async () => {

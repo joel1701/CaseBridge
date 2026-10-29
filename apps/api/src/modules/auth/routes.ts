@@ -26,7 +26,7 @@ router.post('/auth/login', async (req, res) => {
   );
   res
     .set('Cache-Control', 'no-store')
-    .cookie('casebridge_session', result.token, sessionCookieOptions)
+    .cookie('setu_session', result.token, sessionCookieOptions)
     .json({ success: true, data: { user: result.user } });
 });
 router.get('/auth/me', requireAuth, async (req, res) => {
@@ -39,11 +39,11 @@ router.get('/auth/me', requireAuth, async (req, res) => {
 });
 router.post('/auth/logout', async (req, res) => {
   parseInput(z.strictObject({}), req.body ?? {});
-  await logout(getPrisma(), req.cookies?.casebridge_session);
+  await logout(getPrisma(), req.cookies?.setu_session);
   const options = { ...sessionCookieOptions };
   delete options.maxAge;
   res
     .set('Cache-Control', 'no-store')
-    .clearCookie('casebridge_session', options)
+    .clearCookie('setu_session', options)
     .json({ success: true, data: { loggedOut: true } });
 });

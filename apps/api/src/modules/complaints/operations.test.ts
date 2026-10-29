@@ -107,10 +107,7 @@ describe('operational validation and privacy', () => {
       ['z', 'a', 'z'],
       async () => true,
     );
-    expect(locks).toEqual([
-      'casebridge:institution:a',
-      'casebridge:institution:z',
-    ]);
+    expect(locks).toEqual(['setu:institution:a', 'setu:institution:z']);
   });
 });
 function fakeDb(overrides: Record<string, unknown> = {}) {

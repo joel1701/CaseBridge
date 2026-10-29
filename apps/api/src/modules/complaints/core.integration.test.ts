@@ -38,7 +38,7 @@ const newCase = (ref: string, bureauId = id('PGRC')) => ({
   originalId: ref,
   institutionId: id('inst'),
   bureauId,
-  title: 'Fictional admission concern',
+  title: 'Admission fee concern',
   description:
     'Synthetic unauthorized admission fee allegation for testing only.',
   category: 'FEES',
@@ -51,14 +51,14 @@ describe.skipIf(!process.env.CASEBRIDGE_TEST_DATABASE_URL)(
       const hash = await hashPassword(password);
       for (const code of ['PGRC', 'RB'])
         await db.bureau.create({
-          data: { id: id(code), code: id(code), name: 'Fictional ' + code },
+          data: { id: id(code), code: id(code), name: 'Bureau ' + code },
         });
       for (const name of ['inst', 'other'])
         await db.institution.create({
           data: {
             id: id(name),
             permanentId: id('permanent-' + name),
-            name: 'Fictional institution',
+            name: 'Aaravika Institute of Engineering',
             state: 'Kerala',
           },
         });
@@ -72,7 +72,7 @@ describe.skipIf(!process.env.CASEBRIDGE_TEST_DATABASE_URL)(
           data: {
             id: id(name),
             email: `${id(name)}@example.invalid`,
-            displayName: 'Fictional ' + name,
+            displayName: 'Officer ' + name,
             role,
             bureauId: bureau ? id(bureau) : null,
             passwordHash: hash,
@@ -599,7 +599,7 @@ describe.skipIf(!process.env.CASEBRIDGE_TEST_DATABASE_URL)(
       await holder.connect();
       try {
         await holder.query(`SELECT pg_advisory_lock(hashtextextended($1, 0))`, [
-          `casebridge:institution:${id('inst')}`,
+          `setu:institution:${id('inst')}`,
         ]);
         const blocked = await send(
           'post',

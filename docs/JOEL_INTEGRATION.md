@@ -103,7 +103,7 @@ Optional API configuration: AI_TIMEOUT_MS=30000 (total analysis budget), MATCH_T
 # Repository root
 npm install
 npm run db:deploy
-npm run dev -w @casebridge/api
+npm run dev -w @setu/api
 ```
 
 ```sh
@@ -130,14 +130,14 @@ RUN_MODEL_TESTS=1 .venv/bin/python -m pytest
 Opt-in HTTP integration (start AI with the same token; commands run from repository root):
 
 ```sh
-CASEBRIDGE_TEST_AI=1 npm run test -w @casebridge/api -- src/modules/matching/ai.integration.test.ts
+CASEBRIDGE_TEST_AI=1 npm run test -w @setu/api -- src/modules/matching/ai.integration.test.ts
 ```
 
 For a **disposable PostgreSQL test database**, set CASEBRIDGE_TEST_DATABASE_URL in your terminal. It is never inferred from the development DATABASE_URL. Apply migrations to that test URL, then run:
 
 ```sh
 DATABASE_URL="$CASEBRIDGE_TEST_DATABASE_URL" npm run db:deploy
-CASEBRIDGE_TEST_AI=1 npm run test -w @casebridge/api -- src/modules/matching/intelligence.integration.test.ts
+CASEBRIDGE_TEST_AI=1 npm run test -w @setu/api -- src/modules/matching/intelligence.integration.test.ts
 ```
 
 The database suite creates records with a unique test prefix and cleans up only those records. It covers real concurrent submissions across bureaus, stale previews, audits/rollback, review concurrency, permissions, coordination, graph visibility and optional real AI analysis. Without CASEBRIDGE_TEST_DATABASE_URL its nine tests are explicitly skipped. Without CASEBRIDGE_TEST_AI the separate HTTP test and two model-dependent database cases are skipped.

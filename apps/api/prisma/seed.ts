@@ -104,6 +104,13 @@ async function seed() {
           create: row,
           update: {},
         });
+      const demoDisplayNames: Record<string, string> = {
+        'pgrc-officer': 'S. Rao (PGRC officer)',
+        'pgrc-head': 'M. Iyer (PGRC head)',
+        'rb-officer': 'R. Gill (RB officer)',
+        'rb-head': 'V. Sharma (RB head)',
+        admin: 'P. Deshmukh (Admin)',
+      };
       const demoUserIds = new Map<string, string>();
       for (const [suffix, role, bureauId] of [
         ['pgrc-officer', 'OFFICER', 'PGRC'],
@@ -112,7 +119,7 @@ async function seed() {
         ['rb-head', 'BUREAU_HEAD', 'RB'],
         ['admin', 'ADMIN', null],
       ] as const) {
-        const demoEmail = `${suffix}@casebridge.example.invalid`;
+        const demoEmail = `${suffix}@setu.example.invalid`;
         const existingUser = await tx.user.findUnique({
           where: { email: demoEmail },
         });
@@ -122,7 +129,7 @@ async function seed() {
             data: {
               id: `demo-user-${suffix}`,
               email: demoEmail,
-              displayName: `Fictional ${suffix}`,
+              displayName: demoDisplayNames[suffix],
               role,
               bureauId,
               passwordHash: demoHash,
@@ -150,14 +157,14 @@ async function seed() {
           update: {},
           create: {
             id,
-            originalId: `OPS-FICTIONAL-${n}`,
+            originalId: `OPS-DEMO-${n}`,
             institutionId: `inst-${String((n % 10) + 1).padStart(2, '0')}`,
             bureauId,
             sourceBureauId: bureauId,
             assignedToId: demoUserIds.get(
               `${bureauId === 'PGRC' ? 'pgrc' : 'rb'}-officer`,
             )!,
-            title: `Fictional operational complaint ${n}`,
+            title: `Operational complaint ${n}`,
             description: `Synthetic training complaint ${n}: reported concerns require independent officer assessment. No real institution or allegation is represented.`,
             category: ['FEES', 'INFRASTRUCTURE', 'FACULTY'][n % 3],
             status,
@@ -177,7 +184,7 @@ async function seed() {
             complaintId: id,
             event: 'COMPLAINT_CREATED',
             metadata: {
-              originalId: `OPS-FICTIONAL-${n}`,
+              originalId: `OPS-DEMO-${n}`,
               source: 'synthetic-seed',
             },
           },

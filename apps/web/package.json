@@ -1,5 +1,5 @@
 {
-  "name": "@casebridge/web",
+  "name": "@setu/web",
   "version": "0.1.0",
   "private": true,
   "type": "module",
@@ -10,26 +10,32 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource-variable/hubot-sans": "^5.3.0",
+    "@fontsource-variable/special-gothic": "^5.3.0",
+    "@fontsource/teko": "^5.3.0",
+    "@gsap/react": "2.1.2",
+    "@radix-ui/react-slot": "^1.2.4",
+    "@tanstack/react-query": "^5.90.0",
+    "@xyflow/react": "^12.9.3",
+    "axios": "^1.13.2",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "gsap": "3.12.5",
+    "lenis": "1.1.13",
+    "lucide-react": "^0.468.0",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
     "react-router": "^7.9.6",
-    "@tanstack/react-query": "^5.90.0",
-    "axios": "^1.13.2",
-    "@xyflow/react": "^12.9.3",
     "recharts": "^3.5.0",
-    "lucide-react": "^0.468.0",
-    "class-variance-authority": "^0.7.1",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.4.0",
-    "@radix-ui/react-slot": "^1.2.4"
+    "tailwind-merge": "^3.4.0"
   },
   "devDependencies": {
-    "vite": "^8.3.5",
-    "@vitejs/plugin-react": "^6.0.0",
-    "tailwindcss": "^4.1.17",
     "@tailwindcss/vite": "^4.1.17",
+    "@types/node": "^24.10.0",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "@types/node": "^24.10.0"
+    "@vitejs/plugin-react": "^6.0.0",
+    "tailwindcss": "^4.1.17",
+    "vite": "^8.3.5"
   }
 }
