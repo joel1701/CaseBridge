@@ -60,7 +60,13 @@ export interface ComplaintListQuery extends PageQuery {
   archived?: boolean;
   /** ADMIN only */
   bureauId?: string;
+  /**
+   * Frontend-only views the API has no parameter for (dashboard tiles, bureau queue
+   * tabs). Never sent to the API; see listComplaints.
+   */
+  view?: ComplaintView;
 }
+export type ComplaintView = 'open' | 'overdue' | 'dueSoon' | 'unassigned';
 export interface ComplaintCreate {
   originalId: string;
   institutionId: string;

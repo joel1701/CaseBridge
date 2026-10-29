@@ -7,6 +7,8 @@ export interface FilterSelect {
   label: string;
   /** The first option is usually "All …" with value ''. */
   options: { value: string; label: string }[];
+  /** false for controls that always hold a value (e.g. sort): they don't count as filters. */
+  clearable?: boolean;
 }
 
 // Search plus square native selects. Controlled: pair it with useUrlState so every
@@ -44,7 +46,8 @@ export function FilterBar({
     return () => clearTimeout(t);
   }, [draft, urlQuery, searchKey, onChange]);
 
-  const active = [search?.key, ...selects.map((s) => s.key)].some(
+  const clearable = selects.filter((s) => s.clearable !== false);
+  const active = [search?.key, ...clearable.map((s) => s.key)].some(
     (k) => k && values[k],
   );
 
@@ -104,7 +107,7 @@ export function FilterBar({
           onClick={() =>
             onChange(
               Object.fromEntries(
-                [search?.key, ...selects.map((s) => s.key)]
+                [search?.key, ...clearable.map((s) => s.key)]
                   .filter(Boolean)
                   .map((k) => [k!, undefined]),
               ),

@@ -27,18 +27,54 @@ export const complaintKeys = {
     ['complaints', 'actions', id, q] as const,
 };
 
-const toQuery = (q: ComplaintListQuery) =>
+export const toQuery = (q: ComplaintListQuery) =>
   params({
     ...q,
+    view: undefined,
     archived: q.archived === undefined ? undefined : String(q.archived),
   });
+
+/**
+ * The API has no parameter for the frontend views (open, overdue, due soon, unassigned).
+ * Against the real API a view fetches the first 100 matches by due date and filters them
+ * in the browser, so very large result sets are truncated; synthetic data filters fully.
+ */
+export async function withView(
+  q: ComplaintListQuery,
+  fetchPage: (
+    q: ComplaintListQuery,
+  ) => Promise<{ data: ApiSuccess<{ items: ComplaintListItem[] }> }>,
+) {
+  if (!q.view) return fetchPage(q);
+  const res = await fetchPage({
+    ...q,
+    page: 1,
+    pageSize: 100,
+    sortBy: 'dueAt',
+    sortOrder: 'asc',
+  });
+  const all = res.data.data.items.filter((c) =>
+    mock.matchesView(c, q.view, Date.now()),
+  );
+  const page = q.page ?? 1;
+  const pageSize = q.pageSize ?? 20;
+  return {
+    data: {
+      ...res.data,
+      data: { items: all.slice((page - 1) * pageSize, page * pageSize) },
+      meta: { page, pageSize, total: all.length },
+    },
+  };
+}
 
 export const listComplaints = (q: ComplaintListQuery = {}) =>
   callPage<ComplaintListItem>(
     () =>
-      api.get<ApiSuccess<{ items: ComplaintListItem[] }>>('/complaints', {
-        params: toQuery(q),
-      }),
+      withView(q, (query) =>
+        api.get<ApiSuccess<{ items: ComplaintListItem[] }>>('/complaints', {
+          params: toQuery(query),
+        }),
+      ),
     () => mock.list(q),
   );
 

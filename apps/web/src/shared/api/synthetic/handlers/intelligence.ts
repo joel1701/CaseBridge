@@ -9,6 +9,7 @@ import {
   linkById,
   links,
   now,
+  suggestOverlaps,
 } from '../store';
 import { conflict, done, notFound, paginate, reasonField } from './util';
 import type {
@@ -31,6 +32,7 @@ const otherOf = (l: (typeof links)[number], caseId: string) =>
 export function analyze(caseId: string): AnalyzeResult {
   const c = caseById(caseId);
   if (!c) notFound('Complaint');
+  if (!mineOf(caseId).length) suggestOverlaps(caseId);
   return {
     caseId,
     suggestions: mineOf(caseId).map((l) => {

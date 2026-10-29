@@ -46,6 +46,21 @@ const STATUSES: ComplaintStatus[] = [
 // Demo actor for synthetic mutations: the signed-in demo account is not tracked here.
 const ACTOR = 'demo-user-pgrc-head';
 
+// Frontend-only views (see ComplaintListQuery.view).
+export function matchesView(
+  c: ComplaintListItem,
+  view: ComplaintListQuery['view'],
+  at = now(),
+) {
+  if (!view) return true;
+  if (c.status === 'DISPOSED') return false;
+  const due = c.dueAt ? Date.parse(c.dueAt) : Infinity;
+  if (view === 'overdue') return due < at;
+  if (view === 'dueSoon') return due >= at && due - at <= 48 * 3_600_000;
+  if (view === 'unassigned') return !c.assignedToId;
+  return true;
+}
+
 export function list(q: ComplaintListQuery = {}): {
   items: ComplaintListItem[];
   meta: ReturnType<typeof paginate>['meta'];
@@ -69,6 +84,7 @@ export function list(q: ComplaintListQuery = {}): {
         (!q.category || c.category === q.category) &&
         (!q.assignedToId || c.assignedToId === q.assignedToId) &&
         (!q.bureauId || c.bureauId === q.bureauId) &&
+        matchesView(c, q.view) &&
         (!needle ||
           c.title.toLowerCase().includes(needle) ||
           c.originalId.toLowerCase().includes(needle) ||

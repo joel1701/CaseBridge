@@ -1,4 +1,5 @@
 import { api } from './client';
+import { toQuery, withView } from './complaints';
 import { callPage, params } from './request';
 import * as mock from './synthetic/handlers/directory';
 import type {
@@ -40,12 +41,10 @@ export const listOfficers = (bureauId: string, q: PageQuery = {}) =>
 export const getBureauQueue = (bureauId: string, q: ComplaintListQuery = {}) =>
   callPage<ComplaintListItem>(
     () =>
-      api.get(`/bureaus/${encodeURIComponent(bureauId)}/queue`, {
-        params: params({
-          ...q,
-          bureauId: undefined,
-          archived: q.archived === undefined ? undefined : String(q.archived),
+      withView(q, (query) =>
+        api.get(`/bureaus/${encodeURIComponent(bureauId)}/queue`, {
+          params: toQuery({ ...query, bureauId: undefined }),
         }),
-      }),
+      ),
     () => mock.bureauQueue(bureauId, q),
   );

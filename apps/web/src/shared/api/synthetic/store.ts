@@ -337,6 +337,68 @@ export const links: StoreLink[] = overlapSpecs.flatMap((spec, n) => {
 });
 export const linkById = (id: string) => links.find((l) => l.id === id);
 
+/**
+ * Matching for a case that has no suggestions yet (mock analyze): one suggested link to
+ * the latest open case at each other bureau at the same institution, registered as an
+ * overlap so the dashboard, alerts and links all show it.
+ */
+export function suggestOverlaps(caseId: string): StoreLink[] {
+  const c = caseById(caseId);
+  if (!c) return [];
+  const t = now();
+  const others = mockBureaus
+    .map((b) => b.code)
+    .filter((b) => b !== c.bureau)
+    .map(
+      (b) =>
+        cases
+          .filter(
+            (x) =>
+              x.institutionId === c.institutionId &&
+              x.bureau === b &&
+              isOpenAt(x, t) &&
+              !x.archivedAt,
+          )
+          .sort((x, y) => y.createdAt - x.createdAt)[0],
+    )
+    .filter((x): x is StoreCase => !!x)
+    .slice(0, 2);
+  if (!others.length) return [];
+  const id = `ovl-syn-${t}`;
+  const reasons = ['Same AICTE permanent ID'];
+  if (others.some((o) => o.category === c.category))
+    reasons.push('Same category');
+  reasons.push('Open cases at another bureau');
+  const score = others.some((o) => o.category === c.category) ? 0.86 : 0.74;
+  overlapSpecs.push({
+    id,
+    institutionId: c.institutionId,
+    bureaus: [c.bureau, ...others.map((o) => o.bureau)],
+    caseIds: [c.id, ...others.map((o) => o.id)],
+    confidence: score,
+    reasons,
+    state: 'NEW',
+    detectedAt: iso(t),
+  });
+  const made = others.map((o, k) => ({
+    id: others.length > 1 ? `link-${id}-${k + 1}` : `link-${id}`,
+    overlapId: id,
+    sourceComplaintId: c.id,
+    targetComplaintId: o.id,
+    status: 'SUGGESTED' as const,
+    underReview: false,
+    score,
+    reasons,
+    createdAt: t,
+    updatedAt: t,
+    reviewedById: null,
+    reviewReason: null,
+    reviewedAt: null,
+  }));
+  links.push(...made);
+  return made;
+}
+
 /** The dashboard's overlap view of the links, live. Rejected overlaps drop out. */
 export function overlapAlerts(): OverlapAlert[] {
   return overlapSpecs
