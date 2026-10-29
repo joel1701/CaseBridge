@@ -336,18 +336,6 @@
         100% 2px;
     }
   }
-
-  /* Legacy font helpers, still used by the old landing page */
-  .font-heading {
-    font-family: var(--f-display);
-    letter-spacing: -0.025em;
-  }
-  .font-body {
-    font-family: var(--f-text);
-  }
-  .font-mono-code {
-    font-family: var(--f-mono);
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
