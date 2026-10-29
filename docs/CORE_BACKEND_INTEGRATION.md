@@ -109,7 +109,7 @@ Workspace responses redact private complaint/action/coordinator identifiers. Inv
 The original labelled CSVs and evaluation results are untouched. The seed creates:
 
 - the original 25 complaints plus 100 deterministic operational fixtures (125 total);
-- 10 fictional institutions and two bureaus;
+- 10 synthetic institutions and two bureaus;
 - the existing actions/link and operational histories, including overdue, escalated and disposed cases;
 - five role-varied demo accounts.
 

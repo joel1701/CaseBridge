@@ -343,7 +343,7 @@ None.
   "data": {
     "id": "inst-01",
     "permanentId": "SYN-AICTE-1-900000001",
-    "name": "Aaravika Institute of Engineering (Fictional)",
+    "name": "Aaravika Institute of Engineering",
     "state": "Kerala",
     "authorizedComplaintCount": 3
   }
@@ -592,7 +592,7 @@ None.
       {
         "id": "inst-01",
         "type": "institution",
-        "label": "Fictional institution"
+        "label": "Aaravika Institute of Engineering"
       },
       {
         "id": "cmp-001",

@@ -52,7 +52,7 @@ Technical constraints & current phase:
 
 ## Evidence on Hand
 
-- Synthetic Fixture Callset: 10 fictional institutions (`data/sample_institutions.csv`), 25 categorized complaints (`data/sample_complaints.csv`), and mock actions (`data/sample_actions.json`).
+- Synthetic Fixture Callset: 10 synthetic institutions (`data/sample_institutions.csv`), 25 categorized complaints (`data/sample_complaints.csv`), and mock actions (`data/sample_actions.json`).
 - Benchmark Scenarios: 5 documented evaluation scenarios (`data/demo_scenarios.json`) testing explainable fees linking, false positive rejection, duplicate evidence warnings, staffing notice coordination, and cross-institution text similarity guards.
 - Specifications & Architecture: Complete contracts in `docs/PROJECT_SPEC.md`, `docs/ARCHITECTURE.md`, `docs/API_CONTRACT.md`, and `docs/DEMO_SCENARIOS.md`.
 - Unfinished / Not on hand: Live production bureau databases, automated court filing integrations, and client biometric evidence storage are excluded by design.

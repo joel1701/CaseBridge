@@ -16,7 +16,7 @@ it('scopes every graph entity lookup and returns no private counterpart', async 
     institution: {
       findFirst: vi.fn().mockResolvedValue({
         id: 'i',
-        name: 'Fictional',
+        name: 'Aaravika Institute of Engineering',
         permanentId: 'SYN-1',
         state: 'Kerala',
       }),

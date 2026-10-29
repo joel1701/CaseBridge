@@ -1,5 +1,5 @@
-// The one synthetic data source for every page and the dashboard: ~600 fictional
-// cases, 8 fictional institutions, PGRC/RB plus the synthetic AB/AC bureaus.
+// The one synthetic data source for every page and the dashboard: ~600 synthetic
+// cases, 8 synthetic institutions, PGRC/RB plus the synthetic AB/AC bureaus.
 // This file holds the deterministic base generator (unchanged from the dashboard's),
 // so the same cases come out on every load.
 import { complaints, institutions } from '../mock';
@@ -18,7 +18,7 @@ export const mockBureaus: { code: BureauCode; name: string }[] = [
   { code: 'AC', name: 'Academic Cell (synthetic)' },
 ];
 
-// AICTE regional office for each state used by the fictional institutions.
+// AICTE regional office for each state used by the synthetic institutions.
 const regionalOffice: Record<string, Region> = {
   Karnataka: 'Bengaluru',
   Telangana: 'Hyderabad',
@@ -129,7 +129,7 @@ export function generateCases(): BaseCase[] {
       });
     }
   }
-  // The two fictional complaints the rest of the app already uses (mock.ts), still open.
+  // The two synthetic complaints the rest of the app already uses (mock.ts), still open.
   for (const c of complaints) {
     const createdAt = Date.parse(c.createdAt);
     out.push({

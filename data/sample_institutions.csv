@@ -1,11 +1,11 @@
 id,permanentId,name,state
-inst-01,SYN-AICTE-1-900000001,Aaravika Institute of Engineering (Fictional),Karnataka
-inst-02,SYN-AICTE-1-900000002,Nabhora Institute of Engineering (Fictional),Tamil Nadu
-inst-03,SYN-AICTE-1-900000003,Veyantara Institute of Engineering (Fictional),Maharashtra
-inst-04,SYN-AICTE-1-900000004,Tarunika Institute of Engineering (Fictional),Odisha
-inst-05,SYN-AICTE-1-900000005,Pravinya Institute of Engineering (Fictional),Kerala
-inst-06,SYN-AICTE-1-900000006,Suryaveda Institute of Engineering (Fictional),Karnataka
-inst-07,SYN-AICTE-1-900000007,Maitravan Institute of Engineering (Fictional),Tamil Nadu
-inst-08,SYN-AICTE-1-900000008,Nirvanta Institute of Engineering (Fictional),Maharashtra
-inst-09,SYN-AICTE-1-900000009,Aroshika Institute of Engineering (Fictional),Odisha
-inst-10,SYN-AICTE-1-900000010,Vedantara Institute of Engineering (Fictional),Kerala
+inst-01,SYN-AICTE-1-900000001,Aaravika Institute of Engineering,Karnataka
+inst-02,SYN-AICTE-1-900000002,Nabhora Institute of Engineering,Tamil Nadu
+inst-03,SYN-AICTE-1-900000003,Veyantara Institute of Engineering,Maharashtra
+inst-04,SYN-AICTE-1-900000004,Tarunika Institute of Engineering,Odisha
+inst-05,SYN-AICTE-1-900000005,Pravinya Institute of Engineering,Kerala
+inst-06,SYN-AICTE-1-900000006,Suryaveda Institute of Engineering,Karnataka
+inst-07,SYN-AICTE-1-900000007,Maitravan Institute of Engineering,Tamil Nadu
+inst-08,SYN-AICTE-1-900000008,Nirvanta Institute of Engineering,Maharashtra
+inst-09,SYN-AICTE-1-900000009,Aroshika Institute of Engineering,Odisha
+inst-10,SYN-AICTE-1-900000010,Vedantara Institute of Engineering,Kerala

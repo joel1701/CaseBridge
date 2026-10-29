@@ -259,7 +259,7 @@ function DialogDemo() {
         open={open}
         onClose={() => setOpen(false)}
         title="change status"
-        description="PGRC-DEMO-001 · Aaravika Institute of Engineering (Fictional). Demo only: nothing is saved."
+        description="PGRC-DEMO-001 · Aaravika Institute of Engineering. Demo only: nothing is saved."
         confirmLabel="Change status"
         concurrency={{ expectedVersion: 0 }}
         onReload={() => setResult('Reloaded the latest version (demo).')}

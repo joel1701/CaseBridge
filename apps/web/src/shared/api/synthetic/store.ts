@@ -65,15 +65,27 @@ const officerNames = [
   'J. Pillai',
   'B. Sen',
 ];
+const headNames: Record<BureauCode, string> = {
+  PGRC: 'M. Iyer (PGRC head)',
+  RB: 'V. Sharma (RB head)',
+  AB: 'A. Kulkarni (AB head)',
+  AC: 'N. Bose (AC head)',
+};
+
+const leadOfficerNames: Record<BureauCode, string> = {
+  PGRC: 'S. Rao (PGRC officer)',
+  RB: 'R. Gill (RB officer)',
+  AB: 'V. Reddy (AB officer)',
+  AC: 'D. Joshi (AC officer)',
+};
+
 export const officers: Officer[] = mockBureaus.flatMap(({ code }, b) => {
   const lower = code.toLowerCase();
   const demo = code === 'PGRC' || code === 'RB';
   return [
     {
       id: demo ? `demo-user-${lower}-head` : `head-${lower}`,
-      displayName: demo
-        ? `Fictional ${lower}-head`
-        : `${officerNames[b * 4]} (head)`,
+      displayName: headNames[code],
       role: 'BUREAU_HEAD' as const,
       bureauId: code,
     },
@@ -82,10 +94,7 @@ export const officers: Officer[] = mockBureaus.flatMap(({ code }, b) => {
         demo && k === 0
           ? `demo-user-${lower}-officer`
           : `off-${lower}-${k + 1}`,
-      displayName:
-        demo && k === 0
-          ? `Fictional ${lower}-officer`
-          : officerNames[b * 4 + k],
+      displayName: k === 0 ? leadOfficerNames[code] : officerNames[b * 4 + k],
       role: 'OFFICER' as const,
       bureauId: code,
     })),

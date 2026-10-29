@@ -41,12 +41,48 @@ export const demoAccounts: {
     bureauId: 'RB',
   },
   {
+    id: 'AB-OFFICER',
+    email: 'ab-officer@setu.example.invalid',
+    role: 'OFFICER',
+    bureauId: 'AB',
+  },
+  {
+    id: 'AB-HEAD',
+    email: 'ab-head@setu.example.invalid',
+    role: 'BUREAU_HEAD',
+    bureauId: 'AB',
+  },
+  {
+    id: 'AC-OFFICER',
+    email: 'ac-officer@setu.example.invalid',
+    role: 'OFFICER',
+    bureauId: 'AC',
+  },
+  {
+    id: 'AC-HEAD',
+    email: 'ac-head@setu.example.invalid',
+    role: 'BUREAU_HEAD',
+    bureauId: 'AC',
+  },
+  {
     id: 'ADMIN',
     email: 'admin@setu.example.invalid',
     role: 'ADMIN',
     bureauId: null,
   },
 ];
+
+export const demoDisplayNames: Record<string, string> = {
+  'pgrc-officer': 'S. Rao (PGRC officer)',
+  'pgrc-head': 'M. Iyer (PGRC head)',
+  'rb-officer': 'R. Gill (RB officer)',
+  'rb-head': 'V. Sharma (RB head)',
+  'ab-officer': 'V. Reddy (AB officer)',
+  'ab-head': 'A. Kulkarni (AB head)',
+  'ac-officer': 'D. Joshi (AC officer)',
+  'ac-head': 'N. Bose (AC head)',
+  admin: 'P. Deshmukh (Admin)',
+};
 
 const STORE_KEY = 'setu.mockUser';
 
@@ -89,7 +125,7 @@ export async function login(
     const suffix = account.email.split('@')[0];
     const user: AuthUser = {
       id: `demo-user-${suffix}`,
-      displayName: `Fictional ${suffix}`,
+      displayName: demoDisplayNames[suffix] ?? `${suffix} (Officer)`,
       role: account.role,
       bureauId: account.bureauId,
     };
