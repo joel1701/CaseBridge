@@ -11,7 +11,7 @@ export async function withInstitutions<T>(
       async (tx) => {
         await tx.$executeRaw`SET LOCAL lock_timeout = '5s'`;
         for (const id of [...new Set(ids)].sort())
-          await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`casebridge:institution:${id}`},0))::text AS locked`;
+          await tx.$queryRaw`SELECT pg_advisory_xact_lock(hashtextextended(${`setu:institution:${id}`},0))::text AS locked`;
         return work(tx);
       },
       { isolationLevel: 'ReadCommitted', maxWait: 5000, timeout: 15000 },

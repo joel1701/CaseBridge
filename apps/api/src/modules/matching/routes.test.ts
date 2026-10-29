@@ -27,7 +27,7 @@ vi.mock('../../lib/prisma.js', () => ({
 }));
 import { app } from '../../app.js';
 function cookie() {
-  return `casebridge_session=${jwt.sign({}, secret, { subject: 'officer', jwtid: 'test-session', issuer: 'casebridge-api', audience: 'casebridge-web', expiresIn: '5m' })}`;
+  return `setu_session=${jwt.sign({}, secret, { subject: 'officer', jwtid: 'test-session', issuer: 'setu-api', audience: 'setu-web', expiresIn: '5m' })}`;
 }
 const paths = [
   ['post', '/api/intelligence/analyze/c1'],

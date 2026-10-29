@@ -10,6 +10,8 @@ export default tseslint.config(
       '**/generated/**',
       '**/.venv/**',
       '.github/skills/**',
+      '.agents/**',
+      '.claude/**',
     ],
   },
   js.configs.recommended,

@@ -59,8 +59,8 @@ export async function login(
   const token = jwt.sign({}, env.JWT_SECRET, {
     subject: user.id,
     jwtid: id,
-    issuer: 'casebridge-api',
-    audience: 'casebridge-web',
+    issuer: 'setu-api',
+    audience: 'setu-web',
     algorithm: 'HS256',
     expiresIn: '8h',
   });
@@ -88,8 +88,8 @@ export async function logout(db: PrismaClient, token: unknown) {
   try {
     const value = jwt.verify(token, env.JWT_SECRET, {
       algorithms: ['HS256'],
-      issuer: 'casebridge-api',
-      audience: 'casebridge-web',
+      issuer: 'setu-api',
+      audience: 'setu-web',
     });
     if (typeof value === 'string' || !value.jti || !value.sub) return;
     claims = value;

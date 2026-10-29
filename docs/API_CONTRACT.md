@@ -15,7 +15,7 @@ All authenticated reads/writes are bureau-scoped except ADMIN's explicitly autho
 Public; no parameters/body. Always process-liveness only, no DB/AI dependency. HTTP 200:
 
 ```json
-{ "success": true, "message": "CaseBridge API is running" }
+{ "success": true, "message": "Setu API is running" }
 ```
 
 Owner: Vishwak. AI GET /health is a separate public liveness endpoint and adds the active embedding mode.
@@ -70,7 +70,7 @@ Authenticate an active account.
 }
 ```
 
-Set casebridge_session HttpOnly cookie; never return token/hash. Normalize email. Database-backed login throttling is implemented (10/account and 60/IP per 15 minutes).
+Set setu_session HttpOnly cookie; never return token/hash. Normalize email. Database-backed login throttling is implemented (10/account and 60/IP per 15 minutes).
 
 ## GET `/api/auth/me`
 

@@ -23,7 +23,7 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
         'Authentication is not configured',
       ),
     );
-  const token: unknown = req.cookies?.casebridge_session;
+  const token: unknown = req.cookies?.setu_session;
   if (typeof token !== 'string')
     return next(new AppError(401, 'UNAUTHENTICATED', 'Sign in required'));
   let subject: string;
@@ -31,8 +31,8 @@ export const requireAuth: RequestHandler = async (req, _res, next) => {
   try {
     const claims = jwt.verify(token, env.JWT_SECRET, {
       algorithms: ['HS256'],
-      issuer: 'casebridge-api',
-      audience: 'casebridge-web',
+      issuer: 'setu-api',
+      audience: 'setu-web',
     });
     if (typeof claims === 'string' || !claims.sub || !claims.exp || !claims.jti)
       throw new Error('Invalid claims');

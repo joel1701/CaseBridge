@@ -599,7 +599,7 @@ describe.skipIf(!process.env.CASEBRIDGE_TEST_DATABASE_URL)(
       await holder.connect();
       try {
         await holder.query(`SELECT pg_advisory_lock(hashtextextended($1, 0))`, [
-          `casebridge:institution:${id('inst')}`,
+          `setu:institution:${id('inst')}`,
         ]);
         const blocked = await send(
           'post',

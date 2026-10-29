@@ -112,7 +112,7 @@ async function seed() {
         ['rb-head', 'BUREAU_HEAD', 'RB'],
         ['admin', 'ADMIN', null],
       ] as const) {
-        const demoEmail = `${suffix}@casebridge.example.invalid`;
+        const demoEmail = `${suffix}@setu.example.invalid`;
         const existingUser = await tx.user.findUnique({
           where: { email: demoEmail },
         });
