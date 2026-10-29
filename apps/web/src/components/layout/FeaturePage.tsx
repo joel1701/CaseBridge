@@ -15,7 +15,7 @@ export function FeaturePage({
       </p>
       <h1 className="mt-3 text-3xl font-semibold tracking-tight">{title}</h1>
       <p className="mt-3 text-muted-foreground">Feature owner: {owner}</p>
-      <div className="mt-8 rounded-lg border bg-white p-6">
+      <div className="mt-8 rounded-lg border bg-card p-6">
         <h2 className="font-semibold">Ready for development</h2>
         <p className="mt-2 max-w-2xl text-sm leading-6 text-muted-foreground">
           This is a starter screen. Workflow implementation belongs to the

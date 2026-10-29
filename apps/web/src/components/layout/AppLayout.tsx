@@ -31,7 +31,7 @@ const links = [
 export function AppLayout() {
   return (
     <div className="min-h-screen md:grid md:grid-cols-[238px_1fr]">
-      <aside className="border-r bg-white p-5 flex flex-col justify-between">
+      <aside className="border-r bg-background p-5 flex flex-col justify-between">
         <div>
           <Link
             to="/"
@@ -59,7 +59,7 @@ export function AppLayout() {
                 className={({ isActive }) =>
                   `flex items-center gap-3 rounded-md px-3 py-2.5 text-sm ${
                     isActive
-                      ? 'bg-primary text-white font-medium'
+                      ? 'bg-primary text-primary-foreground font-medium'
                       : 'text-muted-foreground hover:bg-muted'
                   }`
                 }
@@ -71,7 +71,7 @@ export function AppLayout() {
           </nav>
         </div>
 
-        <div className="mt-8 pt-4 border-t border-[#E8E6DF]">
+        <div className="mt-8 pt-4 border-t border-border">
           <Link
             to="/"
             className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground py-1.5 transition-colors"
@@ -88,7 +88,7 @@ export function AppLayout() {
       </aside>
 
       <div className="min-w-0">
-        <header className="flex flex-wrap items-center justify-between gap-3 border-b bg-white px-6 py-4">
+        <header className="flex flex-wrap items-center justify-between gap-3 border-b bg-background px-6 py-4">
           <div className="flex items-center gap-3">
             <span className="text-sm font-medium">
               Investigation & coordination workspace
