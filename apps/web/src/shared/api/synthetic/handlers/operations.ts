@@ -1,5 +1,5 @@
 // Action Firewall, coordination, alerts and reports.
-import { iso, isOpenAt, statusAt } from '../core';
+import { DAY, iso, isOpenAt, regionOf, statusAt } from '../core';
 import {
   actions,
   advance,
@@ -37,6 +37,8 @@ import type {
   CoordinationDecision,
   CoordinationDecisionInput,
   DateRange,
+  OverlapMonth,
+  OverviewFilters,
   ReportsSummary,
   Workspace,
   WorkspaceHistoryEntry,
@@ -425,4 +427,47 @@ export function reportsSummary(range: DateRange = {}): ReportsSummary {
     coordinationRequiredCount: openOverlaps.length,
     scope: 'SYNTHETIC',
   };
+}
+
+const RANGE_DAYS: Record<OverviewFilters['range'], number> = {
+  '30d': 30,
+  '90d': 90,
+  '12m': 365,
+  all: Infinity,
+};
+
+/** Links by flagged month, filtered like the dashboard overview (either case matching counts). */
+export function overlapTrend(f: OverviewFilters): OverlapMonth[] {
+  const t = now();
+  const matches = (id: string) => {
+    const c = caseById(id);
+    if (!c) return false;
+    if (f.region && regionOf(c.institutionId) !== f.region) return false;
+    if (f.bureau === 'OTHER') return c.bureau !== 'RB' && c.bureau !== 'PGRC';
+    return !f.bureau || c.bureau === f.bureau;
+  };
+  const chosen = links.filter(
+    (l) =>
+      t - l.createdAt <= RANGE_DAYS[f.range] * DAY &&
+      (matches(l.sourceComplaintId) || matches(l.targetComplaintId)),
+  );
+  // Every month in the period (12 at most), oldest first, so empty months show as zero.
+  const span = Math.min(12, Math.max(1, Math.ceil(RANGE_DAYS[f.range] / 30)));
+  const d = new Date(t);
+  const months = Array.from({ length: span }, (_, i) =>
+    iso(Date.UTC(d.getUTCFullYear(), d.getUTCMonth() - span + 1 + i, 1)).slice(
+      0,
+      7,
+    ),
+  );
+  return months.map((month) => {
+    const mine = chosen.filter((l) => iso(l.createdAt).startsWith(month));
+    return {
+      month,
+      flagged: mine.length,
+      confirmed: mine.filter((l) => l.status === 'CONFIRMED').length,
+      rejected: mine.filter((l) => l.status === 'REJECTED').length,
+      open: mine.filter((l) => l.status === 'SUGGESTED').length,
+    };
+  });
 }
