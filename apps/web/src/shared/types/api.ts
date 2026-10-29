@@ -321,3 +321,11 @@ export interface DateRange {
   from?: string;
   to?: string;
 }
+/** GET /api/reports/overlaps (proposed): case links by the month they were flagged, with their current status. */
+export interface OverlapMonth {
+  month: string;
+  flagged: number;
+  confirmed: number;
+  rejected: number;
+  open: number;
+}
