@@ -336,6 +336,27 @@
         100% 2px;
     }
   }
+
+  /* App motion (calm): route content fades in with a small rise */
+  .route-enter {
+    animation: setu-enter 0.3s var(--ease) both;
+  }
+  /* The only pulse in the app, reserved for overlap alerts */
+  .alert-pulse {
+    animation: setu-pulse 2.4s ease-in-out infinite;
+  }
+}
+
+@keyframes setu-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+@keyframes setu-pulse {
+  50% {
+    opacity: 0.45;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

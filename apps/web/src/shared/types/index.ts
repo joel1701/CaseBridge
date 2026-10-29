@@ -35,3 +35,18 @@ export interface ApiFailure {
   success: false;
   error: { code: string; message: string; details?: unknown };
 }
+export interface AuthUser {
+  id: string;
+  displayName: string;
+  role: Role;
+  bureauId: string | null;
+}
+export type AlertType = 'OVERLAP' | 'DEADLINE' | 'STATUS_CHANGE' | string;
+export interface Alert {
+  id: string;
+  type: AlertType;
+  complaintId: string | null;
+  message: string;
+  readAt: string | null;
+  createdAt: string;
+}

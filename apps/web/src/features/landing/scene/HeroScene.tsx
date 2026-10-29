@@ -9,10 +9,13 @@ export function HeroScene({
   frameRef,
   heroRef,
   reduce,
+  labels = true,
 }: {
   frameRef: RefObject<HTMLDivElement | null>;
   heroRef: RefObject<HTMLElement | null>;
   reduce: boolean;
+  /** Pylon labels and the overlap call-out that track the bridge (landing hero only). */
+  labels?: boolean;
 }) {
   const pyL = useRef<HTMLSpanElement>(null);
   const pyR = useRef<HTMLSpanElement>(null);
@@ -141,6 +144,7 @@ export function HeroScene({
     };
   }, [frameRef, heroRef, reduce]);
 
+  if (!labels) return null;
   return (
     <>
       <span className="pylon" aria-hidden="true" ref={pyL}>

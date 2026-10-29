@@ -1,4 +1,4 @@
-import type { Complaint, DashboardSummary, Institution } from '../types';
+import type { Alert, Complaint, DashboardSummary, Institution } from '../types';
 export const institutions: Institution[] = [
   {
     id: 'inst-01',
@@ -39,3 +39,30 @@ export const summary: DashboardSummary = {
   activeActions: 4,
   scope: 'SYNTHETIC',
 };
+// Synthetic unread alerts, shaped like GET /api/alerts items.
+export const alerts: Alert[] = [
+  {
+    id: 'alert-demo-001',
+    type: 'OVERLAP',
+    complaintId: 'cmp-001',
+    message: 'Overlap awaits review',
+    readAt: null,
+    createdAt: '2026-10-02T09:15:00Z',
+  },
+  {
+    id: 'alert-demo-002',
+    type: 'DEADLINE',
+    complaintId: 'cmp-002',
+    message: 'Disposal timeline ends in 6 days',
+    readAt: null,
+    createdAt: '2026-10-24T08:00:00Z',
+  },
+  {
+    id: 'alert-demo-003',
+    type: 'STATUS_CHANGE',
+    complaintId: 'cmp-002',
+    message: 'Case moved to Under process',
+    readAt: null,
+    createdAt: '2026-10-25T11:05:00Z',
+  },
+];
