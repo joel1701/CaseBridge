@@ -43,7 +43,7 @@ npm run db:deploy
 npm run db:seed
 ```
 
-`db:deploy` applies the checked-in baseline migration. For later schema edits use `npm run db:migrate -- --name describe_change` (the root workspace forwarding may require running `npm run db:migrate -w @casebridge/api -- --name describe_change` directly). Commit resulting migrations. Migration development requires a database role allowed to create a shadow database or an explicitly configured shadow URL. `db:generate` and validate do not connect to PostgreSQL.
+`db:deploy` applies the checked-in baseline migration. For later schema edits use `npm run db:migrate -- --name describe_change` (the root workspace forwarding may require running `npm run db:migrate -w @setu/api -- --name describe_change` directly). Commit resulting migrations. Migration development requires a database role allowed to create a shadow database or an explicitly configured shadow URL. `db:generate` and validate do not connect to PostgreSQL.
 
 Seed creates 2 bureaus, 10 institutions, 125 complaints, 4 actions, a suggestion, an alert and five role-varied demo accounts. Their newly generated credentials are saved privately in apps/api/.seed-credentials.json (Git-ignored, mode 0600), or set SEED_DEMO_PASSWORD for initial creation. Optional `SEED_ADMIN_EMAIL` and `SEED_ADMIN_PASSWORD` create a demo admin with a bcrypt hash. Password must be 12+ characters and <=72 UTF-8 bytes. No fixed default password is embedded in source. Seed only against a development database; it preserves existing records.
 
@@ -78,7 +78,7 @@ npm run build
 npm run format:check
 ```
 
-`npm run build -w @casebridge/web` builds without a DB. API: `npm run build -w @casebridge/api` then `npm start -w @casebridge/api`. For Vercel, install at repository root, build the web workspace, output `apps/web/dist`; the included SPA rewrite supports direct route loads. For Render API, install with `npm ci`, build API, start the API workspace; set API_PORT to the platform port. AI: install requirements and start `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"`. Supply production origin, HTTPS cookie configuration and secrets in provider settings. Configure private AI connectivity and the shared service token before enabling matching.
+`npm run build -w @setu/web` builds without a DB. API: `npm run build -w @setu/api` then `npm start -w @setu/api`. For Vercel, install at repository root, build the web workspace, output `apps/web/dist`; the included SPA rewrite supports direct route loads. For Render API, install with `npm ci`, build API, start the API workspace; set API_PORT to the platform port. AI: install requirements and start `uvicorn app.main:app --host 0.0.0.0 --port "$PORT"`. Supply production origin, HTTPS cookie configuration and secrets in provider settings. Configure private AI connectivity and the shared service token before enabling matching.
 
 ## Troubleshooting
 
@@ -88,5 +88,5 @@ npm run format:check
 - Model unavailable: fixture mode is offline; transformer mode needs cached weights or explicit ALLOW_MODEL_DOWNLOAD=true.
 - CORS/cookie issues: FRONTEND_URL must match the browser origin exactly (localhost and 127.0.0.1 differ). Writes require Origin. Production requires HTTPS; cross-site cookies need SameSite=None and may still face browser restrictions.
 - 401: sign in using a seeded/provisioned active account. Old manually minted tokens without a database session are invalid. No authentication bypass is supplied.
-- npm cache permission errors: choose a writable cache with `npm install --cache /tmp/casebridge-npm-cache`; do not change home-directory ownership as a routine fix.
+- npm cache permission errors: choose a writable cache with `npm install --cache /tmp/setu-npm-cache`; do not change home-directory ownership as a routine fix.
 - Port busy: stop the process using 5173/3001/8000 or update both service config and consumers. Vite uses strictPort to avoid a hidden CORS mismatch.

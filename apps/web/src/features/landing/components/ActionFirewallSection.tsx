@@ -23,7 +23,7 @@ export function ActionFirewallSection() {
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600 font-body leading-relaxed">
             When independent bureaus review the same institution, uncoordinated
-            inquiries create confusion and repeated evidence burdens. CaseBridge
+            inquiries create confusion and repeated evidence burdens. Setu
             checks proposed actions across bureau calendars to recommend joint
             proceedings.
           </p>
@@ -149,7 +149,7 @@ export function ActionFirewallSection() {
                 <p className="text-slate-600 mt-0.5 leading-relaxed max-w-2xl">
                   {isCoordinated
                     ? 'PGRC and Regional Bureau officers approved a unified notice under ACT-001. A single inquiry is dispatched to Aaravika Institute while keeping independent bureau complaint IDs and case dispositions sovereign.'
-                    : 'Instead of sending two conflicting demands, CaseBridge recommends a single joint request. This prevents duplicate paperwork for institutions while keeping human officers in complete command.'}
+                    : 'Instead of sending two conflicting demands, Setu recommends a single joint request. This prevents duplicate paperwork for institutions while keeping human officers in complete command.'}
                 </p>
               </div>
             </div>

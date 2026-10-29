@@ -56,7 +56,7 @@ export function LandingNav() {
         <a
           href="#top"
           className="focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 rounded-lg p-0.5"
-          aria-label="CaseBridge home"
+          aria-label="Setu home"
         >
           <BrandMark variant="dark" size="sm" />
         </a>

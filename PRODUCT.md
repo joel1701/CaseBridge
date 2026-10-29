@@ -8,15 +8,15 @@ web
 
 ## Users
 
-Primary users are regulatory bureau officers (OFFICER), bureau heads (BUREAU_HEAD), and oversight administrators (ADMIN) across independent educational regulatory bodies (specifically AICTE's Public Grievance Redressal Cell [PGRC] and Regional Bureau [RB]). Secondary intended users are legal-aid caseworkers and community intake teams triaging high-volume, emotionally distressed complaints from students, parents, and faculty. They use CaseBridge when an intake arrives to extract facts, uncover evidentiary gaps, and check for sister-bureau overlap before initiating costly or redundant institutional investigations.
+Primary users are regulatory bureau officers (OFFICER), bureau heads (BUREAU_HEAD), and oversight administrators (ADMIN) across independent educational regulatory bodies (specifically AICTE's Public Grievance Redressal Cell [PGRC] and Regional Bureau [RB]). Secondary intended users are legal-aid caseworkers and community intake teams triaging high-volume, emotionally distressed complaints from students, parents, and faculty. They use Setu when an intake arrives to extract facts, uncover evidentiary gaps, and check for sister-bureau overlap before initiating costly or redundant institutional investigations.
 
 ## Product Purpose
 
-CaseBridge transforms unstructured complaint narratives into organized, reviewable case records while providing explainable cross-bureau matching and an Action Firewall against duplicate regulatory notices. The product exists to prevent conflicting inspections and repeated evidence burdens on complainants, ensuring that officers spot critical deadlines and missing facts while preserving complete bureau jurisdiction and human decision authority. Success means faster, fairer intake triage, zero duplicate notices dispatched to institutions, and fully transparent human sign-offs.
+Setu transforms unstructured complaint narratives into organized, reviewable case records while providing explainable cross-bureau matching and an Action Firewall against duplicate regulatory notices. The product exists to prevent conflicting inspections and repeated evidence burdens on complainants, ensuring that officers spot critical deadlines and missing facts while preserving complete bureau jurisdiction and human decision authority. Success means faster, fairer intake triage, zero duplicate notices dispatched to institutions, and fully transparent human sign-offs.
 
 ## Positioning
 
-Unlike generic case management software or black-box AI classifiers, CaseBridge links related complaints across independent regulatory silos without forcing records to merge, transfer ownership, or overwrite original complaint IDs. Its Action Firewall previews proposed actions across bureaus to recommend coordination, explicitly surfacing what evidence is missing rather than hallucinating answers or attempting automated legal determinations.
+Unlike generic case management software or black-box AI classifiers, Setu links related complaints across independent regulatory silos without forcing records to merge, transfer ownership, or overwrite original complaint IDs. Its Action Firewall previews proposed actions across bureaus to recommend coordination, explicitly surfacing what evidence is missing rather than hallucinating answers or attempting automated legal determinations.
 
 ## Operating Context
 
@@ -38,12 +38,12 @@ Technical constraints & current phase:
 
 - Foundation prototype: browser shell, route layout, health checks, mock adapters (`VITE_USE_MOCKS=true`), and synthetic fixtures are active.
 - Real API endpoints currently return 501 placeholders until backend modules are connected.
-- Zero automated sanctions: CaseBridge outputs are assistive drafts; all determinations require an authorized human officer.
+- Zero automated sanctions: Setu outputs are assistive drafts; all determinations require an authorized human officer.
 - Role-scoped tenant isolation between PGRC and RB bureaus.
 
 ## Brand Commitments
 
-- Name: CaseBridge (Team Aarohan · SIH26264).
+- Name: Setu (Team Aarohan · SIH26264).
 - Voice & Tone: Editorial, authoritative, calm, precise, objective, and human-centered. Avoids generic SaaS hype, hyperbole, or excessive decorative flourishes.
 - Primary Surfaces: Clean white (`#FFFFFF`) and calm slate backgrounds (`#F8FAFC`, `#F1F5F9`).
 - Primary Text: Deep slate ink (`#0F172A`) for effortless legibility.

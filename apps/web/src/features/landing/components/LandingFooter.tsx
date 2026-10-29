@@ -16,9 +16,9 @@ export function LandingFooter() {
           <div className="lg:col-span-5 space-y-4">
             <BrandMark variant="light" size="md" />
             <p className="text-xs text-slate-400 leading-relaxed font-body max-w-sm mt-3">
-              CaseBridge helps AICTE Public Grievance Redressal Cell and
-              Regional Bureau officers review complex student complaints,
-              identify missing evidence, and coordinate pre-notice actions.
+              Setu helps AICTE Public Grievance Redressal Cell and Regional
+              Bureau officers review complex student complaints, identify
+              missing evidence, and coordinate pre-notice actions.
             </p>
             <div className="pt-2 flex items-center gap-3">
               <a
@@ -113,8 +113,8 @@ export function LandingFooter() {
         {/* Bottom Bar */}
         <div className="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
           <p className="text-slate-400 font-body text-center sm:text-left">
-            CaseBridge · Team Aarohan. Assistive regulatory triage prototype;
-            all determinations remain with authorized officers.
+            Setu · Team Aarohan. Assistive regulatory triage prototype; all
+            determinations remain with authorized officers.
           </p>
 
           <button

@@ -146,7 +146,7 @@ export function ProductWorkbench() {
           {/* Workbench Top Bar */}
           <div className="bg-slate-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-4 border-b border-slate-800">
             <span className="text-xs font-medium text-slate-300">
-              CaseBridge Workspace · AICTE Redressal Desk
+              Setu Workspace · AICTE Redressal Desk
             </span>
 
             {/* Case Selector Tabs */}

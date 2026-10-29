@@ -7,7 +7,7 @@ export function HowItWorksSection() {
       number: '1',
       title: 'Preserve the complaint verbatim',
       description:
-        'Grievances arrive in the student or parent’s own words. CaseBridge preserves the full submission without alterations, keeping original bureau reference numbers intact.',
+        'Grievances arrive in the student or parent’s own words. Setu preserves the full submission without alterations, keeping original bureau reference numbers intact.',
       benefit:
         'Original complaint IDs remain sovereign without forced renumbering or merging.',
       icon: FileText,
@@ -16,7 +16,7 @@ export function HowItWorksSection() {
       number: '2',
       title: 'Surface missing proof early',
       description:
-        'Instead of guessing facts, CaseBridge highlights absent documentation—such as missing fee vouchers, unadvertised faculty circulars, or uncorroborated dates.',
+        'Instead of guessing facts, Setu highlights absent documentation—such as missing fee vouchers, unadvertised faculty circulars, or uncorroborated dates.',
       benefit:
         'Officers receive a clear checklist of missing proof before speaking with complainants.',
       icon: AlertTriangle,
@@ -25,7 +25,7 @@ export function HowItWorksSection() {
       number: '3',
       title: 'Coordinate before sending notices',
       description:
-        'Before dispatching an evidence demand or inspection summons, the system checks sister-bureau calendars. If another desk is already investigating the same institution, CaseBridge recommends a joint inquiry.',
+        'Before dispatching an evidence demand or inspection summons, the system checks sister-bureau calendars. If another desk is already investigating the same institution, Setu recommends a joint inquiry.',
       benefit:
         'Prevents contradictory deadlines and reduces duplicate paperwork for institutions.',
       icon: GitMerge,

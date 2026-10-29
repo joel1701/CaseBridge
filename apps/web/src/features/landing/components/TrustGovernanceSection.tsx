@@ -5,7 +5,7 @@ export function TrustGovernanceSection() {
     {
       title: 'Human officers make every decision',
       description:
-        'CaseBridge provides assistive summaries and conflict alerts. It never makes automated legal determinations, issues regulatory sanctions, or closes complaints without authorized human approval.',
+        'Setu provides assistive summaries and conflict alerts. It never makes automated legal determinations, issues regulatory sanctions, or closes complaints without authorized human approval.',
       icon: UserCheck,
     },
     {
@@ -17,7 +17,7 @@ export function TrustGovernanceSection() {
     {
       title: 'Flags missing facts instead of guessing',
       description:
-        'When receipts, dates, or circulars are missing, CaseBridge explicitly highlights what is absent rather than guessing or inferring certainty, preventing premature conclusions.',
+        'When receipts, dates, or circulars are missing, Setu explicitly highlights what is absent rather than guessing or inferring certainty, preventing premature conclusions.',
       icon: AlertCircle,
     },
     {
@@ -40,7 +40,7 @@ export function TrustGovernanceSection() {
             Built for officer discretion, not automated decisions.
           </h2>
           <p className="mt-4 text-base sm:text-lg text-slate-600 font-body leading-relaxed">
-            Regulatory reviews carry high legal stakes. CaseBridge is strictly
+            Regulatory reviews carry high legal stakes. Setu is strictly
             designed as an assistive tool that keeps human officers in control.
           </p>
         </div>

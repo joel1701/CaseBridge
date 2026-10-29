@@ -12,9 +12,9 @@ export function HeroSection() {
 
         {/* Supporting Plain-Language Narrative */}
         <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed font-body max-w-3xl mx-auto">
-          CaseBridge helps AICTE Public Grievance Redressal Cell and Regional
-          Bureau officers review student and faculty grievances, spot missing
-          evidence early, and coordinate before sending duplicate notices to
+          Setu helps AICTE Public Grievance Redressal Cell and Regional Bureau
+          officers review student and faculty grievances, spot missing evidence
+          early, and coordinate before sending duplicate notices to
           institutions.
         </p>
 

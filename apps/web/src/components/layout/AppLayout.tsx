@@ -40,7 +40,7 @@ export function AppLayout() {
           >
             <Landmark className="text-primary" />
             <div>
-              <strong className="text-xl tracking-tight">CaseBridge</strong>
+              <strong className="text-xl tracking-tight">Setu</strong>
               <p className="text-xs text-muted-foreground">
                 Cross-bureau coordination
               </p>

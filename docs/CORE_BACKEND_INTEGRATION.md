@@ -15,7 +15,7 @@ Login counts attempts atomically in PostgreSQL: 10 per normalized account and 60
 | Setting            | Local                   | Vercel web + Render API                                                                                                                                                                                                                                       |
 | ------------------ | ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `NODE_ENV`         | `development`           | `production` (forces Secure cookies; JWT_SECRET required at startup)                                                                                                                                                                                          |
-| `FRONTEND_URL`     | `http://localhost:5173` | The exact browser origin, e.g. `https://casebridge.example`. Scheme, host and port must match; no trailing path                                                                                                                                               |
+| `FRONTEND_URL`     | `http://localhost:5173` | The exact browser origin, e.g. `https://setu.example`. Scheme, host and port must match; no trailing path                                                                                                                                                     |
 | `COOKIE_SAME_SITE` | `lax`                   | `lax` when web and API share a registrable domain (preferred, e.g. `app.example` + `api.example`). `none` only for unrelated default domains (`*.vercel.app` + `*.onrender.com`); browsers that block third-party cookies will still refuse it                |
 | `TRUST_PROXY_HOPS` | `0`                     | The number of reverse proxies in front of Express. Render puts its load balancer in front of the service, so start with `1`, then confirm in staging that the throttle sees distinct client IPs (not the proxy's). Never set it higher than the real topology |
 
@@ -62,7 +62,7 @@ DELETE is an ADMIN-only archive of a disposed, not-yet-archived complaint (re-ar
 
 ## Alerts and the deadline monitor
 
-`POST /api/alerts/refresh` refreshes the caller's authorized bureau(s); heads/admins only. The standalone `npm run alerts:refresh -w @casebridge/api` checks all cases for a trusted operator/scheduler and deletes session/throttle rows that expired more than a day ago. On failure it logs only an error code (for example `P1001` or `DATABASE_NOT_CONFIGURED`) and exits 1. Reads never generate alerts.
+`POST /api/alerts/refresh` refreshes the caller's authorized bureau(s); heads/admins only. The standalone `npm run alerts:refresh -w @setu/api` checks all cases for a trusted operator/scheduler and deletes session/throttle rows that expired more than a day ago. On failure it logs only an error code (for example `P1001` or `DATABASE_NOT_CONFIGURED`) and exits 1. Reads never generate alerts.
 
 DEADLINE_ALERT_HOURS defaults to 48 (range 1–720). Keys:
 
@@ -77,7 +77,7 @@ Resolution semantics:
 
 Each case refreshes in its own transaction under the institution lock, so concurrent refreshes (cron plus a head pressing refresh) serialize per case without duplicate-key failures. Disposed/archived cases are skipped unless an automatic alert is still open. Read/resolved state is shared by the bureau, not per user. Requests to read/update alerts scope both the alert's bureau and its complaint's current bureau.
 
-**Scheduling:** no scheduler is installed by the repository. On Render, add a Cron Job service that uses the API's build and environment (same `DATABASE_URL`, `DEADLINE_ALERT_HOURS`; JWT/AI secrets not needed) with the command `npm run alerts:refresh -w @casebridge/api` and schedule `*/10 * * * *` (any value in 5–15 minutes). Elsewhere, use the platform scheduler or `cron` with the same command. Overlapping runs are safe but wasteful; keep the interval longer than a run.
+**Scheduling:** no scheduler is installed by the repository. On Render, add a Cron Job service that uses the API's build and environment (same `DATABASE_URL`, `DEADLINE_ALERT_HOURS`; JWT/AI secrets not needed) with the command `npm run alerts:refresh -w @setu/api` and schedule `*/10 * * * *` (any value in 5–15 minutes). Elsewhere, use the platform scheduler or `cron` with the same command. Overlapping runs are safe but wasteful; keep the interval longer than a run.
 
 ## Timelines
 
@@ -126,8 +126,8 @@ npm install
 npm run db:generate
 npm run db:deploy
 npm run db:seed
-npm run alerts:refresh -w @casebridge/api
-npm run dev -w @casebridge/api
+npm run alerts:refresh -w @setu/api
+npm run dev -w @setu/api
 ```
 
 Run MiniLM separately as documented in JOEL_INTEGRATION.md: EMBEDDING_MODE=transformer, the shared service token and the pinned model cache. The frontend must set VITE_USE_MOCKS=false and use credentialed requests; login is real, with no fixture fallback or auth bypass.
@@ -192,7 +192,7 @@ docker run -d --rm --name casebridge-test-pg -e POSTGRES_USER=casebridge \
 export CASEBRIDGE_TEST_DATABASE_URL=postgresql://casebridge@127.0.0.1:55432/casebridge_test
 DATABASE_URL="$CASEBRIDGE_TEST_DATABASE_URL" npm run db:deploy
 DATABASE_URL="$CASEBRIDGE_TEST_DATABASE_URL" npm run db:seed
-npm run test -w @casebridge/api -- src/modules/complaints/core.integration.test.ts src/modules/matching/intelligence.integration.test.ts
+npm run test -w @setu/api -- src/modules/complaints/core.integration.test.ts src/modules/matching/intelligence.integration.test.ts
 # Model-dependent cases: start uvicorn with EMBEDDING_MODE=transformer and a shared AI_SERVICE_TOKEN, then
 CASEBRIDGE_TEST_AI=1 AI_SERVICE_URL=http://127.0.0.1:8000 AI_SERVICE_TOKEN=... npm test
 docker stop casebridge-test-pg   # --rm deletes it
