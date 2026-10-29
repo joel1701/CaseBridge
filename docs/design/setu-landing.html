@@ -1,0 +1,757 @@
+<!-- Layout and motion system adapted from: Wayfind AI Travel Companion Page · INSTALANDING.AI (MIT) · https://instalanding.ai/prompt/wayfind-ai-travel-companion-page -->
+<title>Setu Poster Landing</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hubot+Sans:wdth,wght@75..125,200..900&family=Special+Gothic:wdth,wght@75..100,400..700&family=Teko:wght@500;600&display=swap">
+<style>
+/* Layout: expedition-poster system (condensed lowercase display, spec sheets, square corners, grain, toned bands)
+   recoloured in Monsoon: graphite base, indigo band, cool paper band. Red appears only for overlaps. */
+:root{
+  --g0:#0B0E14; --g1:#151A24; --g2:#1D2330;
+  --ind:#6E7BFF; --ind-hi:#9AA4FF; --ind-deep:#3442C9;
+  --paper:#E6E9F2; --sheet:#EDF0F6; --ink:#0B0E14;
+  --text:#EEF1F8; --muted:#8C95AB; --alert:#FF5C6C;
+  --f-display:"Special Gothic","Arial Narrow",sans-serif;
+  --f-text:"Hubot Sans",system-ui,sans-serif;
+  --f-deva:"Teko","Noto Sans Devanagari",sans-serif;
+  --m:clamp(16px,4.35vw,72px); --gap:clamp(14px,2vw,32px); --hdr:clamp(64px,7vw,96px);
+  --ease:cubic-bezier(.2,.7,.1,1);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+body{background:var(--g0);color:var(--text);font-family:var(--f-text);font-size:clamp(16px,.35vw + 13px,18px);line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--g0)}
+body::after{content:"";position:fixed;inset:0;z-index:90;pointer-events:none;opacity:.09;background:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='200' height='200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .7 -.12'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>")}
+h1,h2,h3,p,dl,dd,figure,blockquote,ul,ol{margin:0}
+ul,ol{padding:0;list-style:none}
+a{color:inherit}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ind-hi);outline-offset:3px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.wrap{padding-left:max(var(--m),env(safe-area-inset-left,0px));padding-right:max(var(--m),env(safe-area-inset-right,0px))}
+main>section,footer{position:relative;overflow-x:clip}
+
+/* tones */
+[data-tone="base"]{background:var(--g0);color:var(--text)}
+[data-tone="deep"]{background:var(--g1);color:var(--text)}
+[data-tone="indigo"]{background:var(--ind);color:var(--ink)}
+[data-tone="paper"]{background:var(--paper);color:var(--ink)}
+.h2{font-family:var(--f-display);font-stretch:75%;font-weight:700;font-size:clamp(46px,7.4vw,132px);line-height:.86;letter-spacing:-.012em;text-transform:lowercase;color:var(--ind-hi);text-wrap:balance}
+[data-tone="indigo"] .h2{color:var(--ink)}
+[data-tone="paper"] .h2{color:var(--ind-deep)}
+.lead{font-size:clamp(17px,.6vw + 13px,21px);max-width:40ch}
+.wide{font-stretch:125%;font-weight:300;letter-spacing:.01em}
+.spec{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,9.5rem),1fr));gap:14px var(--gap)}
+.spec>div{min-width:0}
+.spec dt{font-weight:700;font-size:15px;line-height:1.3}
+.spec dt::after{content:" -"}
+.spec dd{margin-top:6px;font-stretch:125%;font-weight:300;font-size:14px;line-height:1.35;letter-spacing:.01em}
+
+/* buttons: colour wipes up on hover, square */
+.btn{--bg:var(--ind);--fg:var(--ink);--fill:var(--text);--fill-fg:var(--ink);position:relative;isolation:isolate;overflow:hidden;display:inline-flex;align-items:center;justify-content:center;min-height:50px;padding:0 24px;border:0;background:var(--bg);color:var(--fg);font-weight:600;font-size:16px;text-decoration:none;white-space:nowrap;cursor:pointer;transition:color .45s var(--ease)}
+.btn::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--fill);clip-path:inset(100% 0 0 0);transition:clip-path .55s var(--ease)}
+.btn--ink{--bg:var(--ink);--fg:var(--text);--fill:var(--text);--fill-fg:var(--ink)}
+.btn--ghost{--bg:transparent;--fg:currentColor;--fill:currentColor;box-shadow:inset 0 0 0 1.5px currentColor}
+[data-tone="base"] .btn--ghost,[data-tone="base"] .btn--ghost{--fill-fg:var(--g0)}
+@media (hover:hover){.btn:hover{color:var(--fill-fg)}.btn:hover::before{clip-path:inset(0)}}
+.link{text-decoration:none;font-weight:600;background:linear-gradient(currentColor,currentColor) 0 100%/100% 1px no-repeat,linear-gradient(currentColor,currentColor) 0 100%/0 2px no-repeat;padding-bottom:4px;transition:background-size .55s var(--ease)}
+@media (hover:hover){.link:hover{background-size:100% 0,100% 2px}}
+
+/* nav */
+.head{position:fixed;top:env(safe-area-inset-top,0px);left:0;right:0;z-index:50;height:var(--hdr);display:flex;align-items:center;gap:var(--gap);color:var(--ink);background:transparent;transition:color .35s var(--ease),background-color .35s var(--ease)}
+.head.sky{color:#F4F6FF}
+.head.solid{color:var(--text);background:rgba(11,14,20,.94)}
+.head .btn{min-height:40px;padding:0 18px;font-size:14px}
+.brand{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(30px,2.8vw,40px);line-height:1;letter-spacing:-.01em;text-decoration:none;margin-right:auto}
+.nav{display:flex;gap:clamp(14px,2vw,30px);font-size:15px}
+.nav a{text-decoration:none;opacity:.85}
+.nav a:hover{opacity:1}
+@media (max-width:860px){.nav{display:none}}
+
+/* hero knockout */
+.hero{height:100vh;height:100svh;min-height:560px;position:relative;overflow:hidden;background:var(--sheet);color:var(--ink)}
+.frame{position:absolute;inset:0;background:linear-gradient(#141A3D,#2B36A8 55%,#9AA4FF 72%,#1A2050 73%,#0E1230)}
+.frame canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero-after{display:none;position:absolute;z-index:1;left:max(var(--m),env(safe-area-inset-left,0px));right:max(var(--m),env(safe-area-inset-right,0px));bottom:clamp(24px,6svh,64px)}
+.hero.static{height:auto;min-height:0}
+.hero.static .frame{position:relative;inset:auto;min-height:70svh;padding-top:calc(var(--hdr) + 40px)}
+.hero.static .mask{display:none}
+.hero.static .hero-after{position:relative;left:auto;right:auto;bottom:auto;padding:24px max(var(--m),env(safe-area-inset-left,0px)) 48px}
+.hero.static .hero-after,html.motion .hero-after{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--gap);align-items:end}
+.ha-word{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(56px,8.6vw,150px);line-height:.84;color:#F4F6FF;max-width:11ch}
+.ha-side{display:grid;gap:14px;color:#DDE1FF;max-width:40ch}
+.ha-key{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;font-stretch:125%;font-weight:300}
+.ha-key span{display:inline-flex;align-items:center;gap:8px}
+.ha-key i{width:10px;height:10px;border-radius:50%;background:#C7CDFF;box-shadow:0 0 10px #C7CDFF}
+.ha-key i.r{background:#FF5C6C;box-shadow:0 0 10px #FF5C6C}
+.pylon,.redcall{position:absolute;z-index:1;opacity:0;transition:opacity .5s var(--ease);pointer-events:none}
+.hero.after .pylon,.hero.after .redcall{opacity:1}
+.pylon{transform:translate(-50%,-100%);font-weight:700;font-size:13px;letter-spacing:.06em;padding:5px 10px;background:rgba(11,14,20,.78);color:#fff;border-bottom:2px solid #9AA4FF}
+.redcall{transform:translate(-50%,calc(-100% - 22px));background:rgba(11,14,20,.86);border:1px solid #FF5C6C;padding:7px 11px;font-size:12.5px;white-space:nowrap;color:#fff}
+.redcall b{color:#FF5C6C;font-family:var(--f-display);font-stretch:75%;font-size:18px;text-transform:lowercase;margin-right:8px}
+.redcall::after{content:"";position:absolute;left:50%;top:100%;width:1px;height:20px;background:#FF5C6C}
+@media (max-width:760px){html.motion .hero-after{grid-template-columns:1fr}.pylon{font-size:11px}.redcall span{display:none}}
+.mask{position:absolute;inset:0;width:100%;height:100%;z-index:2;pointer-events:none;transform-origin:50% 45%;will-change:transform,opacity}
+.reveal-note{position:absolute;z-index:1;left:max(var(--m),env(safe-area-inset-left,0px));top:calc(var(--hdr) + 8px);font-size:13px;color:#C9CEFF;opacity:0}
+
+/* dashboard render (fills the knockout) */
+.dash{height:100%;display:grid;grid-template-columns:200px minmax(0,1fr);background:#11151E;border:1px solid #262D3C;font-size:14px;overflow:hidden}
+.dash aside{border-right:1px solid #262D3C;padding:22px 14px;display:flex;flex-direction:column;gap:4px;color:var(--muted)}
+.dash aside .mk{font-family:var(--f-deva);font-size:36px;font-weight:600;color:var(--text);margin-bottom:18px;line-height:1}
+.dash aside span{padding:9px 10px}
+.dash aside .on{background:#181E2A;color:var(--text);box-shadow:inset 3px 0 0 var(--ind)}
+.dm{padding:22px 26px;display:grid;gap:16px;grid-template-rows:auto auto auto 1fr;min-width:0}
+.dtop{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.dtop b{font-family:var(--f-display);font-stretch:75%;font-size:34px;font-weight:700;text-transform:lowercase;line-height:1}
+.srch{flex:0 1 340px;border:1px solid #262D3C;padding:9px 12px;color:var(--muted);font-size:13px}
+.kp{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.kp div{background:#181E2A;border:1px solid #262D3C;padding:14px}
+.kp i{font-style:normal;color:var(--muted);font-size:12px;display:block}
+.kp strong{font-size:34px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.kp .a{color:var(--alert);border-color:rgba(255,92,108,.45)}
+.kp .a i{color:var(--alert)}
+.drow{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:12px;min-height:0}
+.ovp{background:#181E2A;border:1px solid rgba(255,92,108,.5);padding:16px}
+.ovp h4{margin:0;font-family:var(--f-display);font-stretch:75%;font-size:26px;text-transform:lowercase;line-height:1}
+.ovp p{color:var(--muted);font-size:13px;margin-top:6px}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.tags span{font-size:12px;padding:4px 8px;border:1px solid #2E364A}
+.tags .r{border-color:transparent;background:rgba(110,123,255,.16);color:var(--ind-hi)}
+.wl{background:#181E2A;border:1px solid #262D3C;padding:16px;display:grid;gap:9px;font-size:12.5px}
+.wl div{display:grid;grid-template-columns:70px 1fr 28px;gap:10px;align-items:center}
+.wl s{display:block;height:9px;background:var(--ind);text-decoration:none}
+.wl em{font-style:normal;color:var(--muted);text-align:right;font-variant-numeric:tabular-nums}
+@media (max-width:700px){.dash{grid-template-columns:1fr}.dash aside{display:none}.kp{grid-template-columns:repeat(2,minmax(0,1fr))}.drow{grid-template-columns:1fr}.dm{padding:16px}}
+
+/* manifesto */
+.manifesto{padding-block:clamp(70px,9vw,140px)}
+.mf{font-family:var(--f-display);font-stretch:75%;font-weight:600;font-size:clamp(26px,2.9vw,48px);line-height:1.02;max-width:28ch;text-wrap:balance}
+.mf strong{color:var(--ind-hi);font-weight:700}
+.mf-foot{margin-top:clamp(28px,4vw,52px);padding-top:18px;font-size:14px;border-top:1px solid rgba(238,241,248,.18);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--gap)}
+.mf-foot>p{font-stretch:125%;font-weight:300;font-size:13px}
+.mf-foot .spec dt{font-size:13px}.mf-foot .spec dd{font-size:12.5px}
+@media (max-width:760px){.mf-foot{grid-template-columns:1fr}}
+
+
+/* two desks, one institution */
+.desks{height:320svh}
+.dsticky{position:sticky;top:var(--hdr);height:calc(100svh - var(--hdr));display:flex;align-items:center}
+.dgrid{display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);gap:clamp(24px,4vw,64px);align-items:center;width:100%}
+.dsteps{display:grid}
+.dstep{grid-area:1/1;opacity:0;transform:translateY(24px);transition:opacity .45s var(--ease),transform .55s var(--ease);pointer-events:none}
+.dstep.on{opacity:1;transform:none;pointer-events:auto}
+.dstep.past{transform:translateY(-24px)}
+.desks .h2{font-size:clamp(40px,5vw,88px)}
+.dstep p{margin-top:16px;max-width:32ch;color:var(--muted)}
+.board{position:relative;height:min(460px,60svh)}
+.case{position:absolute;top:0;width:min(250px,42%);background:var(--g1);border:1px solid rgba(238,241,248,.12);padding:18px;will-change:transform}
+.case .bu{display:inline-block;font-weight:700;font-size:13px;color:var(--ink);background:var(--ind-hi);padding:3px 8px}
+.case h3{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:26px;line-height:.92;margin:14px 0 10px}
+.case p{font-size:13px;color:var(--muted)}
+.case p b{color:var(--text);font-weight:500}
+.case .idl{transition:color .3s}
+.case.matched{border-color:rgba(154,164,255,.5)}
+.case.matched .idl{color:var(--ind-hi)}
+.lcase{left:0}.rcase{right:0}
+.dlink{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.below{position:absolute;left:0;right:0;display:grid;justify-items:center}
+.reasons,.alertc{grid-area:1/1}
+.reasons{display:grid;gap:8px;justify-items:start;transition:opacity .35s}
+.reason{display:flex;align-items:center;gap:10px;font-size:14px;opacity:0;transform:translateY(8px);transition:opacity .3s var(--ease),transform .3s var(--ease)}
+.reason svg{flex:none;color:var(--ind-hi)}
+.reason.on{opacity:1;transform:none}
+.alertc{width:min(400px,100%);background:var(--g0);border:1.5px solid var(--alert);padding:16px 18px;opacity:0;transform:translateY(14px);transition:opacity .4s var(--ease),transform .4s var(--ease)}
+.alertc.on{opacity:1;transform:none}
+.below.alerting .reasons{opacity:0}
+.alertc strong{font-family:var(--f-display);font-stretch:75%;font-size:26px;text-transform:lowercase;color:var(--alert);line-height:1}
+.alertc .acts{display:flex;gap:8px;margin-top:12px}
+.alertc .acts span{font-size:13px;padding:7px 12px;box-shadow:inset 0 0 0 1px rgba(238,241,248,.3)}
+.alertc .acts span:first-child{background:var(--ind);color:var(--ink);box-shadow:none;font-weight:600}
+@media (max-width:760px){.dgrid{grid-template-columns:1fr;gap:12px}.board{height:52svh}.case{padding:12px;width:46%}.case h3{font-size:19px}.reason{font-size:13px}}
+
+/* stacked posters */
+.views{padding-top:clamp(80px,10vw,150px)}
+.vhead{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--gap);align-items:end;padding-bottom:clamp(40px,6vw,80px)}
+@media (max-width:760px){.vhead{grid-template-columns:1fr}}
+.stack{display:grid;gap:0}
+.poster{--dim:0;position:sticky;top:calc(var(--hdr) + var(--i) * 14px);min-height:calc(100svh - var(--hdr) - 60px);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:var(--gap);padding:clamp(22px,3vw,48px) max(var(--m),env(safe-area-inset-left,0px));transform-origin:50% 0;will-change:transform}
+.poster::after{content:"";position:absolute;inset:0;background:#000;opacity:var(--dim);pointer-events:none}
+.poster:nth-child(1){background:var(--g1);color:var(--text)}
+.poster:nth-child(2){background:var(--paper);color:var(--ink)}
+.poster:nth-child(2) .pfig{background:rgba(11,14,20,.06)}
+.poster:nth-child(3){background:var(--ind);color:var(--ink)}
+.poster:nth-child(4){background:var(--g2);color:var(--text)}
+.ptitle{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(64px,10vw,180px);line-height:.82;margin:clamp(20px,4vw,60px) 0 18px}
+.pcol{display:flex;flex-direction:column;min-width:0}
+.ptext{max-width:38ch;margin-top:auto}
+.ptext .link{display:inline-block;margin-top:14px}
+.pfig{align-self:stretch;display:grid;place-items:center;min-height:300px;background:rgba(0,0,0,.18);padding:clamp(16px,2.4vw,36px);position:relative}
+@media (max-width:860px){.poster{grid-template-columns:1fr;min-height:auto}.pfig{min-height:240px}}
+
+/* vignette cards inside figures */
+.vc{width:min(440px,100%);background:#11151E;color:var(--text);border:1px solid #262D3C;padding:18px;font-size:13.5px}
+.vc h4{margin:0;font-family:var(--f-display);font-stretch:75%;font-size:28px;text-transform:lowercase;line-height:1}
+.vc .m{color:var(--muted);font-size:12.5px}
+.vc .id{font-family:ui-monospace,Menlo,monospace;color:var(--ind-hi);font-size:13px;margin-top:4px}
+.vgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px}
+.vgrid div{border:1px solid #262D3C;padding:10px}
+.vgrid b{display:block;font-size:22px;font-variant-numeric:tabular-nums}
+.tline{display:grid;gap:12px;margin-top:12px}
+.tline div{display:grid;grid-template-columns:12px 1fr auto;gap:10px;align-items:center}
+.tline i{width:10px;height:10px;border:1.5px solid var(--muted)}
+.tline .now i{background:var(--ind);border-color:var(--ind)}
+.tline small{color:var(--muted)}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.pair div{border:1px solid #2E364A;padding:10px}
+.pair b{color:var(--ind-hi);font-size:12px}
+.flag{margin-top:12px;border:1px solid var(--alert);color:var(--alert);padding:8px 10px;font-weight:600}
+.rb{display:grid;gap:9px;margin-top:12px}
+.rb div{display:grid;grid-template-columns:80px 1fr 30px;gap:10px;align-items:center}
+.rb s{height:10px;background:var(--ind);display:block;text-decoration:none}
+.rb em{font-style:normal;color:var(--muted);text-align:right}
+
+/* engines: a deck that shuffles as you scroll */
+.engines{height:340svh}
+.esticky{position:sticky;top:var(--hdr);height:calc(100svh - var(--hdr));display:flex;align-items:center}
+.egrid{display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:clamp(24px,4vw,72px);align-items:center;width:100%}
+.enames{margin-top:28px;display:grid;gap:2px}
+.enames li{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(30px,3vw,46px);line-height:1;color:var(--g2);transition:color .35s var(--ease),transform .35s var(--ease)}
+.enames li.on{color:var(--ind-hi);transform:translateX(12px)}
+.deck{position:relative;height:min(520px,62svh)}
+.ecard{position:absolute;inset:0;background:var(--g1);border:1px solid rgba(238,241,248,.12);padding:clamp(20px,2.4vw,34px);display:flex;flex-direction:column;gap:18px;transition:transform .7s var(--ease),opacity .5s var(--ease);will-change:transform}
+.ecard:nth-child(even){background:var(--g2)}
+.ecard .ename{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(56px,6vw,100px);line-height:.85;color:var(--ind-hi)}
+.ecard .efig{flex:1;display:grid;place-items:center;background:rgba(0,0,0,.18);padding:16px;min-height:0}
+@media (max-width:860px){.egrid{grid-template-columns:1fr;gap:16px}.enames{display:none}.deck{height:58svh}.ecard .ename{font-size:50px}}
+
+/* life of a case: pinned sideways route */
+.route{padding-top:clamp(90px,12vw,170px)}
+.rhead{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:var(--gap);align-items:end}
+@media (max-width:760px){.rhead{grid-template-columns:1fr}}
+.rpin{height:100svh;display:flex;align-items:center;overflow-x:auto}
+.rpin.pinned{overflow:hidden}
+.rail{position:relative;display:flex;gap:clamp(28px,4vw,64px);padding-left:max(var(--m),env(safe-area-inset-left,0px));padding-right:30vw;will-change:transform}
+.rsvg{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.stop{flex:0 0 clamp(250px,24vw,340px);position:relative}
+.stop--low{margin-top:clamp(80px,12svh,140px)}
+.sday{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;margin-bottom:14px}
+.sday i{width:14px;height:14px;background:var(--ind);border:2px solid var(--ink);flex:none;transition:background .25s,border-color .25s}
+.sday em{font-style:normal;font-size:12px;font-weight:600;padding:2px 8px;background:var(--ink);color:var(--text);opacity:0;transform:translateX(-6px);transition:opacity .25s,transform .25s}
+.stop.done .sday i{background:var(--ink);border-color:var(--ink)}
+.stop.on .sday i{background:var(--ink);border-color:var(--ink);box-shadow:0 0 0 5px rgba(11,14,20,.18)}
+.stop.on .sday em{opacity:1;transform:none}
+.stop.hit.on .sday i{background:var(--alert);border-color:var(--alert)}
+.stop.hit.on .sday em{background:var(--alert)}
+.stop{transition:transform .3s var(--ease),opacity .3s}
+html.motion .stop:not(.on){opacity:.55}
+.stop.on{transform:translateY(-8px)}
+.sfig{height:clamp(140px,20svh,200px);background:rgba(11,14,20,.82);color:var(--text);transition:background .3s,color .3s;display:grid;place-items:center;font-family:var(--f-display);font-stretch:75%;font-weight:700;font-size:clamp(44px,5vw,72px);text-transform:lowercase;line-height:1}
+.stop.on .sfig{background:var(--g0);color:var(--ind-hi);box-shadow:0 18px 40px rgba(11,14,20,.35)}
+.stop.hit.on .sfig{color:var(--alert)}
+.stitle{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(30px,3vw,44px);line-height:.9;margin:16px 0 8px}
+.stop p{font-size:15px;max-width:34ch}
+
+/* chart */
+.chart-sec{padding-block:clamp(90px,12vw,170px)}
+.cgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.2fr);gap:clamp(30px,5vw,80px);align-items:end}
+@media (max-width:860px){.cgrid{grid-template-columns:1fr}}
+.bars{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:clamp(6px,1vw,14px);align-items:end;height:clamp(260px,38svh,420px)}
+.bar{display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:8px;min-width:0}
+.bcol{background:var(--ind-deep);height:var(--h);transform-origin:50% 100%;position:relative}
+.bar.peak .bcol{background:var(--ink)}
+.bv{font-weight:700;font-size:14px;font-variant-numeric:tabular-nums}
+.bm{font-stretch:125%;font-weight:300;font-size:12px}
+.cnote{margin-top:14px;font-size:13px;opacity:.75}
+
+/* roles: dealt from a stack */
+.roles{height:230svh}
+.rsticky{position:sticky;top:var(--hdr);min-height:calc(100svh - var(--hdr));display:flex;flex-direction:column;justify-content:center;padding-block:24px}
+.rgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:clamp(12px,1.6vw,24px);margin-top:clamp(28px,4vw,56px)}
+.role{background:var(--g1);color:var(--text);padding:clamp(22px,2.6vw,38px);display:flex;flex-direction:column;gap:18px;min-height:min(400px,52svh);border:1px solid rgba(238,241,248,.1);will-change:transform}
+.role--main{background:var(--ind);color:var(--ink);border-color:transparent}
+.rname{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(48px,5vw,84px);line-height:.85}
+.role ul{display:grid;gap:8px;font-size:15px;margin-top:auto}
+.role li::before{content:"+ ";font-weight:700}
+@media (max-width:860px){.roles{height:auto}.rsticky{position:static;min-height:0;padding-block:clamp(70px,10vw,120px)}.rgrid{grid-template-columns:1fr}.role{min-height:0}}
+
+/* faq */
+.faq{padding-block:clamp(90px,12vw,170px)}
+.fgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(30px,5vw,80px)}
+@media (max-width:860px){.fgrid{grid-template-columns:1fr}}
+.fside p{margin-top:18px;max-width:34ch}
+.qa{border-top:1px solid rgba(238,241,248,.18)}
+.qa:last-child{border-bottom:1px solid rgba(238,241,248,.18)}
+.qa summary{list-style:none;display:flex;justify-content:space-between;gap:16px;cursor:pointer;padding:22px 0;font-weight:600;font-size:clamp(18px,1.4vw,22px)}
+.qa summary::-webkit-details-marker{display:none}
+.qa summary::after{content:"+";font-family:var(--f-display);font-size:30px;line-height:.8;transition:transform .4s var(--ease)}
+.qa[open] summary::after{transform:rotate(45deg)}
+.qa p{padding-bottom:22px;max-width:56ch;color:var(--muted)}
+
+/* closing */
+.close{padding-block:clamp(70px,10vw,140px) 0}
+.cword{font-family:var(--f-display);font-stretch:75%;font-weight:700;text-transform:lowercase;font-size:clamp(110px,24vw,420px);line-height:.78;color:var(--ind);margin-top:clamp(30px,5vw,60px)}
+.crow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--gap);align-items:end;padding-bottom:clamp(40px,6vw,80px)}
+.crow .btns{display:flex;gap:12px;flex-wrap:wrap}
+@media (max-width:760px){.crow{grid-template-columns:1fr}}
+footer{padding-block:clamp(40px,6vw,80px) 30px}
+.fword{font-family:var(--f-deva);font-weight:600;font-size:clamp(140px,30vw,520px);line-height:.8;color:var(--g2)}
+.frow{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:24px;font-size:14px;color:var(--muted)}
+.frow nav{display:flex;gap:20px;flex-wrap:wrap}
+
+@media (prefers-reduced-motion:reduce){
+  .poster{position:relative;top:auto}
+  .rpin{height:auto;overflow-x:auto;padding-block:40px}
+  .big .w{opacity:1}
+}
+</style>
+
+<header class="head wrap" data-section="nav">
+  <a class="brand" href="#top" aria-label="Setu, home">setu</a>
+  <nav class="nav" aria-label="Main"><a href="#views">Views</a><a href="#engines">Engines</a><a href="#route">A case</a><a href="#roles">Roles</a><a href="#faq">Questions</a></nav>
+  <a class="btn" href="#close">Sign in</a>
+</header>
+
+<main id="top">
+<!-- HERO: the dashboard seen through सेतु, opening to full bleed -->
+<section class="hero" data-section="hero" aria-labelledby="hero-t">
+  <h1 class="sr-only" id="hero-t">Setu: one view of every complaint case across AICTE bureaus</h1>
+  <div class="frame" id="frame" aria-hidden="true">
+    <canvas id="sky"></canvas>
+    <div class="hero-after" id="heroAfter">
+      <p class="ha-word">one view of every case.</p>
+      <div class="ha-side">
+        <p>Every light crossing this bridge is a complaint moving between bureaus. When two desks reach the same institution, Setu turns it red.</p>
+        <div class="ha-key"><span><i></i>Case in transit</span><span><i class="r"></i>Overlap, coordinate first</span></div>
+        <div><a class="btn" href="#close">Sign in</a></div>
+      </div>
+    </div>
+    <span class="pylon" id="pyL">PGRC</span><span class="pylon" id="pyR">RB</span>
+    <div class="redcall" id="redCall"><b>overlap</b><span>RB + PGRC · Aaravika Institute</span></div>
+  </div>
+  <svg class="mask" id="mask" aria-hidden="true">
+    <defs><mask id="knock" maskUnits="userSpaceOnUse" x="-50%" y="-50%" width="200%" height="200%"><rect x="-50%" y="-50%" width="200%" height="200%" fill="#fff"/><text id="kword" x="50%" text-anchor="middle" font-family="Teko, 'Noto Sans Devanagari', sans-serif" font-weight="600" fill="#000">सेतु</text></mask></defs>
+    <rect x="-50%" y="-50%" width="200%" height="200%" fill="#EDF0F6" mask="url(#knock)"/>
+  </svg>
+  
+</section>
+
+<!-- MANIFESTO -->
+<section class="manifesto wrap" data-tone="base" data-section="manifesto">
+  <p class="mf">Today a college can get two notices from two desks about one complaint. <strong>Setu puts every case about an institution on one record</strong>, so bureaus coordinate before they act.</p>
+  <div class="mf-foot">
+    <p>Smart India Hackathon<br>Problem statement 26264</p>
+    <dl class="spec">
+      <div><dt>The gap</dt><dd>No shared, real-time view across bureaus</dd></div>
+      <div><dt>The risk</dt><dd>Duplicate work and conflicting action</dd></div>
+      <div><dt>The fix</dt><dd>One record per institution, overlap alerts</dd></div>
+    </dl>
+  </div>
+</section>
+
+<!-- TWO DESKS, ONE INSTITUTION -->
+<section class="desks" id="desks" data-tone="base" data-section="desks">
+  <div class="dsticky wrap">
+    <div class="dgrid">
+      <div class="dsteps">
+        <div class="dstep on"><h2 class="h2">two desks. one institution.</h2><p>PGRC and RB each open a case on the same college, under different names.</p></div>
+        <div class="dstep"><h2 class="h2">setu connects them.</h2><p>It matches the permanent ID, the name and the timing.</p></div>
+        <div class="dstep"><h2 class="h2">coordinate first.</h2><p>Both bureaus are alerted, link the cases and agree who leads.</p></div>
+      </div>
+      <div class="board" id="board">
+        <svg class="dlink" id="dlink" aria-hidden="true"><path id="dpath" fill="none" stroke="#9AA4FF" stroke-width="2"/><circle id="dnode" r="7" fill="#0B0E14" stroke="#9AA4FF" stroke-width="2" opacity="0"/></svg>
+        <article class="case lcase" id="lcase"><span class="bu">PGRC</span><h3>aaravika institute of engineering</h3><p>PGRC-2026-0412 · <b>Fees</b></p><p class="idl">AICTE 1-900000001</p></article>
+        <article class="case rcase" id="rcase"><span class="bu">RB</span><h3>aaravika inst. of engg.</h3><p>RB-2026-0198 · <b>Fees</b></p><p class="idl">AICTE 1-900000001</p></article>
+        <div class="below" id="below">
+          <div class="reasons"><span class="reason"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Same AICTE permanent ID</span><span class="reason"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Name variant of the same college</span><span class="reason"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12l5 5 9-10"/></svg>Same category, one day apart</span></div>
+          <div class="alertc" id="alertc" role="status"><strong>potential overlapping cases</strong><p style="font-size:13px;color:var(--muted);margin-top:4px">Coordination required between PGRC and RB</p><div class="acts"><span>Link cases</span><span>Review</span></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STACKED POSTERS -->
+<section class="views" id="views" data-tone="base" data-section="views">
+  <div class="wrap vhead"><h2 class="h2">four views, one source of truth</h2><p class="lead">Each view answers the question an official asks first, and every one of them is built on the same institution record.</p></div>
+  <div class="stack" id="stack">
+    <article class="poster" style="--i:0">
+      <div class="pcol">
+        <dl class="spec"><div><dt>Shows</dt><dd>Every case, every bureau</dd></div><div><dt>Keyed by</dt><dd>AICTE permanent ID</dd></div><div><dt>Used by</dt><dd>All officials</dd></div></dl>
+        <h3 class="ptitle">institution</h3>
+        <div class="ptext"><p>Name, address, region and the full history of complaints about one institution, gathered from every bureau that has ever touched it.</p><a class="link" href="#route">Follow a case</a></div>
+      </div>
+      <figure class="pfig"><div class="vc"><h4>aaravika institute of engineering</h4><p class="id">AICTE 1-900000001</p><p class="m">Southern region · Karnataka</p><div class="vgrid"><div><b>4</b><span class="m">cases</span></div><div><b>2</b><span class="m">bureaus</span></div><div><b>1</b><span class="m">overlap</span></div></div></div></figure>
+    </article>
+    <article class="poster" style="--i:1">
+      <div class="pcol">
+        <dl class="spec"><div><dt>Shows</dt><dd>Status and movement</dd></div><div><dt>Records</dt><dd>Officer, remarks, documents</dd></div><div><dt>Updates</dt><dd>On every action</dd></div></dl>
+        <h3 class="ptitle">case track</h3>
+        <div class="ptext"><p>Date received, category, current status, assigned officer, last action and the next one due, with every transfer and escalation on a timeline.</p><a class="link" href="#route">See the timeline</a></div>
+      </div>
+      <figure class="pfig"><div class="vc"><h4>pgrc-2026-0412</h4><p class="m">Unapproved admission fees</p><div class="tline"><div><i></i><span>Received at PGRC</span><small>1 Oct</small></div><div><i></i><span>Assigned to S. Rao</span><small>1 Oct</small></div><div><i></i><span>Notice to institution</span><small>4 Oct</small></div><div class="now"><i></i><span>Linked with RB case</span><small>6 Oct</small></div></div></div></figure>
+    </article>
+    <article class="poster" style="--i:2">
+      <div class="pcol">
+        <dl class="spec"><div><dt>Matches on</dt><dd>ID, name variants, address</dd></div><div><dt>Method</dt><dd>Rules plus AI</dd></div><div><dt>Decides</dt><dd>Officers, never the model</dd></div></dl>
+        <h3 class="ptitle">overlap</h3>
+        <div class="ptext"><p>When RB and PGRC are both working on the same institution, Setu says so, shows why it thinks so, and lets the bureaus link the cases.</p><a class="link" href="#engines">How matching works</a></div>
+      </div>
+      <figure class="pfig"><div class="vc"><h4>potential overlapping cases</h4><div class="pair"><div><b>PGRC</b><p>Aaravika Institute of Engineering</p></div><div><b>RB</b><p>Aaravika Inst. of Engg.</p></div></div><div class="flag">Coordination required</div></div></figure>
+    </article>
+    <article class="poster" style="--i:3">
+      <div class="pcol">
+        <dl class="spec"><div><dt>Cuts by</dt><dd>Bureau, region, status</dd></div><div><dt>Tracks</dt><dd>Ageing and disposal rate</dd></div><div><dt>Periods</dt><dd>Monthly, quarterly</dd></div></dl>
+        <h3 class="ptitle">reports</h3>
+        <div class="ptext"><p>Institution-wise, region-wise and bureau-wise reports, with pending-case ageing ready for the review meeting.</p><a class="link" href="#chart">See a chart</a></div>
+      </div>
+      <figure class="pfig"><div class="vc"><h4>pending by region</h4><div class="rb"><div><span>Southern</span><s style="width:82%"></s><em>64</em></div><div><span>Western</span><s style="width:66%"></s><em>51</em></div><div><span>Northern</span><s style="width:58%"></s><em>45</em></div><div><span>Eastern</span><s style="width:40%"></s><em>31</em></div></div></div></figure>
+    </article>
+  </div>
+</section>
+
+<!-- LIFE OF A CASE -->
+<section class="route" id="route" data-tone="indigo" data-section="route">
+  <div class="wrap rhead"><h2 class="h2">twelve days in the life of a case</h2><p class="lead">One complaint, two bureaus, and the moment Setu noticed. Each day lights up as the case reaches it.</p></div>
+  <div class="rpin" id="rpin">
+    <div class="rail" id="rail">
+      <svg class="rsvg" id="rsvg" aria-hidden="true"><path id="rpath" fill="none" stroke="rgba(11,14,20,.35)" stroke-width="2" stroke-dasharray="6 7"/><path id="rdraw" fill="none" stroke="#0B0E14" stroke-width="3"/></svg>
+      <ol style="display:contents">
+        <li class="stop"><p class="sday"><i></i><span class="dlabel">Day 1</span><em>Reached</em></p><div class="sfig">pgrc</div><h3 class="stitle">complaint arrives</h3><p>Students report unapproved admission fees. PGRC registers the case and assigns an officer.</p></li>
+        <li class="stop stop--low"><p class="sday"><i></i><span class="dlabel">Day 2</span><em>Reached</em></p><div class="sfig">rb</div><h3 class="stitle">a second desk</h3><p>RB opens its own case on the same college, filed under a shorter version of its name.</p></li>
+        <li class="stop hit"><p class="sday"><i></i><span class="dlabel">Day 2, minutes later</span><em>Reached</em></p><div class="sfig">overlap</div><h3 class="stitle">setu notices</h3><p>Matcher links the two by permanent ID and category, and alerts both bureaus.</p></li>
+        <li class="stop stop--low"><p class="sday"><i></i><span class="dlabel">Day 3</span><em>Reached</em></p><div class="sfig">linked</div><h3 class="stitle">one lead bureau</h3><p>The cases are linked. RB takes the lead, and PGRC follows on the same record.</p></li>
+        <li class="stop"><p class="sday"><i></i><span class="dlabel">Day 8</span><em>Reached</em></p><div class="sfig">notice</div><h3 class="stitle">one notice, not two</h3><p>The institution gets a single notice that covers both complaints.</p></li>
+        <li class="stop stop--low"><p class="sday"><i></i><span class="dlabel">Day 12</span><em>Reached</em></p><div class="sfig">disposed</div><h3 class="stitle">closed together</h3><p>Both cases are disposed with the same outcome, and the history stays on the institution's record.</p></li>
+      </ol>
+    </div>
+  </div>
+</section>
+
+<!-- ENGINES -->
+<section class="engines" id="engines" data-tone="base" data-section="engines">
+  <div class="esticky wrap">
+    <div class="egrid">
+      <div><h2 class="h2">four engines behind one screen</h2><p class="lead" style="margin-top:18px">Officials see one dashboard. Underneath, four parts of Setu split the work and pass it between them.</p>
+        <ol class="enames" id="enames"><li class="on">matcher</li><li>tracker</li><li>watcher</li><li>reporter</li></ol></div>
+      <div class="deck" id="deck">
+        <article class="ecard"><div><h3 class="ename">matcher</h3><p class="wide">Overlap detection</p></div>
+          <figure class="efig"><div class="vc"><p class="m">New case RB-2026-0198</p><div class="pair"><div><b>Permanent ID</b><p>Exact match</p></div><div><b>Name</b><p>91% similar</p></div></div></div></figure>
+          <dl class="spec"><div><dt>Compares</dt><dd>Every new case against open ones</dd></div><div><dt>Explains</dt><dd>Why it matched</dd></div></dl></article>
+        <article class="ecard"><div><h3 class="ename">tracker</h3><p class="wide">Workflow and history</p></div>
+          <figure class="efig"><div class="vc"><div class="tline" style="margin:0"><div><i></i><span>Transferred to RB</span><small>09:40</small></div><div class="now"><i></i><span>Escalated to bureau head</span><small>11:05</small></div></div></div></figure>
+          <dl class="spec"><div><dt>Logs</dt><dd>Every action with a timestamp</dd></div><div><dt>Shows</dt><dd>Who holds the case now</dd></div></dl></article>
+        <article class="ecard"><div><h3 class="ename">watcher</h3><p class="wide">Alerts and timelines</p></div>
+          <figure class="efig"><div class="vc"><p style="font-family:var(--f-display);font-stretch:75%;font-size:52px;font-weight:700;line-height:1">6 days</p><p class="m">left of a 30-day disposal timeline</p></div></figure>
+          <dl class="spec"><div><dt>Warns</dt><dd>Before a case goes overdue</dd></div><div><dt>Escalates</dt><dd>When it does</dd></div></dl></article>
+        <article class="ecard"><div><h3 class="ename">reporter</h3><p class="wide">Reports and analytics</p></div>
+          <figure class="efig"><div class="vc"><div class="rb" style="margin:0"><div><span>Disposal</span><s style="width:72%"></s><em>72%</em></div><div><span>Overlaps</span><s style="width:18%"></s><em>18</em></div></div></div></figure>
+          <dl class="spec"><div><dt>Builds</dt><dd>Bureau, region, institution reports</dd></div><div><dt>Measures</dt><dd>Ageing and disposal rate</dd></div></dl></article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CHART -->
+<section class="chart-sec wrap" id="chart" data-tone="paper" data-section="chart">
+  <div class="cgrid">
+    <div><h2 class="h2">caught before the second notice</h2><p class="lead" style="margin-top:20px">Overlapping cases flagged each month in the pilot data, before either bureau had acted twice.</p></div>
+    <figure>
+      <ol class="bars" id="bars" aria-label="Overlaps flagged per month, synthetic">
+        <li class="bar"><span class="bv">6</span><span class="bcol" style="--h:21%"></span><span class="bm">Jan</span></li>
+        <li class="bar"><span class="bv">9</span><span class="bcol" style="--h:32%"></span><span class="bm">Feb</span></li>
+        <li class="bar"><span class="bv">14</span><span class="bcol" style="--h:50%"></span><span class="bm">Mar</span></li>
+        <li class="bar"><span class="bv">12</span><span class="bcol" style="--h:43%"></span><span class="bm">Apr</span></li>
+        <li class="bar"><span class="bv">18</span><span class="bcol" style="--h:64%"></span><span class="bm">May</span></li>
+        <li class="bar"><span class="bv">21</span><span class="bcol" style="--h:75%"></span><span class="bm">Jun</span></li>
+        <li class="bar peak"><span class="bv">28</span><span class="bcol" style="--h:100%"></span><span class="bm">Jul</span></li>
+        <li class="bar"><span class="bv">24</span><span class="bcol" style="--h:86%"></span><span class="bm">Aug</span></li>
+        <li class="bar"><span class="bv">19</span><span class="bcol" style="--h:68%"></span><span class="bm">Sep</span></li>
+        <li class="bar"><span class="bv">16</span><span class="bcol" style="--h:57%"></span><span class="bm">Oct</span></li>
+      </ol>
+      <figcaption class="cnote">Synthetic data. July peaks with the admissions season.</figcaption>
+    </figure>
+  </div>
+</section>
+
+
+<!-- ROLES -->
+<section class="roles" id="roles" data-tone="base" data-section="roles">
+  <div class="rsticky wrap">
+  <h2 class="h2">right view for every desk</h2>
+  <ul class="rgrid">
+    <li class="role"><h3 class="rname">officer</h3><dl class="spec"><div><dt>Sees</dt><dd>Assigned cases</dd></div><div><dt>Can</dt><dd>Act, remark, transfer</dd></div></dl><ul><li>Case timeline and next action</li><li>Overlap alerts on own cases</li><li>Deadline reminders</li></ul></li>
+    <li class="role role--main"><h3 class="rname">bureau head</h3><dl class="spec"><div><dt>Sees</dt><dd>The whole bureau</dd></div><div><dt>Can</dt><dd>Assign, link, escalate</dd></div></dl><ul><li>Bureau workload and ageing</li><li>Link cases across bureaus</li><li>Decide the lead bureau</li></ul></li>
+    <li class="role"><h3 class="rname">management</h3><dl class="spec"><div><dt>Sees</dt><dd>All bureaus and regions</dd></div><div><dt>Can</dt><dd>Review and report</dd></div></dl><ul><li>Region and bureau reports</li><li>Disposal rate trends</li><li>Escalations with context</li></ul></li>
+  </ul>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq wrap" id="faq" data-tone="base" data-section="faq">
+  <div class="fgrid">
+    <div class="fside"><h2 class="h2">before you ask</h2><p>Questions officials usually raise in the first demo.</p></div>
+    <div>
+      <details class="qa"><summary>Does the AI decide what happens to a case?</summary><p>No. Setu suggests possible overlaps and explains why. Officers review the suggestion and decide whether to link cases and which bureau leads.</p></details>
+      <details class="qa"><summary>What if an institution's name is spelled differently?</summary><p>Matching uses the AICTE permanent ID first, then name variants, address and timing, so small spelling differences don't hide an overlap.</p></details>
+      <details class="qa"><summary>Who can see which cases?</summary><p>Access follows role and bureau. Officers see their cases, bureau heads see their bureau, and management sees everything.</p></details>
+      <details class="qa"><summary>Is this real data?</summary><p>Not in this prototype. Every institution, case and number shown is synthetic.</p></details>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section class="close wrap" id="close" data-tone="base" data-section="close">
+  <div class="crow">
+    <dl class="spec"><div><dt>Access</dt><dd>Authorized AICTE officials</dd></div><div><dt>Data</dt><dd>Synthetic in this prototype</dd></div><div><dt>Team</dt><dd>Aarohan, SIH PS 26264</dd></div></dl>
+    <div class="btns"><a class="btn" href="#top">Sign in</a><a class="btn btn--ghost" href="#views">Explore the views</a></div>
+  </div>
+  <p class="cword" aria-hidden="true">sign in</p>
+</section>
+</main>
+
+<footer class="wrap" data-tone="base">
+  <p class="fword" lang="hi" aria-hidden="true">सेतु</p>
+  <div class="frow"><nav aria-label="Footer"><a class="link" href="#views">Views</a><a class="link" href="#route">A case</a><a class="link" href="#roles">Roles</a><a class="link" href="#faq">Questions</a></nav><small>Prototype for Smart India Hackathon · PS 26264 · Team Aarohan · All data shown is synthetic</small></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const mask=document.getElementById('mask'),kw=document.getElementById('kword'),hero=document.querySelector('.hero');
+
+  /* size the knockout word to the hero */
+  function fitWord(){
+    const W=hero.clientWidth,H=hero.clientHeight;
+    mask.setAttribute('viewBox','0 0 '+W+' '+H);
+    const top=document.querySelector('.head').offsetHeight||80;
+    /* measure the real ink of the word once, on a canvas, then fit and centre it */
+    const fs0=200,cw=1400,chh=700,bl=520;
+    let ink=null;
+    try{
+      const c=document.createElement('canvas');c.width=cw;c.height=chh;const x=c.getContext('2d');
+      x.font='600 '+fs0+'px Teko, "Noto Sans Devanagari", sans-serif';x.textAlign='center';x.textBaseline='alphabetic';x.fillText('सेतु',cw/2,bl);
+      const d=x.getImageData(0,0,cw,chh).data;let x0=cw,x1=0,y0=chh,y1=0,bestY=0,bestN=0;
+      for(let yy=0;yy<chh;yy++){let n=0;for(let xx=0;xx<cw;xx++){if(d[(yy*cw+xx)*4+3]>128){n++;if(xx<x0)x0=xx;if(xx>x1)x1=xx;}}if(n){if(yy<y0)y0=yy;y1=yy;}if(n>bestN){bestN=n;bestY=yy;}}
+      let bx=cw/2,best=1e9;for(let xx=0;xx<cw;xx++){if(d[(bestY*cw+xx)*4+3]>128&&Math.abs(xx-cw/2)<best){best=Math.abs(xx-cw/2);bx=xx;}}
+      if(x1>x0&&y1>y0)ink={w:x1-x0,h:y1-y0,cx:(x0+x1)/2-cw/2,top:y0-bl,bot:y1-bl,barY:bestY-bl,barX:bx-cw/2};
+    }catch(e){}
+    if(ink){
+      const k=Math.min((W*0.88)/ink.w,((H-top)*0.88)/ink.h),fs=fs0*k,mid=top+(H-top)*0.5;
+      const base=mid-((ink.top+ink.bot)/2)*k;
+      kw.setAttribute('font-size',fs);kw.setAttribute('x',String(W/2-ink.cx*k));kw.setAttribute('y',String(base));
+      mask.style.transformOrigin=(W/2+(ink.barX-ink.cx)*k)+'px '+(base+ink.barY*k)+'px';
+    }else{kw.setAttribute('font-size',W*0.3);kw.setAttribute('y',String(H*0.7));}
+  }
+  fitWord();
+  (document.fonts&&document.fonts.ready?document.fonts.ready:Promise.resolve()).then(fitWord);
+  addEventListener('resize',fitWord);
+
+  /* monsoon sky over a cable-stayed bridge, rendered live (fallback: CSS gradient) */
+  (function(){
+    const cv=document.getElementById('sky');const gl=cv.getContext('webgl',{antialias:false,premultipliedAlpha:false});
+    if(!gl)return;
+    const vs='attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}';
+    const fs=`precision highp float;uniform vec2 r;uniform float t;uniform float rx;
+    float h(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+    float n(vec2 p){vec2 i=floor(p),f=fract(p);f=f*f*(3.-2.*f);return mix(mix(h(i),h(i+vec2(1,0)),f.x),mix(h(i+vec2(0,1)),h(i+vec2(1,1)),f.x),f.y);}
+    float fbm(vec2 p){float v=0.,a=.5;for(int i=0;i<6;i++){v+=a*n(p);p*=2.03;a*=.5;}return v;}
+    float seg(vec2 p,vec2 a,vec2 b){vec2 pa=p-a,ba=b-a;float k=clamp(dot(pa,ba)/dot(ba,ba),0.,1.);return length(pa-ba*k);}
+    void main(){
+      vec2 uv=gl_FragCoord.xy/r;float asp=r.x/r.y;vec2 p=vec2(uv.x*asp,uv.y);
+      float hz=.30;
+      vec3 top=vec3(.06,.07,.18),mid=vec3(.17,.21,.62),glow=vec3(.66,.70,1.);
+      float y=(uv.y-hz)/(1.-hz);
+      vec3 sky=mix(glow,mid,smoothstep(0.,.45,y));sky=mix(sky,top,smoothstep(.4,1.,y));
+      float c=fbm(vec2(p.x*1.6+t*.025,p.y*2.6-t*.01));float c2=fbm(vec2(p.x*3.2-t*.04,p.y*4.)+c);
+      float cl=smoothstep(.42,.78,c*.7+c2*.45);
+      vec3 cloud=mix(vec3(.08,.09,.2),vec3(.32,.35,.7),c2);
+      sky=mix(sky,cloud,cl*smoothstep(.02,.35,y)*.92);
+      float rays=pow(max(0.,1.-abs(uv.x-.62)*2.2),3.)*smoothstep(.1,.6,y)*(1.-cl)*.25;sky+=glow*rays;
+      vec3 col=sky;
+      if(uv.y<hz){
+        vec2 q=vec2(uv.x,hz+(hz-uv.y)*1.4+.012*sin(uv.x*90.+t*1.6+uv.y*240.));
+        float yy=(q.y-hz)/(1.-hz);vec3 ref=mix(glow,mid,smoothstep(0.,.45,yy));
+        col=mix(vec3(.04,.05,.12),ref*.55,smoothstep(0.,hz,uv.y)*.9);
+        col+=glow*.12*smoothstep(.6,1.,n(vec2(uv.x*60.,uv.y*400.+t*2.)));
+      }
+      float rain=smoothstep(.985,1.,n(vec2((p.x+p.y*.28)*140.,p.y*6.+t*9.)));col=mix(col,vec3(.85,.88,1.),rain*.35);
+      vec3 ink=vec3(.03,.035,.06);
+      float deck=hz+.06;float w=asp;
+      float d=abs(p.y-deck)-.007;
+      vec2 P1=vec2(w*.34,deck),P2=vec2(w*.70,deck);float ph=.34;
+      d=min(d,max(abs(p.x-P1.x)-.006,abs(p.y-(deck+ph*.5-.03))-ph*.5-.03));
+      d=min(d,max(abs(p.x-P2.x)-.006,abs(p.y-(deck+ph*.5-.03))-ph*.5-.03));
+      for(int k=1;k<=9;k++){float fk=float(k)*.034;
+        d=min(d,seg(p,P1+vec2(0.,ph-fk*.6),vec2(P1.x-fk*1.15,deck))-.0012);
+        d=min(d,seg(p,P1+vec2(0.,ph-fk*.6),vec2(P1.x+fk*1.15,deck))-.0012);
+        d=min(d,seg(p,P2+vec2(0.,ph-fk*.6),vec2(P2.x-fk*1.15,deck))-.0012);
+        d=min(d,seg(p,P2+vec2(0.,ph-fk*.6),vec2(P2.x+fk*1.15,deck))-.0012);}
+      col=mix(ink,col,smoothstep(0.,.0025,d));
+      for(int k=0;k<7;k++){float fk=float(k);float sp=.05+.03*h(vec2(fk,3.));float x=fk==3.?rx*w:fract(h(vec2(fk,1.))+t*sp*(mod(fk,2.)<1.?1.:-1.))*w;
+        float l=length((p-vec2(x,deck+.012))*vec2(1.,1.6));
+        vec3 lc=fk==3.?vec3(1.,.36,.42):vec3(.78,.82,1.);col+=lc*smoothstep(.012,0.,l)*.9+lc*smoothstep(.06,0.,l)*.12;}
+      col+=(h(gl_FragCoord.xy+t)-.5)*.03;
+      gl_FragColor=vec4(col,1.);}`;
+    function sh(type,src){const o=gl.createShader(type);gl.shaderSource(o,src);gl.compileShader(o);if(!gl.getShaderParameter(o,gl.COMPILE_STATUS)){console.warn(gl.getShaderInfoLog(o));return null;}return o;}
+    const a=sh(gl.VERTEX_SHADER,vs),b=sh(gl.FRAGMENT_SHADER,fs);if(!a||!b)return;
+    const pr=gl.createProgram();gl.attachShader(pr,a);gl.attachShader(pr,b);gl.linkProgram(pr);gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,3,-1,-1,3]),gl.STATIC_DRAW);
+    const loc=gl.getAttribLocation(pr,'p');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+    const ur=gl.getUniformLocation(pr,'r'),ut=gl.getUniformLocation(pr,'t'),urx=gl.getUniformLocation(pr,'rx');
+    const heroEl=document.querySelector('.hero'),pyL=document.getElementById('pyL'),pyR=document.getElementById('pyR'),rc=document.getElementById('redCall');
+    const scale=Math.min(devicePixelRatio||1,1.25)*(innerWidth>1600?.75:1);
+    function size(){cv.width=Math.round(cv.clientWidth*scale);cv.height=Math.round(cv.clientHeight*scale);gl.viewport(0,0,cv.width,cv.height);}
+    new ResizeObserver(size).observe(cv);size();
+    let vis=true;new IntersectionObserver(e=>{vis=e[0].isIntersecting;}).observe(cv);
+    const t0=performance.now();
+    function frame(){if(vis&&!document.hidden){const tt=(performance.now()-t0)/1000,rxv=(tt*.045+.08)%1;
+        gl.uniform2f(ur,cv.width,cv.height);gl.uniform1f(ut,tt);gl.uniform1f(urx,rxv);gl.drawArrays(gl.TRIANGLES,0,3);
+        if(heroEl.classList.contains('after')){const W=cv.clientWidth,H=cv.clientHeight;
+          pyL.style.left=(W*.34)+'px';pyL.style.top=(H*.30-6)+'px';pyR.style.left=(W*.70)+'px';pyR.style.top=(H*.30-6)+'px';
+          rc.style.left=(rxv*W)+'px';rc.style.top=(H*(1-.372))+'px';rc.style.opacity=(rxv>.04&&rxv<.96)?'':'0';}}
+      if(!reduce)requestAnimationFrame(frame);}
+    frame();
+  })();
+
+
+
+  /* two desks: apart, slide together while the reasons tick in, link, then alert */
+  (function(){
+    const sec=document.getElementById('desks'),board=document.getElementById('board'),L=document.getElementById('lcase'),Rc=document.getElementById('rcase');
+    const steps=[...sec.querySelectorAll('.dstep')],reasons=[...sec.querySelectorAll('.reason')],below=document.getElementById('below');
+    const alertc=document.getElementById('alertc'),path=document.getElementById('dpath'),node=document.getElementById('dnode'),svg=document.getElementById('dlink');
+    const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),io=t=>t<.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
+    function upd(){
+      const r=sec.getBoundingClientRect(),d=r.height-innerHeight,q=reduce?1:(d>0?clamp(-r.top/d,0,1):0);
+      const st=q<.28?0:q<.7?1:2;
+      steps.forEach((s,i)=>{s.classList.toggle('on',i===st);s.classList.toggle('past',i<st);});
+      const bw=board.clientWidth,cw=L.offsetWidth,gap=48;
+      const travel=Math.max(0,(bw-2*cw-gap)/2)*io(clamp((q-.28)/.24,0,1));
+      L.style.transform='translateX('+travel+'px)';Rc.style.transform='translateX('+(-travel)+'px)';
+      const ch=Math.max(L.offsetHeight,Rc.offsetHeight);below.style.top=(ch+32)+'px';
+      reasons.forEach((x,i)=>x.classList.toggle('on',q>.36+i*.06));
+      const matched=q>.36;L.classList.toggle('matched',matched);Rc.classList.toggle('matched',matched);
+      svg.setAttribute('viewBox','0 0 '+bw+' '+board.clientHeight);
+      const y=Math.min(L.offsetHeight,Rc.offsetHeight)/2,x1=cw+travel,x2=bw-cw-travel;
+      path.setAttribute('d','M'+x1+' '+y+' H'+x2);
+      const k=clamp((q-.56)/.1,0,1),len=Math.max(1,x2-x1);path.style.strokeDasharray=len;path.style.strokeDashoffset=String(len*(1-k));
+      node.setAttribute('cx',(x1+x2)/2);node.setAttribute('cy',y);node.setAttribute('opacity',k>=1?1:0);
+      const al=q>=.7,col=al?'#FF5C6C':'#9AA4FF';node.setAttribute('stroke',col);path.setAttribute('stroke',col);
+      alertc.classList.toggle('on',al);below.classList.toggle('alerting',al);
+    }
+    let tk=false;addEventListener('scroll',()=>{if(!tk){tk=true;requestAnimationFrame(()=>{tk=false;upd();});}},{passive:true});addEventListener('resize',upd);upd();
+    if(document.fonts&&document.fonts.ready)document.fonts.ready.then(upd);
+  })();
+
+  /* engines deck: top card flies off, the rest move up */
+  (function(){
+    const sec=document.getElementById('engines'),cards=[...sec.querySelectorAll('.ecard')],names=[...sec.querySelectorAll('.enames li')];
+    let last=-1;
+    function upd(){
+      const r=sec.getBoundingClientRect(),d=r.height-innerHeight,q=d>0?Math.min(1,Math.max(0,-r.top/d)):0;
+      const a=reduce?0:Math.min(cards.length-1,Math.floor(q*cards.length*0.999));
+      if(a===last)return;last=a;
+      cards.forEach((c,i)=>{const k=i-a;
+        if(k<0){c.style.transform='translate(-118%,-4%) rotate(-12deg)';c.style.opacity='0';c.style.zIndex=1;}
+        else{c.style.transform='translate('+(k*16)+'px,'+(k*16)+'px) rotate('+(k*2.2)+'deg) scale('+(1-k*.04)+')';c.style.opacity=String(1-k*.18);c.style.zIndex=20-k;}});
+      names.forEach((n,i)=>n.classList.toggle('on',i===a));
+    }
+    addEventListener('scroll',upd,{passive:true});addEventListener('resize',()=>{last=-1;upd();});upd();
+  })();
+
+  /* roles: three cards dealt from a stack */
+  (function(){
+    const sec=document.getElementById('roles'),cards=[...sec.querySelectorAll('.role')];
+    const clamp=(v,a,b)=>Math.min(b,Math.max(a,v)),ease=t=>1-Math.pow(1-t,3);
+    function upd(){
+      if(innerWidth<=860||reduce){cards.forEach(c=>{c.style.transform='';});return;}
+      const r=sec.getBoundingClientRect(),d=r.height-innerHeight,q=d>0?clamp(-r.top/d,0,1):0,e=ease(clamp(q/.55,0,1));
+      const mid=cards[1].getBoundingClientRect(),mc=mid.left+mid.width/2;
+      cards.forEach((c,i)=>{const b=c.getBoundingClientRect(),cur=new DOMMatrixReadOnly(getComputedStyle(c).transform).m41,cx=b.left-cur+b.width/2;
+        const dx=(mc-cx)*(1-e),rot=[-9,0,9][i]*(1-e)+[-1.2,0,1.2][i]*e,dy=(i===1?-14*e:18*(1-e));
+        c.style.transform='translate('+dx+'px,'+dy+'px) rotate('+rot+'deg)';c.style.zIndex=i===1?3:1;});
+    }
+    let tk=false;addEventListener('scroll',()=>{if(!tk){tk=true;requestAnimationFrame(()=>{tk=false;upd();});}},{passive:true});addEventListener('resize',upd);upd();
+  })();
+
+  const head=document.querySelector('.head');
+  function headTone(){const m=document.querySelector('.manifesto').getBoundingClientRect().top;head.classList.toggle('solid',m<=head.offsetHeight+1);if(head.classList.contains('solid'))head.classList.remove('sky');}
+  addEventListener('scroll',headTone,{passive:true});headTone();
+  if(reduce||!window.gsap||!window.ScrollTrigger){hero.classList.add('static');return;}
+  document.documentElement.classList.add('motion');
+  gsap.registerPlugin(ScrollTrigger);
+
+  if(window.Lenis){
+    const lenis=new Lenis({lerp:.1});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(t=>lenis.raf(t*1000));
+    gsap.ticker.lagSmoothing(0);
+    document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const t=document.querySelector(a.getAttribute('href'));if(t){e.preventDefault();lenis.scrollTo(t,{offset:0});}}));
+  }
+
+  /* hero: word opens to full bleed */
+  gsap.timeline({scrollTrigger:{trigger:hero,start:'top top',end:'+=140%',pin:true,scrub:1,onUpdate:st=>{if(!head.classList.contains('solid'))head.classList.toggle('sky',st.progress>.45);hero.classList.toggle('after',st.progress>.72);}}})
+    .to(mask,{scale:14,ease:'power2.in',duration:.8},0)
+    .to(mask,{opacity:0,ease:'none',duration:.2},.62)
+    .fromTo('#heroAfter',{y:40,opacity:0},{y:0,opacity:1,ease:'power3.out',duration:.3},.68)
+;
+
+  /* posters stack, tilt and darken */
+  const posters=gsap.utils.toArray('.poster');
+  posters.forEach((p,i)=>{
+    const next=posters[i+1]; if(!next)return;
+    gsap.to(p,{scale:.93,rotate:i%2?1.6:-1.6,'--dim':.55,ease:'none',
+      scrollTrigger:{trigger:next,start:'top bottom',end:'top top+=120',scrub:true}});
+  });
+
+
+  /* life of a case: steps from day to day, each one marked as reached */
+  const rail=document.getElementById('rail'),rpin=document.getElementById('rpin'),rsvg=document.getElementById('rsvg'),rpath=document.getElementById('rpath'),rdraw=document.getElementById('rdraw');
+  const stops=gsap.utils.toArray('.stop');
+  rpin.classList.add('pinned');
+  let len=0,pts=[];
+  function buildRoute(){
+    const x0=gsap.getProperty(rail,'x');gsap.set(rail,{x:0});
+    const rb=rail.getBoundingClientRect();
+    pts=[...rail.querySelectorAll('.sday i')].map(i=>{const b=i.getBoundingClientRect();return[b.left-rb.left+b.width/2,b.top-rb.top+b.height/2];});
+    gsap.set(rail,{x:x0});
+    if(!pts.length)return;
+    let d='M'+pts[0][0]+' '+pts[0][1];
+    for(let k=1;k<pts.length;k++){const [a,b]=pts[k-1],[c,e]=pts[k],mx=(a+c)/2;d+=' C'+mx+' '+b+' '+mx+' '+e+' '+c+' '+e;}
+    rsvg.setAttribute('viewBox','0 0 '+rail.scrollWidth+' '+rail.scrollHeight);rsvg.style.width=rail.scrollWidth+'px';
+    rpath.setAttribute('d',d);rdraw.setAttribute('d',d);len=rdraw.getTotalLength();rdraw.style.strokeDasharray=len;
+  }
+  buildRoute();
+  const maxX=()=>Math.max(0,rail.scrollWidth-innerWidth);
+  const xFor=i=>{const st=stops[i];return -Math.min(maxX(),Math.max(0,st.offsetLeft+st.offsetWidth/2-innerWidth*.42));};
+  const rtl=gsap.timeline({scrollTrigger:{trigger:rpin,start:'top top',end:()=>'+='+(stops.length*innerHeight*.38),pin:true,scrub:.4,invalidateOnRefresh:true,
+    snap:{snapTo:'labels',duration:{min:.12,max:.3},delay:.04,ease:'power2.inOut'},onRefresh:buildRoute}});
+  stops.forEach((st,i)=>{
+    if(i>0)rtl.to(rail,{x:()=>xFor(i),duration:1,ease:'power1.inOut'});
+    rtl.addLabel('s'+i);
+    rtl.to({},{duration:.55});
+  });
+  rtl.eventCallback('onUpdate',()=>{
+    const t=rtl.time();let a=0;stops.forEach((s,i)=>{if(rtl.labels['s'+i]<=t+.001)a=i;});
+    stops.forEach((s,i)=>{s.classList.toggle('on',i===a);s.classList.toggle('done',i<a);});
+    if(pts.length>1&&len){const cx=-gsap.getProperty(rail,'x')+innerWidth*.42,f=Math.min(1,Math.max(0,(cx-pts[0][0])/(pts[pts.length-1][0]-pts[0][0])));rdraw.style.strokeDashoffset=String(len*(1-f));}
+  });
+  stops[0].classList.add('on');rdraw.style.strokeDashoffset=String(len);
+
+  /* bars grow */
+  gsap.from('.bcol',{scaleY:0,duration:1.1,ease:'power3.out',stagger:.06,scrollTrigger:{trigger:'#bars',start:'top 80%'}});
+
+
+  /* closing word rises */
+  gsap.from('.cword',{yPercent:40,ease:'none',scrollTrigger:{trigger:'.close',start:'top bottom',end:'bottom bottom',scrub:true}});
+
+  addEventListener('load',()=>ScrollTrigger.refresh());
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>ScrollTrigger.refresh());
+})();
+</script>
