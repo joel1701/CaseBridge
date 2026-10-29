@@ -16,8 +16,8 @@ const ReportPanels = lazy(() =>
 
 // The dashboard's filter hook and overview, so the same filters give the same numbers.
 const PERIODS: { value: OverviewRange; label: string }[] = [
-  { value: '30d', label: 'This month' },
-  { value: '90d', label: 'Last quarter' },
+  { value: '30d', label: 'Last 30 days' },
+  { value: '90d', label: 'Last 90 days' },
   { value: '12m', label: 'Last 12 months' },
 ];
 
@@ -70,7 +70,7 @@ function PanelsSkeleton() {
 
 export function ReportsPage() {
   const { filters, setRange, setRegion, setBureau } = useOverviewFilters();
-  // "All time" isn't a report preset; fall back to the default quarter.
+  // "All time" isn't a report preset; fall back to the default 90 days.
   const range = PERIODS.some((p) => p.value === filters.range)
     ? filters
     : { ...filters, range: '90d' as const };

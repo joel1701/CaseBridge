@@ -174,8 +174,10 @@ const overlapSpecs: {
   caseIds?: string[];
   confidence: number;
   reasons: string[];
-  state: OverlapAlert['status'];
+  state: OverlapAlert['status'] | 'REJECTED';
   detectedAt: string;
+  /** Past overlaps already decided: in links, reports and the graph, not on the dashboard. */
+  historical?: boolean;
 }[] = [
   {
     id: 'ovl-001',
@@ -237,11 +239,103 @@ const overlapCases = overlapSpecs.map((spec) => {
             )
             .sort((x, y) => y.createdAt - x.createdAt)[0],
       );
-  if (spec.state !== 'LINKED')
+  if (spec.state === 'NEW' || spec.state === 'UNDER_REVIEW')
     for (const c of chosen)
       if (c) c.events = c.events.filter((e) => e.status !== 'DISPOSED');
   return chosen.filter(Boolean).map((c) => c.id);
 });
+
+// Past overlaps across the last 12 months, so the overlaps-per-month report has a shape:
+// mostly confirmed or rejected (historical), plus two still open. They reuse existing
+// cases (never reopening one), so every dashboard count stays the same.
+{
+  const r3 = rng(9026);
+  const today = Date.parse(MOCK_TODAY);
+  const used = new Set(overlapCases.flat());
+  const reasonSets = [
+    ['Same AICTE permanent ID', 'Same category, a few days apart'],
+    ['Name variant of the same college', 'Same address'],
+    ['Same AICTE permanent ID', 'Related fee allegation'],
+    ['Same category', 'Same complainant group'],
+  ];
+  const pairIn = (from: number, to: number, needOpen: boolean) => {
+    const pool = base
+      .filter(
+        (c) =>
+          c.createdAt >= from &&
+          c.createdAt < to &&
+          !used.has(c.id) &&
+          (!needOpen || isOpenAt(c, today)),
+      )
+      .sort((x, y) => x.createdAt - y.createdAt);
+    // Seeded Fisher-Yates shuffle, so the same pairs come out on every load.
+    const starts = [...pool];
+    for (let i = starts.length - 1; i > 0; i--) {
+      const j = Math.floor(r3() * (i + 1));
+      [starts[i], starts[j]] = [starts[j], starts[i]];
+    }
+    for (const a of starts) {
+      const b = pool.find(
+        (c) =>
+          c.id !== a.id &&
+          c.institutionId === a.institutionId &&
+          c.bureau !== a.bureau &&
+          Math.abs(c.createdAt - a.createdAt) <= 6 * DAY,
+      );
+      if (b) return [a, b].sort((x, y) => x.createdAt - y.createdAt);
+    }
+    return null;
+  };
+  // Overlaps decided per month, Nov 2025 to Sep 2026 (peaking with admissions), then two open.
+  const perMonth = [1, 1, 1, 1, 2, 1, 2, 2, 3, 2, 2];
+  const plan: {
+    from: number;
+    to: number;
+    open: boolean;
+    state: (typeof overlapSpecs)[number]['state'];
+  }[] = [];
+  perMonth.forEach((n, i) => {
+    const from = Date.UTC(2025, 10 + i, 1);
+    const to = Date.UTC(2025, 11 + i, 1);
+    for (let k = 0; k < n; k++)
+      plan.push({
+        from,
+        to,
+        open: false,
+        state: r3() < 0.7 ? 'LINKED' : 'REJECTED',
+      });
+  });
+  plan.push({
+    from: Date.UTC(2026, 7, 1),
+    to: Date.UTC(2026, 9, 1),
+    open: true,
+    state: 'NEW',
+  });
+  plan.push({
+    from: Date.UTC(2026, 7, 1),
+    to: Date.UTC(2026, 9, 1),
+    open: true,
+    state: 'UNDER_REVIEW',
+  });
+  plan.forEach((p, n) => {
+    const pair = pairIn(p.from, p.to, p.open);
+    if (!pair) return;
+    for (const c of pair) used.add(c.id);
+    const id = `ovl-past-${String(n + 1).padStart(2, '0')}`;
+    overlapSpecs.push({
+      id,
+      institutionId: pair[0].institutionId,
+      bureaus: pair.map((c) => c.bureau),
+      caseIds: pair.map((c) => c.id),
+      confidence: Math.round((0.66 + r3() * 0.3) * 100) / 100,
+      reasons: reasonSets[Math.floor(r3() * reasonSets.length)],
+      state: p.state,
+      detectedAt: new Date(pair[1].createdAt + 6 * 3_600_000).toISOString(),
+      historical: !p.open,
+    });
+    overlapCases.push(pair.map((c) => c.id));
+  });
+}
 
 // Details come from a second seed so the base cases (and every dashboard number) don't move.
 const r2 = rng(1847);
@@ -316,22 +410,30 @@ export const links: StoreLink[] = overlapSpecs.flatMap((spec, n) => {
   return rest.map((other, k) => {
     const detected = Date.parse(spec.detectedAt);
     const confirmed = spec.state === 'LINKED';
+    const rejected = spec.state === 'REJECTED';
+    const decided = confirmed || rejected;
     return {
       id: rest.length > 1 ? `link-${spec.id}-${k + 1}` : `link-${spec.id}`,
       overlapId: spec.id,
       sourceComplaintId: first,
       targetComplaintId: other,
-      status: confirmed ? ('CONFIRMED' as const) : ('SUGGESTED' as const),
+      status: confirmed
+        ? ('CONFIRMED' as const)
+        : rejected
+          ? ('REJECTED' as const)
+          : ('SUGGESTED' as const),
       underReview: spec.state === 'UNDER_REVIEW',
       score: spec.confidence,
       reasons: spec.reasons,
       createdAt: detected,
-      updatedAt: confirmed ? detected + 3 * DAY : detected,
-      reviewedById: confirmed ? (headOf('PGRC')?.id ?? null) : null,
+      updatedAt: decided ? detected + 3 * DAY : detected,
+      reviewedById: decided ? (headOf('PGRC')?.id ?? null) : null,
       reviewReason: confirmed
         ? 'Same institution and category; one record for both bureaus.'
-        : null,
-      reviewedAt: confirmed ? detected + 3 * DAY : null,
+        : rejected
+          ? 'Different allegations; the cases stay separate.'
+          : null,
+      reviewedAt: decided ? detected + 3 * DAY : null,
     };
   });
 });
@@ -402,6 +504,7 @@ export function suggestOverlaps(caseId: string): StoreLink[] {
 /** The dashboard's overlap view of the links, live. Rejected overlaps drop out. */
 export function overlapAlerts(): OverlapAlert[] {
   return overlapSpecs
+    .filter((spec) => !spec.historical)
     .map((spec) => {
       const mine = links.filter((l) => l.overlapId === spec.id);
       if (mine.some((l) => l.status === 'REJECTED')) return null;

@@ -9,15 +9,27 @@ import { ComplaintDetailsPage } from '@/features/complaints/ComplaintDetailsPage
 import { InstitutionProfilePage } from '@/features/institutions/InstitutionProfilePage';
 import { BureauQueuePage } from '@/features/bureau-queue/BureauQueuePage';
 import { InvestigationPage } from '@/features/investigations/InvestigationPage';
-import { GraphPage } from '@/features/graph/GraphPage';
-import { ReportsPage } from '@/features/reports/ReportsPage';
 import { AlertsPage } from '@/features/dashboard/AlertsPage';
-import { StyleguidePage } from '@/features/styleguide/StyleguidePage';
 
 // Lazy so app users never download the landing page or its animation code.
 const LandingPage = lazy(() =>
   import('@/features/landing/LandingPage').then((m) => ({
     default: m.LandingPage,
+  })),
+);
+// Pages with heavy libraries (@xyflow/react, Recharts) load on first visit only.
+const GraphPage = lazy(() =>
+  import('@/features/graph/GraphPage').then((m) => ({ default: m.GraphPage })),
+);
+const ReportsPage = lazy(() =>
+  import('@/features/reports/ReportsPage').then((m) => ({
+    default: m.ReportsPage,
+  })),
+);
+// Internal design reference; never needed by app users.
+const StyleguidePage = lazy(() =>
+  import('@/features/styleguide/StyleguidePage').then((m) => ({
+    default: m.StyleguidePage,
   })),
 );
 const LoginPage = lazy(() =>
@@ -68,7 +80,14 @@ export const router = createBrowserRouter([
         ),
       },
       // Design system reference, outside the app navigation
-      { path: '/styleguide', element: <StyleguidePage /> },
+      {
+        path: '/styleguide',
+        element: (
+          <Lazy>
+            <StyleguidePage />
+          </Lazy>
+        ),
+      },
 
       // Internal investigation and coordination workspace
       {
@@ -82,9 +101,23 @@ export const router = createBrowserRouter([
           { path: '/institutions/:id', element: <InstitutionProfilePage /> },
           { path: '/bureau-queue', element: <BureauQueuePage /> },
           { path: '/investigations/:id', element: <InvestigationPage /> },
-          { path: '/graph/:institutionId', element: <GraphPage /> },
+          {
+            path: '/graph/:institutionId',
+            element: (
+              <Lazy>
+                <GraphPage />
+              </Lazy>
+            ),
+          },
           { path: '/alerts', element: <AlertsPage /> },
-          { path: '/reports', element: <ReportsPage /> },
+          {
+            path: '/reports',
+            element: (
+              <Lazy>
+                <ReportsPage />
+              </Lazy>
+            ),
+          },
           {
             path: '*',
             element: (

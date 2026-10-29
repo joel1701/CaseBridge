@@ -290,12 +290,15 @@ function DetailPanel({
   );
 }
 
+// List view (the default on phones): a tapped case opens its details right under its row.
 function GraphList({
   model,
+  selected,
   onSelect,
 }: {
   model: Model;
-  onSelect: (id: string) => void;
+  selected: string | null;
+  onSelect: (id: string | null) => void;
 }) {
   const bureaus = model.placed.filter((p) => p.type === 'bureau');
   return (
@@ -326,7 +329,11 @@ function GraphList({
                   <li key={c.id}>
                     <button
                       type="button"
-                      onClick={() => onSelect(c.id)}
+                      aria-expanded={selected === c.id}
+                      aria-controls={
+                        selected === c.id ? `detail-${c.id}` : undefined
+                      }
+                      onClick={() => onSelect(selected === c.id ? null : c.id)}
                       className="flex w-full flex-wrap items-center gap-x-3 gap-y-1 px-2 py-2 text-left text-sm hover:bg-panel"
                     >
                       <span
@@ -346,6 +353,24 @@ function GraphList({
                         </span>
                       )}
                     </button>
+                    {selected === c.id && (
+                      <div
+                        id={`detail-${c.id}`}
+                        className="mt-1 mb-2 scroll-mt-24"
+                        ref={(el) =>
+                          el?.scrollIntoView({
+                            block: 'nearest',
+                            behavior: 'smooth',
+                          })
+                        }
+                      >
+                        <DetailPanel
+                          node={c}
+                          model={model}
+                          onClose={() => onSelect(null)}
+                        />
+                      </div>
+                    )}
                   </li>
                 );
               })}
@@ -495,7 +520,9 @@ export function GraphPage() {
             <div
               className={cn(
                 'grid items-start gap-4',
-                selectedNode && 'lg:grid-cols-[minmax(0,1fr)_300px]',
+                view === 'graph' &&
+                  selectedNode &&
+                  'lg:grid-cols-[minmax(0,1fr)_300px]',
               )}
             >
               {view === 'graph' ? (
@@ -517,9 +544,13 @@ export function GraphPage() {
                   </ReactFlow>
                 </div>
               ) : (
-                <GraphList model={model} onSelect={setSelected} />
+                <GraphList
+                  model={model}
+                  selected={selected}
+                  onSelect={setSelected}
+                />
               )}
-              {selectedNode && (
+              {view === 'graph' && selectedNode && (
                 <DetailPanel
                   key={selectedNode.id}
                   node={selectedNode}
